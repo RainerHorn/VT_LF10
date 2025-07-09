@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schnittstellen & Signalleitungen in der Veranstaltungstechnik</title>
+</head>
+<body>
+    <div class="container">
+        <header class="main-header">
+            <h1>Schnittstellen & Signalleitungen in der Veranstaltungstechnik</h1>
+            <div class="header-icon">🎵 🎬 🎤</div>
+        </header>
+
+        <div class="accordion">
+            <!-- Kapitel 1: Einführung & Bedeutung -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span class="icon">🔌</span>
+                    <h2>1. Einführung & Bedeutung</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="content-wrapper">
+                        <p>Die Übertragung von Audio-, Video-, Steuer- und Datensignalen ist das Rückgrat jeder professionellen Veranstaltung. Ob bei Konzerten, Konferenzen oder Theateraufführungen – das Zusammenspiel unterschiedlichster Systeme ist essenziell. Dabei sind Schnittstellen und Signalleitungen die verbindenden Elemente, die Geräte miteinander kommunizieren lassen und die Signalqualität maßgeblich beeinflussen.</p>
+                        
+                        <p>In der Veranstaltungstechnik geht es dabei nicht nur um Funktionalität, sondern auch um Robustheit, Kompatibilität und Ausfallsicherheit. Wer falsche Kabel verwendet, kann im schlimmsten Fall Bildaussetzer, Brummschleifen oder sogar Geräteschäden verursachen. Die Anforderungen an diese Verbindungen sind vielfältig: Sie müssen hohen mechanischen Belastungen standhalten, dürfen keine Signalverluste erzeugen und müssen dabei möglichst flexibel einsetzbar sein. Gerade im Live-Betrieb sind schnelle und fehlerfreie Verbindungen überlebenswichtig – Zeit ist Geld, und Fehlersuche während einer Show kann fatal sein.</p>
+
+                        <p>Darüber hinaus spielt die Normierung eine entscheidende Rolle. Steckertypen wie XLR, Speakon oder HDMI folgen internationalen Standards, die eine reibungslose Kombination verschiedenster Geräte ermöglichen sollen. Dennoch existieren zahllose Sonderlösungen und inkompatible Bauformen – eine Herausforderung, die tiefes technisches Verständnis erfordert. Auch neue Schnittstellen wie USB-C oder netzwerkbasierte Protokolle (z. B. ArtNet) halten zunehmend Einzug in die Branche und verlangen fortlaufende Weiterbildung.</p>
+
+                        <p>Nicht zuletzt ist auch die Signalart entscheidend: analoge und digitale Signale verhalten sich völlig unterschiedlich. Während analoge Übertragungen anfällig für Störungen sind, benötigen digitale Signale exakte Pegel- und Timingbedingungen. Besonders bei längeren Leitungen oder bei Hochfrequenzdaten wie 4K-Video sind spezielle Kabel und Stecker unumgänglich.</p>
+
+                        <p>Diese Unterrichtseinheit gibt einen praxisnahen Überblick über die wichtigsten in der Veranstaltungstechnik verwendeten Schnittstellen und Signalleitungen. Dabei werden sowohl physikalische Eigenschaften, technische Parameter als auch Anwendungshinweise und potenzielle Fehlerquellen behandelt.</p>
+
+                        <div class="sources">
+                            <h4>Weiterführende Links:</h4>
+                            <ul>
+                                <li><a href="https://de.wikipedia.org/wiki/Schnittstelle_(Technik)" target="_blank">Technische Schnittstellen - Wikipedia</a></li>
+                                <li><a href="https://www.vdtev.de/" target="_blank">Verband der Veranstaltungstechnik e.V.</a></li>
+                                <li><a href="https://www.professional-system.de/basics/kabel-stecker/" target="_blank">Kabel & Stecker Grundlagen - Professional System</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kapitel 2: XLR -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span class="icon">🎤</span>
+                    <h2>2. XLR – Standard für Audiokabel</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="content-wrapper">
+                        <p>Das XLR-Kabel gehört zu den bekanntesten Steckverbindern in der Audiotechnik. Es wurde ursprünglich von der Firma Cannon entwickelt und ist heute als „XLR" (eXternal Line Return) weltweit genormt. Besonders im professionellen Audiobereich ist die 3-polige Version als Standard für symmetrische Signalübertragung weit verbreitet. Die Bauform garantiert durch die Verriegelung hohe mechanische Sicherheit und eignet sich für Bühnen-, Studio- und Veranstaltungseinsatz.</p>
+
+                        <p>Ein großer Vorteil der XLR-Verbindung ist die symmetrische Übertragung: Zwei Leiter transportieren das Signal in entgegengesetzter Polarität, ein dritter dient als Masse (Ground). Störungen, die durch elektromagnetische Einflüsse von außen entstehen, wirken sich auf beide Signaladern gleichermaßen aus und werden beim Differenzsignal am Empfänger nahezu vollständig ausgelöscht. Dadurch eignet sich XLR hervorragend für längere Strecken – Kabellängen von über 100 Metern sind realistisch möglich.</p>
+
+                        <div class="tech-specs">
+                            <h4>Standardbelegung:</h4>
+                            <ul>
+                                <li><strong>Pin 1:</strong> Masse (Schirm)</li>
+                                <li><strong>Pin 2:</strong> Hot (Signal +)</li>
+                                <li><strong>Pin 3:</strong> Cold (Signal -)</li>
+                            </ul>
+                        </div>
+
+                        <p>In der Veranstaltungstechnik findet man XLR nicht nur bei Mikrofonen, Mischpulten und DI-Boxen, sondern auch zur Verbindung von Aktivlautsprechern, Funkstrecken, Audioprozessoren oder Intercom-Systemen. Dabei kann der Stecker sowohl als Ein- wie auch Ausgang dienen. Besonders bei mobilen Anwendungen hat sich die robuste Bauweise bewährt: XLR-Stecker sind stoß- und trittfest, lassen sich gut löten und mit Schrumpfschlauch schützen.</p>
+
+                        <p>Neben der 3-poligen Variante existieren auch XLR-Stecker mit 4, 5, 6 oder sogar 7 Polen. In der Lichttechnik ist beispielsweise der 5-polige XLR-Stecker Standard für das digitale DMX512-Protokoll. In der Audiotechnik wird der 5-polige Stecker gelegentlich für Stereo-Übertragungen (z. B. Intercom) verwendet.</p>
+
+                        <div class="warning-box">
+                            <h4>⚠️ Häufiger Fehler:</h4>
+                            <p>Die Verwendung von XLR-Kabeln mit falscher Impedanz – insbesondere bei digitaler Audioübertragung (AES/EBU). Diese erfordert ein Kabel mit 110 Ohm Wellenwiderstand. Standard-Mikrofonkabel liegen jedoch meist darunter und sind nur für analoge Signale geeignet.</p>
+                        </div>
+
+                        <div class="sources">
+                            <h4>Weiterführende Links:</h4>
+                            <ul>
+                                <li><a href="https://de.wikipedia.org/wiki/XLR" target="_blank">XLR-Steckverbinder - Wikipedia</a></li>
+                                <li><a href="https://www.neutrik.com/de/neutrik/products/xlr-connectors" target="_blank">Neutrik XLR-Steckverbinder</a></li>
+                                <li><a href="https://www.sommer-cable.com/de/produktkatalog/audio/xlr-kabel" target="_blank">Sommer Cable - XLR Kabel</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kapitel 3: HDMI -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span class="icon">📺</span>
+                    <h2>3. HDMI – Allround-Talent für digitalen AV</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="content-wrapper">
+                        <p>HDMI steht für „High Definition Multimedia Interface" und ist ein digitaler Standard zur Übertragung von Audio- und Videosignalen über ein einziges Kabel. Seit seiner Einführung 2003 hat sich HDMI vor allem im Consumer-Bereich, aber auch zunehmend in der professionellen Veranstaltungstechnik etabliert. Seine Fähigkeit, hochauflösendes Video und Mehrkanal-Audio verlustfrei zu übertragen, macht HDMI zu einem beliebten Universalanschluss für Projektoren, Displays, Regietechnik und Kamerasysteme.</p>
+
+                        <p>Der Stecker ist in mehreren Größen verfügbar: Standard (Typ A), Mini (Typ C) und Micro (Typ D). Für die Veranstaltungstechnik ist meist Typ A relevant. HDMI überträgt digitale Bild- und Tonsignale sowie zusätzliche Datenkanäle wie HDMI-CEC (Fernsteuerung), Ethernet oder EDID-Informationen zur automatischen Geräteerkennung und Auflösungsanpassung.</p>
+
+                        <div class="tech-specs">
+                            <h4>HDMI-Kabel übertragen:</h4>
+                            <ul>
+                                <li>Bildauflösungen bis 8K (bei HDMI 2.1)</li>
+                                <li>Audioformate wie Dolby TrueHD oder DTS-HD</li>
+                                <li>Kopierschutzsignale (HDCP)</li>
+                                <li>Ethernet (nur bei High-Speed HDMI mit Ethernet)</li>
+                            </ul>
+                        </div>
+
+                        <div class="warning-box">
+                            <h4>⚠️ Nachteile von HDMI:</h4>
+                            <p>Ein Nachteil von HDMI liegt in der Kabellänge. Während XLR oder BNC problemlos über Dutzende Meter funktionieren, sind HDMI-Verbindungen ab ca. 10 m kritisch. Ohne Repeater, aktives Kabel oder Glasfaser kann es zu Signalverlust, Bildaussetzern oder fehlender Synchronisation kommen.</p>
+                        </div>
+
+                        <p>HDMI ist anfällig für mechanische Belastung: Die Stecker rasten nicht ein und können leicht herausrutschen. Deshalb wird in der Veranstaltungstechnik häufig mit HDMI-Lock-Systemen oder Adapterrahmen gearbeitet. Auch EMI-Störungen (elektromagnetische Interferenzen) können bei längeren Strecken problematisch sein.</p>
+
+                        <p>HDMI ist rückwärtskompatibel, was bedeutet: Neue Geräte (z. B. mit HDMI 2.1) können meist problemlos mit älteren HDMI-Versionen betrieben werden, allerdings nur mit eingeschränkter Bandbreite. Für professionelle Anwendungen empfiehlt sich der Einsatz zertifizierter Kabel mit zuverlässiger Abschirmung und nachgewiesener Kompatibilität zu 4K/8K-Auflösungen.</p>
+
+                        <div class="sources">
+                            <h4>Weiterführende Links:</h4>
+                            <ul>
+                                <li><a href="https://www.hdmi.org/" target="_blank">HDMI Licensing Administrator - Offizielle HDMI Website</a></li>
+                                <li><a href="https://de.wikipedia.org/wiki/High_Definition_Multimedia_Interface" target="_blank">HDMI - Wikipedia</a></li>
+                                <li><a href="https://www.av-connection.de/grundlagen/hdmi-grundlagen/" target="_blank">HDMI Grundlagen - AV Connection</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kapitel 4: RJ45 -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span class="icon">🌐</span>
+                    <h2>4. RJ45 – Der Netzwerk-Allrounder</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="content-wrapper">
+                        <p>Die RJ45-Schnittstelle, auch als Ethernet-Anschluss bekannt, ist die zentrale physikalische Verbindung für Netzwerke in der Veranstaltungstechnik. Sie überträgt Daten digital und in hoher Geschwindigkeit – von Audio-over-IP über Lichtsteuerung (ArtNet/sACN) bis hin zur Medienverteilung per NDI oder Dante.</p>
+
+                        <p>RJ45 verwendet in der Regel Twisted-Pair-Kabel (CAT5e, CAT6, CAT7), die paarweise verdrillt sind, um Störungen zu minimieren. Die Stecker basieren auf dem 8P8C-Standard (8 Positionen, 8 Kontakte) und können Datenraten von 100 Mbit/s (Fast Ethernet) bis zu 10 Gbit/s (10GBase-T) übertragen.</p>
+
+                        <div class="tech-specs">
+                            <h4>Belegung nach TIA/EIA-568B:</h4>
+                            <ul>
+                                <li><strong>1:</strong> Orange/Weiß</li>
+                                <li><strong>2:</strong> Orange</li>
+                                <li><strong>3:</strong> Grün/Weiß</li>
+                                <li><strong>6:</strong> Grün</li>
+                                <li>(Weitere Pins für Gigabit/PoE)</li>
+                            </ul>
+                        </div>
+
+                        <div class="tech-specs">
+                            <h4>Anwendungen im Eventbereich:</h4>
+                            <ul>
+                                <li>Steuerung von Lichtanlagen per ArtNet/DMX</li>
+                                <li>Audio-Netzwerke mit Dante, AES67</li>
+                                <li>Steuerprotokolle (OSC, HTTP, Telnet)</li>
+                                <li>Medienserver-Streaming per NDI, RTMP</li>
+                                <li>IP-Kameras & PTZ-Steuerung</li>
+                            </ul>
+                        </div>
+
+                        <p>Ein großer Vorteil von RJ45 ist die Flexibilität: Standardisierte Netzwerktechnik ist preiswert, weit verbreitet und erlaubt komplexe Topologien mit Switches, Routern und VLANs. Auch Power over Ethernet (PoE) ist möglich – damit können z. B. IP-Kameras oder Remote-Geräte über ein einziges Kabel mit Strom und Daten versorgt werden.</p>
+
+                        <div class="warning-box">
+                            <h4>⚠️ Herausforderungen:</h4>
+                            <ul>
+                                <li>Die Stecker sind empfindlich gegenüber mechanischer Belastung</li>
+                                <li>CAT-Kabel müssen korrekt konfektioniert und geprüft sein</li>
+                                <li>Netzwerkplanung erfordert Know-how über Adressierung, Routing, QoS und IGMP-Snooping</li>
+                            </ul>
+                        </div>
+
+                        <div class="sources">
+                            <h4>Weiterführende Links:</h4>
+                            <ul>
+                                <li><a href="https://de.wikipedia.org/wiki/RJ45" target="_blank">RJ45-Steckverbinder - Wikipedia</a></li>
+                                <li><a href="https://www.ethernetalliance.org/" target="_blank">Ethernet Alliance - Technische Standards</a></li>
+                                <li><a href="https://www.art-net.org.uk/" target="_blank">Art-Net - Ethernet Protocol für Lighting</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kapitel 5: BNC -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span class="icon">📹</span>
+                    <h2>5. BNC – Der Spezialist für Video- und Takt-Signale</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="content-wrapper">
+                        <p>Der BNC-Steckverbinder (Bayonet Neill-Concelman) ist in der professionellen Videotechnik weit verbreitet. Seine charakteristische Bajonettverriegelung sorgt für einen sicheren Sitz und verhindert versehentliches Herausziehen. Er wird vor allem für hochfrequente Signale verwendet, z. B. in der Übertragung von SDI-Video oder Word-Clock-Zeitsignalen.</p>
+
+                        <p>BNC-Stecker sind typischerweise für Koaxialkabel mit 50 oder 75 Ohm Impedanz ausgelegt. In der Veranstaltungstechnik wird fast ausschließlich die 75-Ohm-Version verwendet, da diese ideal für Videosignale (z. B. SDI, HD-SDI, 3G-SDI) ist.</p>
+
+                        <div class="tech-specs">
+                            <h4>Eigenschaften:</h4>
+                            <ul>
+                                <li>Frequenzbereich: bis über 3 GHz (je nach Ausführung)</li>
+                                <li>Sichere Verriegelung durch Bajonettverschluss</li>
+                                <li>Geringe Dämpfung, hohe Signalqualität</li>
+                                <li>Kompakt und stapelbar</li>
+                            </ul>
+                        </div>
+
+                        <div class="tech-specs">
+                            <h4>Verwendungszwecke:</h4>
+                            <ul>
+                                <li>SDI-Videoverbindungen (z. B. Kamera → Regie → Projektor)</li>
+                                <li>Wordclock-Signale für digitale Audiogeräte</li>
+                                <li>Timecode-Verbindungen bei Synchronisation</li>
+                                <li>Testequipment & Messgeräte</li>
+                            </ul>
+                        </div>
+
+                        <p>Ein großer Vorteil: SDI über BNC kann über größere Entfernungen als HDMI übertragen werden. 3G-SDI ist je nach Kabelqualität über 100 m stabil übertragbar. Dennoch ist auf hochwertige, geschirmte Kabel zu achten – insbesondere bei 6G/12G-SDI.</p>
+
+                        <p>BNC-Stecker gibt es als Crimp-, Löt- oder Steckvariante. Für Bühnenbetrieb sind Crimpversionen mit Zugentlastung empfehlenswert. Besonders im Ü-Wagen- und Broadcastbereich ist BNC der Standardanschluss für Kamera- und Bildtechnik.</p>
+
+                        <div class="sources">
+                            <h4>Weiterführende Links:</h4>
+                            <ul>
+                                <li><a href="https://de.wikipedia.org/wiki/BNC-Steckverbinder" target="_blank">BNC-Steckverbinder - Wikipedia</a></li>
+                                <li><a href="https://www.smpte.org/" target="_blank">Society of Motion Picture & Television Engineers (SMPTE)</a></li>
+                                <li><a href="https://www.blackmagicdesign.com/de/support/faq/58979" target="_blank">Blackmagic Design - SDI Grundlagen</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kapitel 6: Klinke und Cinch -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span class="icon">🔌</span>
+                    <h2>6. Klinke und Cinch – Klassiker der Audioübertragung</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="content-wrapper">
+                        <p>Klinkenstecker (meist 6,3 mm oder 3,5 mm) und Cinch-Verbindungen (RCA) sind in der Unterhaltungselektronik und semiprofessionellen Veranstaltungstechnik weit verbreitet. Sie dienen zur Übertragung analoger Audiosignale und sind besonders in älteren Mischpulten, Consumer-Geräten oder Monitoranlagen anzutreffen.</p>
+
+                        <p>Die Klinkenverbindung kann mono (TS: Tip-Sleeve) oder stereo (TRS: Tip-Ring-Sleeve) ausgeführt sein. In der professionellen Technik kommt häufig die symmetrische TRS-Verbindung zum Einsatz, etwa bei Line-In/-Out-Signalen oder bei Insert-Wege von Mischpulten. Klinkenkabel lassen sich leicht stecken, haben aber keine Verriegelung und sind relativ störanfällig.</p>
+
+                        <p>Cinch-Verbindungen (RCA) bestehen aus einem zentralen Signalstift und einem Außenschirm. Sie übertragen unsymmetrisch und sind für kurze Entfernungen bis ca. 5 m geeignet. Cinch ist weit verbreitet bei DJ-Controllern, Consumer-Verstärkern oder älteren Videoquellen (Composite, S-Video via Adapter).</p>
+
+                        <div class="warning-box">
+                            <h4>⚠️ Herausforderungen:</h4>
+                            <ul>
+                                <li>Keine mechanische Verriegelung</li>
+                                <li>Höhere Störanfälligkeit gegenüber symmetrischen Verbindungen</li>
+                                <li>Klinke kann bei Bewegung Kontaktprobleme erzeugen</li>
+                                <li>Cinch-Stecker oft mechanisch labil</li>
+                            </ul>
+                        </div>
+
+                        <p>Klinke wird oft für Kopfhöreranschlüsse, Stage-Monitoring und Instrumentenkabel verwendet. Cinch kommt typischerweise bei Geräten wie CD-Playern, DJ-Mixern oder Media-Playern zum Einsatz. Beide Systeme gelten inzwischen als veraltet, sind aber aufgrund ihrer weiten Verbreitung noch allgegenwärtig.</p>
+
+                        <div class="sources">
+                            <h4>Weiterführende Links:</h4>
+                            <ul>
+                                <li><a href="https://de.wikipedia.org/wiki/Klinkenstecker" target="_blank">Klinkenstecker - Wikipedia</a></li>
+                                <li><a href="https://de.wikipedia.org/wiki/Cinch-Stecker" target="_blank">Cinch-Stecker (RCA) - Wikipedia</a></li>
+                                <li><a href="https://www.bonedo.de/artikel/einzelansicht/klinkenstecker-und-cinch/" target="_blank">Bonedo - Klinkenstecker und Cinch erklärt</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kapitel 7: Speakon -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span class="icon">🔊</span>
+                    <h2>7. Speakon – Die leistungsstarke Verbindung für Lautsprecher</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="content-wrapper">
+                        <p>Der Speakon-Stecker wurde von der Firma Neutrik speziell für die sichere Übertragung von Lautsprechersignalen entwickelt. Er ersetzt in der professionellen Veranstaltungstechnik veraltete Klinke- oder Schraubverbindungen, da er hochströme zuverlässig und berührungssicher überträgt.</p>
+
+                        <div class="tech-specs">
+                            <h4>Eigenschaften:</h4>
+                            <ul>
+                                <li>Mechanisch verriegelt (Verdrehschutz)</li>
+                                <li>Berührungssicher auch bei Stromfluss</li>
+                                <li>Hohe Stromtragfähigkeit (bis zu 40 A)</li>
+                                <li>Polzahlen: 2-, 4-, 8-polig (z. B. Bi-/Tri-Amping)</li>
+                                <li>Robustes Gehäuse, ideal für Touring</li>
+                            </ul>
+                        </div>
+
+                        <div class="tech-specs">
+                            <h4>Typische Anwendungen:</h4>
+                            <ul>
+                                <li>Lautsprecherverkabelung bei Live-Beschallung</li>
+                                <li>Verbindung von Endstufe zu Topteil oder Subwoofer</li>
+                                <li>Mehrkanalige Lautsprecherkonzepte über ein Kabel (z. B. 4-polig: L+R oder Mid+High)</li>
+                            </ul>
+                        </div>
+
+                        <p>Speakon ist in der Live-Tontechnik praktisch Standard geworden. Durch eindeutige Codierung (z. B. NL2, NL4, NL8) lassen sich Verwechslungen vermeiden. Zudem sind Speakon-Stecker äußerst robust, einfach zu konfektionieren und selbst bei starker Belastung betriebssicher.</p>
+
+                        <div class="warning-box">
+                            <h4>⚠️ Fehlerquellen:</h4>
+                            <ul>
+                                <li>Verwechslung von Pinbelegungen (besonders bei 4-/8-poligen Steckern)</li>
+                                <li>Mechanische Abnutzung bei extrem häufiger Nutzung</li>
+                                <li>Falsche Lastverteilung bei Bi-Amping-Systemen</li>
+                            </ul>
+                        </div>
+
+                        <div class="sources">
+                            <h4>Weiterführende Links:</h4>
+                            <ul>
+                                <li><a href="https://www.neutrik.com/de/neutrik/products/speakon-connectors" target="_blank">Neutrik Speakon-Steckverbinder</a></li>
+                                <li><a href="https://de.wikipedia.org/wiki/Speakon" target="_blank">Speakon - Wikipedia</a></li>
+                                <li><a href="https://www.sound.de/equipment/speakon-stecker/" target="_blank">Sound.de - Speakon Stecker Ratgeber</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kapitel 8: USB-C & DisplayPort -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span class="icon">💻</span>
+                    <h2>8. USB-C & DisplayPort – Multitalente für moderne Signalübertragung</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="content-wrapper">
+                        <p>Mit der zunehmenden Digitalisierung und Miniaturisierung von Geräten gewinnen Schnittstellen wie USB-C und DisplayPort in der Veranstaltungstechnik an Bedeutung. Sie übertragen hochauflösende Audio- und Videosignale sowie Datenströme – oftmals sogar kombiniert in einem Kabel.</p>
+
+                        <div class="tech-specs">
+                            <h4>USB-C:</h4>
+                            <p>Der USB-C-Stecker ist klein, verdrehsicher und unterstützt viele Protokolle:</p>
+                            <ul>
+                                <li>USB 3.2 / USB4 für schnelle Datenübertragung</li>
+                                <li>Thunderbolt 3/4 (bis 40 Gbps)</li>
+                                <li>DisplayPort Alt Mode (für AV-Signale)</li>
+                                <li>Power Delivery (bis 100 W Ladung)</li>
+                            </ul>
+                        </div>
+
+                        <p>USB-C wird für die Verbindung moderner Notebooks, Smartphones, Tablets mit Regie- oder Zuspieltechnik genutzt. Adapter auf HDMI, DisplayPort oder VGA sind verbreitet. Besonders praktisch ist die Multifunktionalität – Daten, Strom und Video in einem Stecker.</p>
+
+                        <div class="tech-specs">
+                            <h4>DisplayPort:</h4>
+                            <p>DisplayPort ist ein digitaler AV-Standard mit hoher Bandbreite (bis 32,4 Gbps). Er eignet sich besonders für:</p>
+                            <ul>
+                                <li>Hohe Auflösungen (bis 8K @ 60 Hz)</li>
+                                <li>Daisy-Chaining (MST: Multi Stream Transport)</li>
+                                <li>Geringe Latenz & hohe Farbtiefe</li>
+                            </ul>
+                        </div>
+
+                        <p>DisplayPort ist häufig in Medienservern, High-End-Grafikkarten oder professionellen Signalverteilern verbaut. Adapter auf HDMI oder DVI sind möglich. Für Veranstaltungen mit hohem AV-Anspruch (z. B. Videowalls, LED-Controller) ist DisplayPort eine zukunftssichere Wahl.</p>
+
+                        <div class="warning-box">
+                            <h4>⚠️ Herausforderungen:</h4>
+                            <ul>
+                                <li>Viele unterschiedliche Kabel- und Adaptertypen</li>
+                                <li>Nicht jeder USB-C-Port unterstützt AV</li>
+                                <li>Unterschiedliche Standards sorgen für Inkompatibilität</li>
+                            </ul>
+                        </div>
+
+                        <div class="sources">
+                            <h4>Weiterführende Links:</h4>
+                            <ul>
+                                <li><a href="https://www.usb.org/usb-c" target="_blank">USB.org - USB-C Spezifikationen</a></li>
+                                <li><a href="https://www.displayport.org/" target="_blank">VESA DisplayPort - Offizielle Website</a></li>
+                                <li><a href="https://thunderbolttechnology.net/" target="_blank">Thunderbolt Technology - Intel</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kapitel 9: DMX -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span class="icon">💡</span>
+                    <h2>9. DMX (XLR 5-polig) – Die Lichtsteuer-Schnittstelle</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="content-wrapper">
+                        <p>Der DMX-Standard (Digital Multiplex) hat sich seit den 1980er-Jahren als internationale Norm zur Steuerung von Lichtsystemen etabliert. DMX512 wurde ursprünglich vom USITT (United States Institute for Theatre Technology) definiert und ist heute nach ANSI E1.11 standardisiert. Die typische physikalische Verbindung erfolgt über XLR-Steckverbinder mit 5 Polen – obwohl in der Praxis auch oft 3-polige Varianten verwendet werden, was technisch nicht normkonform, aber verbreitet ist.</p>
+
+                        <p>DMX512 überträgt digitale Steuerdaten seriell mit 250 kbit/s. Ein sogenanntes Universum umfasst 512 Kanäle, die jeweils einen 8-Bit-Wert (0–255) tragen – genug, um z. B. Dimmer, Farbe, Pan/Tilt, Gobos oder Strobo-Effekte eines Scheinwerfers zu steuern. Geräte werden „adressiert", um ihre Kanäle eindeutig im Datenstrom zu finden.</p>
+
+                        <div class="tech-specs">
+                            <h4>Typische Komponenten:</h4>
+                            <ul>
+                                <li>Lichtpult oder Software mit DMX-Ausgang</li>
+                                <li>Interface (USB → DMX oder ArtNet → DMX)</li>
+                                <li>XLR-5-Pol-Kabel, oft durchgeschleift (Daisy Chain)</li>
+                                <li>Abschlusswiderstand am letzten Gerät (120 Ohm)</li>
+                            </ul>
+                        </div>
+
+                        <p>Die elektrische Übertragung erfolgt als symmetrisches Signal nach dem RS-485-Standard. Damit sind Kabellängen bis etwa 300 m möglich. Wichtig ist die Verwendung hochwertiger DMX-Kabel mit passender Impedanz (120 Ohm), da Mikrofonkabel nicht geeignet sind und Reflektionen verursachen können.</p>
+
+                        <div class="tech-specs">
+                            <h4>XLR-Belegung nach DMX512:</h4>
+                            <ul>
+                                <li><strong>Pin 1:</strong> Masse (Shield)</li>
+                                <li><strong>Pin 2:</strong> Daten (-)</li>
+                                <li><strong>Pin 3:</strong> Daten (+)</li>
+                                <li><strong>Pin 4 & 5:</strong> Reserve (für zukünftige Protokolle oder RDM)</li>
+                            </ul>
+                        </div>
+
+                        <p>DMX ist ein unidirektionales Protokoll – das Lichtpult sendet, Geräte empfangen. Für bidirektionale Kommunikation (z. B. zur Statusabfrage) wurde RDM (Remote Device Management) eingeführt, das die selben Kabel nutzt.</p>
+
+                        <div class="warning-box">
+                            <h4>⚠️ Fehlerquellen in der Praxis:</h4>
+                            <ul>
+                                <li>Keine Terminierung am Ende der Leitung</li>
+                                <li>Einsatz von Audio-XLR-Kabeln statt DMX-Kabeln</li>
+                                <li>3-Pol-XLR-Stecker in nicht normgerechten Systemen</li>
+                                <li>Adressierungskonflikte oder falsche DMX-Kanäle</li>
+                            </ul>
+                        </div>
+
+                        <p>DMX ist trotz seiner Einfachheit sehr leistungsfähig und wird durch Protokolle wie ArtNet (DMX über Ethernet) oder sACN (Streaming ACN) ergänzt. In der modernen Veranstaltungstechnik ist DMX nach wie vor der Standard zur Steuerung von Scheinwerfern, LED-Panels, Nebelmaschinen, Lasern und vielem mehr.</p>
+
+                        <div class="sources">
+                            <h4>Weiterführende Links:</h4>
+                            <ul>
+                                <li><a href="https://tsp.esta.org/tsp/documents/published_docs.php" target="_blank">ESTA - DMX512 Standards und Dokumentation</a></li>
+                                <li><a href="https://www.enttec.com/learn/dmx-basics/" target="_blank">Enttec - DMX512 Grundlagen</a></li>
+                                <li><a href="https://chamsyslighting.com/help/page/dmx.basics" target="_blank">ChamSys - DMX512 Basics</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CSS Styles durch JavaScript einbetten (für Moodle-Kompatibilität)
+        (function() {
+            const style = document.createElement('style');
+            style.textContent = `
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+                    min-height: 100vh;
+                }
+
+                .container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }
+
+                .main-header {
+                    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+                    color: white;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    margin-bottom: 2rem;
+                    text-align: center;
+                    box-shadow: 0 8px 32px rgba(255, 107, 53, 0.3);
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .main-header::before {
+                    content: '';
+                    position: absolute;
+                    top: -50%;
+                    left: -50%;
+                    width: 200%;
+                    height: 200%;
+                    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+                    animation: pulse 4s ease-in-out infinite;
+                }
+
+                @keyframes pulse {
+                    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.3; }
+                    50% { transform: scale(1.1) rotate(180deg); opacity: 0.1; }
+                }
+
+                .main-header h1 {
+                    font-size: 2.5rem;
+                    font-weight: 700;
+                    margin-bottom: 0.5rem;
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .header-icon {
+                    font-size: 2rem;
+                    margin-top: 1rem;
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .accordion {
+                    background: white;
+                    border-radius: 15px;
+                    overflow: hidden;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                }
+
+                .accordion-item {
+                    border-bottom: 1px solid #e0e0e0;
+                }
+
+                .accordion-item:last-child {
+                    border-bottom: none;
+                }
+
+                .accordion-header {
+                    padding: 1.5rem 2rem;
+                    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+                    color: white;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    transition: all 0.3s ease;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .accordion-header:hover {
+                    background: linear-gradient(135deg, #5a6578 0%, #3d4758 100%);
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                }
+
+                .accordion-header::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+                    transition: left 0.5s;
+                }
+
+                .accordion-header:hover::before {
+                    left: 100%;
+                }
+
+                .accordion-header .icon {
+                    font-size: 1.5rem;
+                    margin-right: 1rem;
+                    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+                }
+
+                .accordion-header h2 {
+                    flex: 1;
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+                }
+
+                .toggle-icon {
+                    font-size: 1.2rem;
+                    transition: transform 0.3s ease;
+                    font-weight: bold;
+                }
+
+                .accordion-header.active .toggle-icon {
+                    transform: rotate(180deg);
+                }
+
+                .accordion-content {
+                    max-height: 0;
+                    overflow: hidden;
+                    transition: max-height 0.4s ease-out;
+                    background: #fafafa;
+                }
+
+                .accordion-content.active {
+                    max-height: 2000px;
+                    transition: max-height 0.6s ease-in;
+                }
+
+                .content-wrapper {
+                    padding: 2rem;
+                }
+
+                .content-wrapper p {
+                    margin-bottom: 1.2rem;
+                    text-align: justify;
+                    color: #444;
+                    line-height: 1.7;
+                }
+
+                .tech-specs {
+                    background: linear-gradient(135deg, #e8f4fd 0%, #d6ecf8 100%);
+                    border-left: 4px solid #3498db;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(52, 152, 219, 0.1);
+                }
+
+                .tech-specs h4 {
+                    color: #2980b9;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+
+                .tech-specs ul {
+                    list-style: none;
+                    padding-left: 0;
+                }
+
+                .tech-specs li {
+                    margin-bottom: 0.5rem;
+                    padding-left: 1.5rem;
+                    position: relative;
+                    color: #34495e;
+                }
+
+                .tech-specs li::before {
+                    content: '⚙️';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                }
+
+                .warning-box {
+                    background: linear-gradient(135deg, #fff3cd 0%, #fdeaa7 100%);
+                    border-left: 4px solid #f39c12;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(243, 156, 18, 0.1);
+                }
+
+                .warning-box h4 {
+                    color: #d68910;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+
+                .warning-box ul {
+                    list-style: none;
+                    padding-left: 0;
+                }
+
+                .warning-box li {
+                    margin-bottom: 0.5rem;
+                    padding-left: 1.5rem;
+                    position: relative;
+                    color: #b7950b;
+                }
+
+                .warning-box li::before {
+                    content: '⚠️';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                }
+
+                .warning-box p {
+                    color: #b7950b !important;
+                }
+
+                .sources {
+                    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                    border-left: 4px solid #28a745;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(40, 167, 69, 0.1);
+                }
+
+                .sources h4 {
+                    color: #155724;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+
+                .sources ul {
+                    list-style: none;
+                    padding-left: 0;
+                }
+
+                .sources li {
+                    margin-bottom: 0.5rem;
+                    padding-left: 1.5rem;
+                    position: relative;
+                }
+
+                .sources li::before {
+                    content: '🔗';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                }
+
+                .sources a {
+                    color: #155724;
+                    text-decoration: none;
+                    font-weight: 500;
+                    transition: color 0.3s ease;
+                }
+
+                .sources a:hover {
+                    color: #28a745;
+                    text-decoration: underline;
+                }
+
+                @media (max-width: 768px) {
+                    .container {
+                        padding: 10px;
+                    }
+
+                    .main-header h1 {
+                        font-size: 2rem;
+                    }
+
+                    .accordion-header {
+                        padding: 1rem 1.5rem;
+                    }
+
+                    .accordion-header h2 {
+                        font-size: 1.1rem;
+                    }
+
+                    .content-wrapper {
+                        padding: 1.5rem;
+                    }
+
+                    .tech-specs, .warning-box {
+                        padding: 1rem;
+                        margin: 1rem 0;
+                    }
+
+                    .sources {
+                        padding: 1rem;
+                        margin: 1rem 0;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .main-header {
+                        padding: 1.5rem;
+                    }
+
+                    .main-header h1 {
+                        font-size: 1.7rem;
+                    }
+
+                    .accordion-header {
+                        padding: 0.8rem 1rem;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 0.5rem;
+                    }
+
+                    .accordion-header h2 {
+                        font-size: 1rem;
+                    }
+
+                    .content-wrapper {
+                        padding: 1rem;
+                    }
+
+                    .sources {
+                        padding: 1rem;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        })();
+
+        // Accordion-Funktionalität
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const isActive = content.classList.contains('active');
+            
+            // Alle anderen Akkordeons schließen
+            document.querySelectorAll('.accordion-content.active').forEach(item => {
+                if (item !== content) {
+                    item.classList.remove('active');
+                    item.previousElementSibling.classList.remove('active');
+                }
+            });
+            
+            // Aktuelles Akkordeon umschalten
+            if (isActive) {
+                content.classList.remove('active');
+                header.classList.remove('active');
+            } else {
+                content.classList.add('active');
+                header.classList.add('active');
+            }
+        }
+
+        // Smooth Scrolling für bessere UX
+        document.addEventListener('DOMContentLoaded', function() {
+            // Erstes Accordion automatisch öffnen
+            const firstAccordion = document.querySelector('.accordion-item');
+            if (firstAccordion) {
+                const firstHeader = firstAccordion.querySelector('.accordion-header');
+                const firstContent = firstAccordion.querySelector('.accordion-content');
+                firstHeader.classList.add('active');
+                firstContent.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
