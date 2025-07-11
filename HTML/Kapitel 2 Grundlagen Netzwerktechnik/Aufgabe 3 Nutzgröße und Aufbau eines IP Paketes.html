@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Einheit 3 – IP-Paket, MTU & Übertragungsarten</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+                    min-height: 100vh;
+                    padding: 20px;
+                }
+
+                .container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }
+
+                h1 {
+                    color: #2563eb;
+                    font-size: 2.2rem;
+                    font-weight: 700;
+                    margin-bottom: 1rem;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                }
+
+                h2 {
+                    color: #1d4ed8;
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                    margin-bottom: 1rem;
+                    margin-top: 2rem;
+                }
+
+                h3 {
+                    color: #1e40af;
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    margin-bottom: 0.8rem;
+                    margin-top: 1.5rem;
+                }
+
+                .section {
+                    background: white;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                    border: 1px solid #e5e7eb;
+                }
+
+                p {
+                    margin-bottom: 1.2rem;
+                    text-align: justify;
+                    color: #444;
+                    line-height: 1.7;
+                }
+
+                code {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    color: #01579b;
+                    padding: 3px 6px;
+                    border-radius: 6px;
+                    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+                    font-size: 0.9em;
+                    font-weight: 600;
+                    border: 1px solid #81d4fa;
+                }
+
+                ul {
+                    padding-left: 2rem;
+                    margin-bottom: 1.2rem;
+                }
+
+                li {
+                    margin-bottom: 0.5rem;
+                    color: #555;
+                }
+
+                .task {
+                    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+                    border-left: 4px solid #4caf50;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(76, 175, 80, 0.1);
+                }
+
+                .task strong {
+                    color: #2e7d32;
+                    font-size: 1.1rem;
+                    display: block;
+                    margin-bottom: 0.8rem;
+                }
+
+                .question {
+                    background: linear-gradient(135deg, #fff3cd 0%, #fdeaa7 100%);
+                    border-left: 4px solid #f39c12;
+                    padding: 1.2rem;
+                    margin: 1rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(243, 156, 18, 0.1);
+                    color: #b7950b;
+                    font-weight: 500;
+                }
+
+                .tech-specs {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    border-left: 4px solid #0288d1;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(2, 136, 209, 0.1);
+                }
+
+                .tech-specs h4 {
+                    color: #01579b;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+
+                strong {
+                    color: #1e40af;
+                }
+
+                @media (max-width: 768px) {
+                    body {
+                        padding: 10px;
+                    }
+
+                    .container {
+                        padding: 10px;
+                    }
+
+                    h1 {
+                        font-size: 1.8rem;
+                    }
+
+                    h2 {
+                        font-size: 1.4rem;
+                    }
+
+                    h3 {
+                        font-size: 1.2rem;
+                    }
+
+                    .section {
+                        padding: 1.5rem;
+                        margin-bottom: 1.5rem;
+                    }
+
+                    .task, .question {
+                        padding: 1rem;
+                        margin: 1rem 0;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .section {
+                        padding: 1rem;
+                    }
+
+                    h1 {
+                        font-size: 1.6rem;
+                    }
+
+                    .task, .question {
+                        padding: 0.8rem;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+    <div class="section">
+        <h1>Einheit 3: Nutzgröße, IP-Paketaufbau und Übertragungsarten</h1>
+        <p><strong>Lernziel:</strong> Sie verstehen den Aufbau eines IP-Pakets, die Begrenzung der Nutzgröße durch die sogenannte MTU (Maximum Transmission Unit) und kennen die grundlegenden Unterschiede zwischen den Protokollen TCP und UDP. Sie können Netzwerkpakete im Veranstaltungskontext einordnen, analysieren und typische Probleme in der Praxis erkennen und vermeiden.</p>
+    </div>
+
+    <div class="section">
+        <h2>1. Einleitung</h2>
+        <p>In der heutigen Veranstaltungstechnik sind Netzwerke das Rückgrat vieler Systeme. Ob digitale Mischpulte, Stageboxen, Medienserver, LED-Wände oder Streaminglösungen – sie alle tauschen ihre Daten über IP-basierte Netzwerke aus. Dabei ist es entscheidend zu verstehen, wie diese Daten strukturiert sind, wie groß einzelne Datenpakete sein dürfen und wie die Wahl des Protokolls die Zuverlässigkeit und Geschwindigkeit der Übertragung beeinflusst.</p>
+        <p>Die IP-Kommunikation basiert nicht auf einem einzigen, großen Datenstrom, sondern auf vielen kleinen Datenpaketen. Diese Pakete enthalten nicht nur die eigentlichen Nutzdaten (z. B. Audio- oder Videoinhalte), sondern auch eine Vielzahl von Steuerinformationen, die für die Übermittlung und Weiterleitung im Netzwerk erforderlich sind. Das Wissen über den Aufbau solcher Pakete ist eine wichtige Voraussetzung für die Planung, Analyse und Fehlerbehebung in Veranstaltungssystemen.</p>
+        <p>Besonders kritisch ist die Paketgröße. Wird ein Paket zu groß für das physikalische Netzwerk, muss es fragmentiert werden – das kann zu Problemen wie Verzögerungen oder Paketverlust führen. In einem Live-Setup mit mehreren Hundert Teilnehmern kann dies beispielsweise zu Knacksern im Audiosystem oder zu Aussetzern im Stream führen. Deshalb ist es wichtig, die Begrenzungen durch die MTU zu verstehen und Protokolle richtig auszuwählen.</p>
+    </div>
+
+    <div class="section">
+        <h2>2. Was ist ein IP-Paket?</h2>
+        <p>Ein IP-Paket ist die grundlegende Transporteinheit in einem IP-basierten Netzwerk. Es ist vergleichbar mit einem Umschlag, der nicht nur einen Brief (die eigentliche Nutzlast) enthält, sondern auch eine Adresse, einen Absender und verschiedene Hinweise für die Zustellung. Diese Verpackung sorgt dafür, dass das Paket durch das Netzwerk bis zu seinem Zielgerät gelangt. Für Veranstaltungstechniker ist es essenziell zu verstehen, wie diese Pakete aufgebaut sind, um die Kommunikation zwischen Geräten zu analysieren oder Netzwerkprobleme zielgerichtet zu beheben.</p>
+        <p>Ein IP-Paket setzt sich aus zwei Hauptkomponenten zusammen:</p>
+        <ul>
+            <li><strong>Header:</strong> Enthält administrative Informationen, z. B. Quell- und Zieladresse, Paketlänge, Protokolltyp (TCP/UDP) und Prüfsummen zur Fehlererkennung.</li>
+            <li><strong>Payload (Nutzdaten):</strong> Der eigentliche Inhalt des Pakets, z. B. Audiodaten eines Mikrofons oder ein Videoframe einer Kamera.</li>
+        </ul>
+        <p>Die Größe des Headers beträgt bei IPv4 mindestens 20 Byte, kann aber durch sogenannte Optionen erweitert werden. Der Payload-Bereich folgt direkt auf den Header und kann variabel lang sein – abhängig von der MTU des jeweiligen Netzwerks.</p>
+        <p>Wichtig zu wissen ist, dass der Inhalt eines IP-Pakets nicht unbedingt vollständig oder einzeln lesbar ist. Große Daten wie z. B. ein HD-Videostream werden in viele kleine Pakete aufgeteilt und auf Netzwerkebene zusammengesetzt. Wenn auch nur eines dieser Pakete fehlt oder beschädigt ist, kann das zu sichtbaren oder hörbaren Fehlern im Livebetrieb führen.</p>
+    </div>
+
+    <div class="section">
+        <h2>3. MTU – Maximum Transmission Unit</h2>
+        <p>Die MTU ist ein wichtiger technischer Grenzwert in Netzwerken. Sie definiert, wie groß ein einzelnes Paket maximal sein darf, um in einem Durchlauf – also ohne Zerlegung – über ein Netzwerkmedium übertragen zu werden. Der Standardwert in einem Ethernet-basierten LAN liegt bei 1500 Byte.</p>
+        <p>Ist ein IP-Paket größer als die erlaubte MTU, muss es fragmentiert werden. Das bedeutet: Das Paket wird in mehrere kleinere Teile aufgeteilt, die einzeln transportiert und auf der Empfängerseite wieder zusammengesetzt werden. Dieser Vorgang benötigt Rechenzeit und erhöht die Fehleranfälligkeit. Wenn ein Fragment verloren geht, ist das ganze Paket nutzlos.</p>
+        <p>In der Veranstaltungstechnik kann dies fatale Auswirkungen haben. Beispielsweise überträgt ein Medienserver Full-HD-Videodaten an ein LED-Control-System. Wenn die Videopakete fragmentiert werden, kann es zu sichtbaren Bildfehlern oder Verzögerungen kommen. Bei Audiosystemen wie Dante oder AES67 ist Fragmentierung sogar unbedingt zu vermeiden, da jede Verzögerung hörbar wird.</p>
+        <p>Typische MTU-Werte:</p>
+        <ul>
+            <li>Standard-Ethernet: 1500 Byte</li>
+            <li>PPPoE (Internet über DSL): 1492 Byte</li>
+            <li>Gigabit-Ethernet mit Jumbo Frames: bis zu 9000 Byte (sofern unterstützt)</li>
+        </ul>
+        <p>Ein durchdachtes MTU-Management ist insbesondere in Systemen mit Videostreaming, Remote-Steuerung oder Audiotracks mit geringer Latenz erforderlich. Es empfiehlt sich, bei größeren MTU-Werten vorher die Unterstützung aller beteiligten Geräte zu prüfen.</p>
+    </div>
+
+    <div class="section">
+        <h2>4. TCP vs. UDP</h2>
+        <p>Auf der Transportschicht (Layer 4) des OSI-Modells entscheiden zwei zentrale Protokolle darüber, wie Daten zwischen Sender und Empfänger übertragen werden: TCP und UDP. Beide haben ihre Vor- und Nachteile – und ganz unterschiedliche Anwendungsbereiche in der Veranstaltungstechnik.</p>
+        <h3>TCP (Transmission Control Protocol)</h3>
+        <p>TCP ist ein verbindungsorientiertes Protokoll. Es stellt sicher, dass alle Daten korrekt und vollständig ankommen. Zu diesem Zweck baut TCP vor dem eigentlichen Datentransfer eine Verbindung auf, bestätigt jeden Paketempfang (ACKs), erkennt verlorene Pakete und sendet sie erneut. Damit ist TCP äußerst zuverlässig – jedoch auch langsamer.</p>
+        <p>Einsatzbeispiele für TCP:</p>
+        <ul>
+            <li>Webinterfaces von Geräten (Browsersteuerung)</li>
+            <li>Dateitransfer (z. B. Konfigurationsdaten, Updates)</li>
+            <li>Remote-Desktop-Lösungen</li>
+        </ul>
+        <h3>UDP (User Datagram Protocol)</h3>
+        <p>UDP ist verbindungslos und bietet keine Empfangsbestätigung. Es sendet die Daten einfach los – ohne Garantie, dass sie ankommen. Dafür ist UDP extrem schnell und ressourcenschonend. In der Veranstaltungstechnik wird UDP bevorzugt, wenn geringe Latenz wichtiger ist als absolute Fehlerfreiheit.</p>
+        <p>Einsatzbeispiele für UDP:</p>
+        <ul>
+            <li>Audio-over-IP (z. B. Dante, AES67)</li>
+            <li>Video-Streaming (z. B. NDI, RTSP)</li>
+            <li>Lichtprotokolle wie Art-Net oder sACN</li>
+        </ul>
+        <p>Fazit: Wählen Sie das Protokoll abhängig vom Anwendungskontext. Für Live-Daten und Steuerbefehle mit geringer Verzögerung ist UDP ideal – für wichtige Konfigurationsdaten oder Steuerverbindungen bevorzugen Sie TCP.</p>
+    </div>
+
+    <div class="section">
+        <h2>5. Praxisbezug: Streaming bei Veranstaltungen</h2>
+        <p>Stellen Sie sich vor, Sie betreuen ein Live-Konzert mit mehreren Kameras, die über NDI (UDP-basiert) an ein Streaminggerät übertragen werden. Gleichzeitig laufen mehrere Mikrofone über ein Dante-Audio-Netzwerk zur FOH-Konsole. Beide Systeme erzeugen hunderte Pakete pro Sekunde – und das alles in Echtzeit.</p>
+        <p>Wird die MTU falsch konfiguriert oder sind Geräte im Netz überlastet, kommt es zu Paketverlusten. Das kann sich in verschiedenen Formen zeigen: Tonaussetzer, asynchrone Videoübertragung, Bildstörungen oder gar komplette Signalabbrüche. Genau deshalb ist ein grundlegendes Verständnis von Paketgrößen, Fragmentierung und Protokollen so entscheidend.</p>
+        <p>Auch bei der Fehlersuche hilft das Wissen: Wenn ein Lichtprotokoll (Art-Net) nicht sauber funktioniert, kann ein falsch gesetzter MTU-Wert die Ursache sein. Oder ein Switch fragmentiert UDP-Daten unkontrolliert, wodurch die Konsole das Signal nicht mehr sauber interpretieren kann.</p>
+        <p>Die Wahl der Protokolle, die Kenntnis der MTU-Grenzen und der sorgfältige Aufbau der Netzstruktur sind daher essentielle Aufgaben einer Fachkraft für Veranstaltungstechnik im digitalen Zeitalter.</p>
+    </div>
+
+    <div class="section">
+        <h2>6. Kontrollfragen</h2>
+        <div class="question">Erklären Sie den grundsätzlichen Aufbau eines IP-Pakets. Welche Bestandteile sind zwingend notwendig?</div>
+        <div class="question">Was ist die Aufgabe des IP-Headers? Nennen Sie mindestens drei enthaltene Informationen.</div>
+        <div class="question">Was passiert, wenn ein Paket größer ist als die MTU? Welche Folgen kann das haben?</div>
+        <div class="question">Welche Unterschiede bestehen zwischen TCP und UDP in Bezug auf Fehlerbehandlung und Geschwindigkeit?</div>
+        <div class="question">Warum wird in der Veranstaltungstechnik so häufig UDP anstelle von TCP eingesetzt?</div>
+        <div class="question">Wie könnten Sie bei Störungen in einem Audionetzwerk (Dante) die MTU als Fehlerquelle identifizieren?</div>
+    </div>
+
+    <div class="section">
+        <h2>7. Aufgaben</h2>
+        <div class="task">
+            <strong>Aufgabe 1 – Paketgrößen verstehen</strong><br>
+            Ein Video-Encoder sendet pro Sekunde 10.000 Pakete à 1400 Byte. Berechnen Sie die Datenrate in MBit/s.<br>
+            a) Wie verändert sich die Situation, wenn die MTU auf 1000 Byte beschränkt ist?<br>
+            b) Was könnte bei fragmentierten Paketen schiefgehen?<br>
+            c) Wie lässt sich dies in der Praxis vermeiden?
+        </div>
+
+        <div class="task">
+            <strong>Aufgabe 2 – Protokolle vergleichen</strong><br>
+            a) Erstellen Sie eine Tabelle mit den Eigenschaften von TCP und UDP.<br>
+            b) Ordnen Sie folgenden Anwendungen das passende Protokoll zu: Dante, HTTP-Webinterface, Firmware-Update, Livestream.<br>
+            c) Begründen Sie Ihre Entscheidung.
+        </div>
+
+        <div class="task">
+            <strong>Aufgabe 3 – Fehlerdiagnose in der Praxis</strong><br>
+            Bei einer Veranstaltung gibt es Knackser im Audiostream (Dante).<br>
+            a) Welche Ursachen könnten im Zusammenhang mit Paketgröße und MTU stehen?<br>
+            b) Welche Messwerkzeuge würden Sie zur Analyse verwenden?<br>
+            c) Wie dokumentieren Sie Ihre Netzwerkkonfiguration für spätere Events?
+        </div>
+
+        <div class="task">
+            <strong>Aufgabe 4 – Reflexion</strong><br>
+            a) Wie hat sich Ihr Verständnis von "Paketgröße" im Verlauf dieser Einheit verändert?<br>
+            b) Welche Konsequenzen kann ein falsch gesetzter MTU-Wert im Livebetrieb haben?<br>
+            c) Welche Maßnahmen würden Sie bei zukünftigen Produktionen standardmäßig umsetzen?
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>8. Zusammenfassung</h2>
+        <p>Sie haben in dieser Einheit gelernt, wie IP-Pakete aufgebaut sind, welche Rolle die MTU bei der Netzwerkauslegung spielt und wie sich die Wahl zwischen TCP und UDP auf die Übertragung auswirkt. Besonders in der Veranstaltungstechnik, wo es auf Zuverlässigkeit und geringe Latenzen ankommt, ist dieses Wissen entscheidend. Ob Sie mit Dante-Audio arbeiten, Kameras per IP verbinden oder Videostreams ins Internet schicken – überall begegnen Ihnen diese Konzepte. Mit dem richtigen Verständnis können Sie Probleme schneller erkennen, Netzwerke effizienter planen und den Livebetrieb robuster gestalten.</p>
+    </div>
+    </div>
+
+    <!-- Ende der vollständigen Erweiterung -->
+</body>
+</html>

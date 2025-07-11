@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Einheit 4 – Switches und Router in der Veranstaltungstechnik</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+                    min-height: 100vh;
+                    padding: 20px;
+                }
+
+                .container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }
+
+                h1 {
+                    color: #2563eb;
+                    font-size: 2.2rem;
+                    font-weight: 700;
+                    margin-bottom: 1rem;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                }
+
+                h2 {
+                    color: #1d4ed8;
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                    margin-bottom: 1rem;
+                    margin-top: 2rem;
+                }
+
+                h3 {
+                    color: #1e40af;
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    margin-bottom: 0.8rem;
+                    margin-top: 1.5rem;
+                }
+
+                .section {
+                    background: white;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                    border: 1px solid #e5e7eb;
+                }
+
+                p {
+                    margin-bottom: 1.2rem;
+                    text-align: justify;
+                    color: #444;
+                    line-height: 1.7;
+                }
+
+                code {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    color: #01579b;
+                    padding: 3px 6px;
+                    border-radius: 6px;
+                    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+                    font-size: 0.9em;
+                    font-weight: 600;
+                    border: 1px solid #81d4fa;
+                }
+
+                ul {
+                    padding-left: 2rem;
+                    margin-bottom: 1.2rem;
+                }
+
+                li {
+                    margin-bottom: 0.5rem;
+                    color: #555;
+                }
+
+                .task {
+                    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+                    border-left: 4px solid #4caf50;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(76, 175, 80, 0.1);
+                }
+
+                .task strong {
+                    color: #2e7d32;
+                    font-size: 1.1rem;
+                    display: block;
+                    margin-bottom: 0.8rem;
+                }
+
+                .question {
+                    background: linear-gradient(135deg, #fff3cd 0%, #fdeaa7 100%);
+                    border-left: 4px solid #f39c12;
+                    padding: 1.2rem;
+                    margin: 1rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(243, 156, 18, 0.1);
+                    color: #b7950b;
+                    font-weight: 500;
+                }
+
+                .tech-specs {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    border-left: 4px solid #0288d1;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(2, 136, 209, 0.1);
+                }
+
+                .tech-specs h4 {
+                    color: #01579b;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+
+                strong {
+                    color: #1e40af;
+                }
+
+                @media (max-width: 768px) {
+                    body {
+                        padding: 10px;
+                    }
+
+                    .container {
+                        padding: 10px;
+                    }
+
+                    h1 {
+                        font-size: 1.8rem;
+                    }
+
+                    h2 {
+                        font-size: 1.4rem;
+                    }
+
+                    h3 {
+                        font-size: 1.2rem;
+                    }
+
+                    .section {
+                        padding: 1.5rem;
+                        margin-bottom: 1.5rem;
+                    }
+
+                    .task, .question {
+                        padding: 1rem;
+                        margin: 1rem 0;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .section {
+                        padding: 1rem;
+                    }
+
+                    h1 {
+                        font-size: 1.6rem;
+                    }
+
+                    .task, .question {
+                        padding: 0.8rem;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+    <div class="section">
+        <h1>Einheit 4: Switches und Router in der Veranstaltungstechnik</h1>
+        <p><strong>Lernziel:</strong> Sie verstehen den funktionalen Unterschied zwischen Switches und Routern und können deren Einsatz im Veranstaltungsbereich bewerten. Sie lernen, wie durch den gezielten Einsatz dieser Komponenten Stabilität, Sicherheit und Performance verbessert werden.</p>
+    </div>
+
+    <div class="section">
+        <h2>1. Einleitung</h2>
+        <p>Veranstaltungen werden immer komplexer: Kameras, Lichtpulte, Streaming-Encoder, Audiomischpulte, Medienserver und viele weitere Geräte müssen miteinander kommunizieren – meist über ein zentrales Netzwerk. Dabei stoßen einfache Netzwerke schnell an ihre Grenzen. Um größere Netzwerke stabil und sicher zu betreiben, kommen Switches und Router zum Einsatz.</p>
+        <p>Ein gutes Verständnis dieser Technologien ist entscheidend für die Planung und den Betrieb professioneller Veranstaltungssysteme. Mit ihnen lassen sich z. B. Störungen durch Broadcast-Traffic vermeiden, Netzwerklasten trennen oder gezielt externe Geräte (z. B. für Streaming) absichern.</p>
+    </div>
+
+    <div class="section">
+        <h2>2. Switches – das Rückgrat der Netzverteilung</h2>
+        <p>Ein Switch arbeitet auf Schicht 2 des OSI-Modells – der Sicherungsschicht. Er verteilt Datenpakete basierend auf MAC-Adressen. Sobald ein Switch ein Paket erhält, lernt er automatisch, an welchem Port sich welche Geräte befinden. Diese Informationen speichert er in einer sogenannten MAC-Address-Table.</p>
+        <p>Vorteile eines Switches gegenüber einem einfachen Hub:</p>
+        <ul>
+            <li>Pakete werden gezielt nur an den richtigen Port weitergeleitet</li>
+            <li>Bandbreite wird effizienter genutzt</li>
+            <li>Weniger Paketkollisionen und bessere Skalierbarkeit</li>
+        </ul>
+        <p>In der Veranstaltungstechnik verbinden Switches z. B. Lichtpulte mit Medienservern, Audionetzwerke mit Stageboxen oder Videoquellen mit Bildmischern. Je nach Leistungsfähigkeit können Switches auch erweiterte Verwaltungsfunktionen wie QoS oder IGMP Snooping bereitstellen.</p>
+    </div>
+
+    <div class="section">
+        <h2>3. Router – Verbindungen zwischen Netzwerken</h2>
+        <p>Ein Router arbeitet auf Schicht 3 des OSI-Modells – der Netzwerkschicht. Er verbindet unterschiedliche Netzwerke miteinander und entscheidet anhand von IP-Adressen, wie und wohin Daten weitergeleitet werden.</p>
+        <p>In einem typischen Veranstaltungsnetzwerk kommt ein Router z. B. zum Einsatz, wenn interne Netzwerke mit dem Internet verbunden werden sollen oder verschiedene Subnetze miteinander kommunizieren müssen.</p>
+        <p>Funktionen eines Routers:</p>
+        <ul>
+            <li>Routing zwischen IP-Subnetzen</li>
+            <li>NAT (Network Address Translation)</li>
+            <li>Firewall-Funktionen (bei modernen Geräten)</li>
+        </ul>
+        <p>Ein Router trennt Netzbereiche logisch – z. B. Technik-Netz vs. Besuchernetz – und schützt so sensible Produktionssysteme vor ungewolltem Zugriff oder Überlastung.</p>
+    </div>
+
+    <div class="section">
+        <h2>4. Kontrollfragen</h2>
+        <div class="question">Welche Aufgabe übernimmt ein Switch in einem IP-Netzwerk?</div>
+        <div class="question">Worin unterscheiden sich Switch und Router hinsichtlich der OSI-Schicht?</div>
+        <div class="question">Welche Aufgaben erfüllt ein Router in einem komplexen Netzwerkaufbau?</div>
+        <div class="question">Wann benötigen Sie einen Router in der Veranstaltungstechnik?</div>
+    </div>
+
+    <div class="section">
+        <h2>5. Aufgaben</h2>
+        <div class="task">
+            <strong>Aufgabe 1 – Netzwerktopologie zeichnen</strong><br>
+            Erstellen Sie einen Netzwerkplan mit folgenden Komponenten:<br>
+            - Lichtnetz<br>
+            - Audionetz<br>
+            - Video-Netzwerk mit Medienserver<br>
+            - Internetzugang über Router<br>
+            Nutzen Sie Symbole für Switches, Router und beschriften Sie die Verbindungen.
+        </div>
+
+        <div class="task">
+            <strong>Aufgabe 2 – Einsatzbewertung</strong><br>
+            Beschreiben Sie ein Szenario aus dem Veranstaltungsbereich, in dem der Einsatz eines Routers zwingend notwendig ist. Begründen Sie Ihre Auswahl.
+        </div>
+
+        <div class="task">
+            <strong>Aufgabe 3 – Fehleranalyse</strong><br>
+            Bei einem Event funktioniert der Internetzugang nicht, obwohl alle Geräte korrekt verbunden scheinen.<br>
+            a) Welche Prüfungen würden Sie am Router vornehmen?<br>
+            b) Welche Einstellungen sind für den Internetzugang typischerweise notwendig?
+        </div>
+
+        <div class="task">
+            <strong>Aufgabe 4 – Reflexion</strong><br>
+            a) Welche Rolle spielen Switches und Router in Ihrer letzten Veranstaltung?<br>
+            b) Welche Schwachstellen ergaben sich möglicherweise aus einer falschen Konfiguration?
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>6. Zusammenfassung</h2>
+        <p>In dieser Einheit haben Sie die Unterschiede und Aufgaben von Switches und Routern kennengelernt. Sie wissen nun, wie durch den gezielten Einsatz dieser Komponenten komplexe Netzwerke aufgebaut, strukturiert und geschützt werden können. Das Wissen darüber ist eine wichtige Grundlage für professionelle Netzwerkplanung in der Veranstaltungstechnik.</p>
+    </div>
+    </div>
+</body>
+</html>

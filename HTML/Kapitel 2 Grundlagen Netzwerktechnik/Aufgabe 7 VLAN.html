@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Einheit 4 – Switches und Router in der Veranstaltungstechnik</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+                    min-height: 100vh;
+                    padding: 20px;
+                }
+
+                .container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }
+
+                h1 {
+                    color: #2563eb;
+                    font-size: 2.2rem;
+                    font-weight: 700;
+                    margin-bottom: 1rem;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                }
+
+                h2 {
+                    color: #1d4ed8;
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                    margin-bottom: 1rem;
+                    margin-top: 2rem;
+                }
+
+                h3 {
+                    color: #1e40af;
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    margin-bottom: 0.8rem;
+                    margin-top: 1.5rem;
+                }
+
+                .section {
+                    background: white;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                    border: 1px solid #e5e7eb;
+                }
+
+                p {
+                    margin-bottom: 1.2rem;
+                    text-align: justify;
+                    color: #444;
+                    line-height: 1.7;
+                }
+
+                code {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    color: #01579b;
+                    padding: 3px 6px;
+                    border-radius: 6px;
+                    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+                    font-size: 0.9em;
+                    font-weight: 600;
+                    border: 1px solid #81d4fa;
+                }
+
+                ul {
+                    padding-left: 2rem;
+                    margin-bottom: 1.2rem;
+                }
+
+                li {
+                    margin-bottom: 0.5rem;
+                    color: #555;
+                }
+
+                .task {
+                    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+                    border-left: 4px solid #4caf50;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(76, 175, 80, 0.1);
+                }
+
+                .task strong {
+                    color: #2e7d32;
+                    font-size: 1.1rem;
+                    display: block;
+                    margin-bottom: 0.8rem;
+                }
+
+                .question {
+                    background: linear-gradient(135deg, #fff3cd 0%, #fdeaa7 100%);
+                    border-left: 4px solid #f39c12;
+                    padding: 1.2rem;
+                    margin: 1rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(243, 156, 18, 0.1);
+                    color: #b7950b;
+                    font-weight: 500;
+                }
+
+                .tech-specs {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    border-left: 4px solid #0288d1;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(2, 136, 209, 0.1);
+                }
+
+                .tech-specs h4 {
+                    color: #01579b;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+
+                strong {
+                    color: #1e40af;
+                }
+
+                @media (max-width: 768px) {
+                    body {
+                        padding: 10px;
+                    }
+
+                    .container {
+                        padding: 10px;
+                    }
+
+                    h1 {
+                        font-size: 1.8rem;
+                    }
+
+                    h2 {
+                        font-size: 1.4rem;
+                    }
+
+                    h3 {
+                        font-size: 1.2rem;
+                    }
+
+                    .section {
+                        padding: 1.5rem;
+                        margin-bottom: 1.5rem;
+                    }
+
+                    .task, .question {
+                        padding: 1rem;
+                        margin: 1rem 0;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .section {
+                        padding: 1rem;
+                    }
+
+                    h1 {
+                        font-size: 1.6rem;
+                    }
+
+                    .task, .question {
+                        padding: 0.8rem;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</head>
+<body>
+<!-- Bisherige Inhalte -->
+<div class="container">
+
+<div class="section">
+    <h2>7. VLANs – Virtuelle Netzwerke für strukturierte Veranstaltungssysteme</h2>
+    <p><strong>VLAN</strong> steht für „Virtual Local Area Network“. Ein VLAN ermöglicht es, ein einziges physisches Netzwerk in mehrere logische Teilnetze aufzuteilen. Das bedeutet, dass Sie mit derselben Hardware – z. B. einem einzigen Switch – mehrere unabhängige Netzwerke erstellen können, die sich verhalten, als wären sie physisch voneinander getrennt. Diese Technologie ist in modernen Netzwerken unverzichtbar, da sie eine bessere Kontrolle, höhere Sicherheit und optimierte Netzwerkleistung bietet.</p>
+
+    <p>In der Veranstaltungstechnik, wo häufig viele unterschiedliche Systeme parallel betrieben werden – z. B. Audio-, Video- und Lichtsteuerung –, bietet VLAN eine hervorragende Möglichkeit, die Datenströme zu organisieren und voneinander zu isolieren. Damit vermeiden Sie gegenseitige Beeinflussung, reduzieren unerwünschten Netzwerkverkehr und können gezielt bestimmte Geräte oder Systeme gegeneinander absichern.</p>
+
+    <p>Technisch gesehen basiert VLAN auf dem IEEE 802.1Q-Standard, der sogenannte VLAN-Tags in Ethernet-Frames einfügt. Diese Tags beinhalten eine VLAN-ID (z. B. 10, 20, 30...), anhand derer Switches erkennen, zu welchem logischen Netzwerk ein Paket gehört. Nur Geräte innerhalb desselben VLANs können miteinander kommunizieren – es sei denn, es wird gezielt Routing zwischen den VLANs eingerichtet.</p>
+
+    <h3>Ausführliches Beispielszenario</h3>
+    <p>Stellen Sie sich vor, Sie betreuen eine Großveranstaltung mit mehreren technischen Gewerken:</p>
+    <ul>
+        <li><strong>Lichtnetzwerk (VLAN 10):</strong> Besteht aus Lichtpulten, Art-Net-Nodes und Moving Heads. Diese Systeme senden in kurzen Abständen Steuerdaten über UDP. Würden sie sich das Netzwerk mit anderen Systemen teilen, könnte dies zu Latenzen oder Paketverlusten führen.</li>
+        <li><strong>Audionetzwerk (VLAN 20):</strong> Beinhaltet Dante-Geräte, Stageboxen, FOH-Konsole. Da Audio über IP extrem empfindlich auf Latenz reagiert, ist eine exklusive Datenleitung essenziell.</li>
+        <li><strong>Video/Streaming (VLAN 30):</strong> Kameras, NDI-Encoder, Videomischer, Livestreaming-PCs. Diese Systeme produzieren sehr große Datenmengen, die bei gleichzeitiger Nutzung desselben Netzes zu einer Überlastung führen können.</li>
+        <li><strong>Produktionsnetzwerk (VLAN 40):</strong> Geräte zur Systemüberwachung, Medienserververwaltung, Firmwareupdates – oft mit Webinterface und Fernwartung.</li>
+        <li><strong>Publikumsnetz (VLAN 50):</strong> WLAN-Zugang für Besucher. Diese sollen keinen Zugang zu internen Geräten haben, aber z. B. einen Livestream empfangen können.</li>
+    </ul>
+
+    <p>Mit VLANs können Sie all diese Bereiche vollständig voneinander trennen – und dabei dennoch nur eine gemeinsame Infrastruktur nutzen. Anstelle von fünf physischen Netzwerken benötigen Sie nur einen leistungsfähigen Switch, der die logische Trennung übernimmt.</p>
+
+    <h3>Detaillierte Vorteile</h3>
+    <ul>
+        <li><strong>Netzwerksicherheit:</strong> Nur berechtigte Geräte kommunizieren miteinander. Ein Gerät im Publikumsnetz hat keine Sichtbarkeit gegenüber Geräten im Techniknetz.</li>
+        <li><strong>Leistungsoptimierung:</strong> VLANs begrenzen Broadcast-Domänen. Broadcasts innerhalb eines VLANs beeinflussen andere VLANs nicht – das ist gerade bei Protokollen wie Art-Net (Broadcast-basiert) entscheidend.</li>
+        <li><strong>Netzwerkdesign und Skalierung:</strong> VLANs ermöglichen strukturiertes Netzwerkdesign. Neue Geräte können flexibel einem bestehenden VLAN zugewiesen werden, ohne dass physische Änderungen nötig sind.</li>
+        <li><strong>Fehlersuche und Diagnose:</strong> VLANs erleichtern die Isolierung von Problemen. Wenn z. B. im Audionetzwerk ein Paketverlust auftritt, betrifft das nicht das Lichtnetzwerk.</li>
+    </ul>
+
+    <h3>Technische Umsetzung – Grundlagen</h3>
+    <ul>
+        <li><strong>Access-Port:</strong> Ein Port, der nur einem VLAN fest zugewiesen ist. Hier schließen Sie z. B. einen Lichtcontroller an, der ausschließlich im VLAN 10 kommunizieren darf.</li>
+        <li><strong>Trunk-Port:</strong> Ein Port, über den mehrere VLANs gleichzeitig übertragen werden. Er verbindet typischerweise zwei VLAN-fähige Switches miteinander oder einen Switch mit einem VLAN-fähigen Router.</li>
+        <li><strong>Layer-3-Routing:</strong> Wenn Geräte in unterschiedlichen VLANs miteinander kommunizieren sollen (z. B. Streaming-PC in VLAN 30 soll Audio aus VLAN 20 holen), muss ein Routing zwischen VLANs konfiguriert werden – typischerweise durch einen Layer-3-Switch oder einen Router.</li>
+    </ul>
+
+    <h3>Visualisierung durch VLAN-Diagramm</h3>
+    <p>Erstellen Sie zur Veranschaulichung ein Diagramm mit farblich markierten VLANs, verbunden durch Trunk-Ports und VLAN-Zuordnungen an jedem Port. Nutzen Sie hierzu Netzplan-Software oder zeichnen Sie das Diagramm per Hand.</p>
+
+    <h3>Praxisaufgaben</h3>
+    <div class="task">
+        <strong>Aufgabe 5 – VLAN-Planung (erweitert)</strong><br>
+        Entwerfen Sie ein vollständiges VLAN-Konzept für eine mehrtägige Hybridkonferenz mit Livepublikum und parallelem Stream. Beachten Sie:<br>
+        - Mindestens 4 unterschiedliche VLANs<br>
+        - Zugriffsbeschränkungen zwischen VLANs<br>
+        - Anforderungen an Bandbreite und Latenz<br>
+        - Absicherung externer WLAN-Zugänge
+    </div>
+
+    <div class="task">
+        <strong>Aufgabe 6 – VLAN-Konfiguration</strong><br>
+        Beschreiben Sie die Einrichtung von VLANs anhand eines Beispielgeräts (z. B. Netgear, Cisco, MikroTik). Dokumentieren Sie:<br>
+        - VLAN-Anlage<br>
+        - Zuweisung von Ports (Access/Trunk)<br>
+        - Erstellung eines Management-VLANs
+    </div>
+
+    <div class="task">
+        <strong>Aufgabe 7 – Fehleranalyse</strong><br>
+        Szenario: Ein Kamerasignal (NDI) funktioniert im Studio, ist aber beim Streaming-Rechner nicht sichtbar.<br>
+        a) Welche VLAN-bedingten Ursachen könnten dies erklären?<br>
+        b) Wie prüfen Sie die Trunk-Konfiguration?<br>
+        c) Welche Tools zur Paketüberwachung und VLAN-Diagnose setzen Sie ein?
+    </div>
+
+    <div class="task">
+        <strong>Aufgabe 8 – Reflexion</strong><br>
+        Wie hat VLAN-Technologie Ihre Sicht auf Netzwerksicherheit und Veranstaltungsstruktur verändert? Welche Rolle spielt VLAN in zukünftigen Projekten Ihrer Einrichtung?
+    </div>
+    </div>
+</div>
+
+</body>
+</html>
