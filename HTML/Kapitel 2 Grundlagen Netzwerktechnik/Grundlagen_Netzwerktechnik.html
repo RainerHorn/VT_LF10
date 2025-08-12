@@ -1,347 +1,342 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grundlagen der Netzwerktechnik in der Veranstaltungstechnik</title>
-</head>
-<body>
-    <div class="container">
-        <header class="main-header">
-            <h1>Grundlagen der Netzwerktechnik in der Veranstaltungstechnik</h1>
-            <div class="header-icon">🌐 💻 🔗</div>
-        </header>
+Grundlagen der Netzwerktechnik in der Veranstaltungstechnik
 
-        <div class="accordion">
-            <!-- Kapitel 1: Einführung & Bedeutung -->
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="icon">🌐</span>
-                    <h2>1. Einführung & Bedeutung der Netzwerktechnik</h2>
-                    <span class="toggle-icon">▼</span>
+
+<div class="container">
+    <header class="main-header">
+        <h1>Grundlagen der Netzwerktechnik in der Veranstaltungstechnik</h1>
+        <div class="header-icon">🌐 💻 🔗</div>
+    </header>
+
+    <div class="accordion">
+        <!-- Kapitel 1: Einführung & Bedeutung -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">🌐</span>
+                <h2>1. Einführung &amp; Bedeutung der Netzwerktechnik</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <p>Die moderne Veranstaltungstechnik ist ohne Netzwerktechnik undenkbar geworden. Ob bei Konzerten, Konferenzen, Theateraufführungen oder Corporate Events – nahezu alle technischen Systeme sind heute vernetzt. Audio-over-IP-Systeme übertragen Tonsignale digital über Ethernet, Lichtpulte steuern hunderte von LED-Scheinwerfern per ArtNet oder sACN, und Videosignale werden in 4K-Qualität über das Netzwerk verteilt.</p>
+
+                    <p>Diese Vernetzung bringt enorme Vorteile: Flexibilität bei der Verkabelung, zentrale Steuerung und Überwachung aller Systeme, einfache Erweiterbarkeit und die Möglichkeit zur Fernwartung. Gleichzeitig steigen aber auch die Anforderungen an das technische Personal. Netzwerkprobleme können den gesamten Show-Betrieb lahmlegen, weshalb ein fundiertes Verständnis der Netzwerktechnik unerlässlich ist.</p>
+
+                    <p>In der Veranstaltungstechnik spielen spezielle Anforderungen eine Rolle: Echtzeitfähigkeit für Audio- und Videoübertragung, hohe Bandbreiten für 4K/8K-Content, geringe Latenz für interaktive Anwendungen und absolute Ausfallsicherheit während Live-Events. Redundante Netzwerkstrukturen, Quality of Service (QoS) und VLAN-Segmentierung sind daher Standard in professionellen Installationen.</p>
+
+                    <p>Moderne Veranstaltungen nutzen zudem zunehmend IP-basierte Protokolle: Dante für Audio, NDI für Video, ArtNet/sACN für Licht und MQTT für IoT-Sensoren. Diese Konvergenz verschiedener Medien auf IP-Basis ermöglicht es, komplexe Shows mit weniger Kabeln und höherer Flexibilität zu realisieren.</p>
+
+                    <p>Diese Unterrichtseinheit vermittelt die grundlegenden Kenntnisse der Netzwerktechnik mit besonderem Fokus auf Anwendungen in der Veranstaltungstechnik. Von den Grundlagen der Zahlensysteme über IP-Adressierung bis hin zu VLAN-Konfiguration werden alle relevanten Themen praxisnah behandelt.</p>
                 </div>
-                <div class="accordion-content">
-                    <div class="content-wrapper">
-                        <p>Die moderne Veranstaltungstechnik ist ohne Netzwerktechnik undenkbar geworden. Ob bei Konzerten, Konferenzen, Theateraufführungen oder Corporate Events – nahezu alle technischen Systeme sind heute vernetzt. Audio-over-IP-Systeme übertragen Tonsignale digital über Ethernet, Lichtpulte steuern hunderte von LED-Scheinwerfern per ArtNet oder sACN, und Videosignale werden in 4K-Qualität über das Netzwerk verteilt.</p>
-                        
-                        <p>Diese Vernetzung bringt enorme Vorteile: Flexibilität bei der Verkabelung, zentrale Steuerung und Überwachung aller Systeme, einfache Erweiterbarkeit und die Möglichkeit zur Fernwartung. Gleichzeitig steigen aber auch die Anforderungen an das technische Personal. Netzwerkprobleme können den gesamten Show-Betrieb lahmlegen, weshalb ein fundiertes Verständnis der Netzwerktechnik unerlässlich ist.</p>
+            </div>
+        </div>
 
-                        <p>In der Veranstaltungstechnik spielen spezielle Anforderungen eine Rolle: Echtzeitfähigkeit für Audio- und Videoübertragung, hohe Bandbreiten für 4K/8K-Content, geringe Latenz für interaktive Anwendungen und absolute Ausfallsicherheit während Live-Events. Redundante Netzwerkstrukturen, Quality of Service (QoS) und VLAN-Segmentierung sind daher Standard in professionellen Installationen.</p>
+        <!-- Kapitel 2: Zahlensysteme -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">🔢</span>
+                <h2>2. Zahlensysteme in der Netzwerktechnik</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <p>Das Verständnis verschiedener Zahlensysteme ist fundamental für die Netzwerktechnik. Computer arbeiten intern im Binärsystem (Basis 2), während Menschen üblicherweise das Dezimalsystem (Basis 10) verwenden. In der Netzwerktechnik begegnen uns zudem häufig das Hexadezimalsystem (Basis 16) für MAC-Adressen und das Oktalsystem (Basis 8) in speziellen Anwendungen.</p>
 
-                        <p>Moderne Veranstaltungen nutzen zudem zunehmend IP-basierte Protokolle: Dante für Audio, NDI für Video, ArtNet/sACN für Licht und MQTT für IoT-Sensoren. Diese Konvergenz verschiedener Medien auf IP-Basis ermöglicht es, komplexe Shows mit weniger Kabeln und höherer Flexibilität zu realisieren.</p>
+                    <p>Besonders wichtig ist die Umrechnung zwischen diesen Systemen bei der IP-Adressierung und Subnetzberechnung. Eine IPv4-Adresse wie 192.168.1.100 besteht aus vier Oktetten (8-Bit-Werten), die jeweils Werte von 0 bis 255 (dezimal) bzw. 00000000 bis 11111111 (binär) annehmen können.</p>
 
-                        <p>Diese Unterrichtseinheit vermittelt die grundlegenden Kenntnisse der Netzwerktechnik mit besonderem Fokus auf Anwendungen in der Veranstaltungstechnik. Von den Grundlagen der Zahlensysteme über IP-Adressierung bis hin zu VLAN-Konfiguration werden alle relevanten Themen praxisnah behandelt.</p>
+                    <div class="tech-specs">
+                        <h4>Zahlensystem-Übersicht:</h4>
+                        <ul>
+                            <li><strong>Binär (Basis 2):</strong> Verwendet Ziffern 0 und 1</li>
+                            <li><strong>Oktal (Basis 8):</strong> Verwendet Ziffern 0-7</li>
+                            <li><strong>Dezimal (Basis 10):</strong> Verwendet Ziffern 0-9</li>
+                            <li><strong>Hexadezimal (Basis 16):</strong> Verwendet Ziffern 0-9 und Buchstaben A-F</li>
+                        </ul>
+                    </div>
+
+                    <p>In der Veranstaltungstechnik begegnen uns Zahlensysteme in vielen Bereichen: DMX-Kanäle werden oft in hexadezimaler Notation angegeben, IP-Adressen müssen für Subnetzberechnungen in binärer Form verstanden werden, und Farbwerte in LED-Systemen werden häufig hexadezimal definiert (z.B. #FF0000 für Rot).</p>
+
+                    <div class="warning-box">
+                        <h4>⚠️ Praktischer Tipp:</h4>
+                        <p>Lernen Sie die Potenzen von 2 auswendig (1, 2, 4, 8, 16, 32, 64, 128, 256). Diese sind essentiell für Subnetzberechnungen und das Verständnis von Netzwerkmasken.</p>
+                    </div>
+
+                    <div class="exercise-link">
+                        <h4>📝 Praktische Übung:</h4>
+                        <p><a href="https://moodle.mm-bbs.de/moodle/mod/assign/view.php?id=335338" target="_blank">Aufgabe 1: Zahlensysteme - Umrechnung und Anwendung</a></p>
+                        <p>In dieser Aufgabe üben Sie die Umrechnung zwischen verschiedenen Zahlensystemen und wenden das Gelernte auf praktische Netzwerk-Szenarien an.</p>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Kapitel 2: Zahlensysteme -->
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="icon">🔢</span>
-                    <h2>2. Zahlensysteme in der Netzwerktechnik</h2>
-                    <span class="toggle-icon">▼</span>
-                </div>
-                <div class="accordion-content">
-                    <div class="content-wrapper">
-                        <p>Das Verständnis verschiedener Zahlensysteme ist fundamental für die Netzwerktechnik. Computer arbeiten intern im Binärsystem (Basis 2), während Menschen üblicherweise das Dezimalsystem (Basis 10) verwenden. In der Netzwerktechnik begegnen uns zudem häufig das Hexadezimalsystem (Basis 16) für MAC-Adressen und das Oktalsystem (Basis 8) in speziellen Anwendungen.</p>
+        <!-- Kapitel 3: Netzwerkadressen -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">🏷️</span>
+                <h2>3. Netzwerkadressen und IP-Adressierung</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <p>IP-Adressen sind die grundlegenden Identifikationsmerkmale von Geräten in einem Netzwerk. IPv4-Adressen bestehen aus 32 Bit (4 Oktetten à 8 Bit) und ermöglichen theoretisch über 4 Milliarden eindeutige Adressen. In der Praxis werden diese jedoch durch Subnetzmasken in kleinere, verwaltbare Netzwerksegmente unterteilt.</p>
 
-                        <p>Besonders wichtig ist die Umrechnung zwischen diesen Systemen bei der IP-Adressierung und Subnetzberechnung. Eine IPv4-Adresse wie 192.168.1.100 besteht aus vier Oktetten (8-Bit-Werten), die jeweils Werte von 0 bis 255 (dezimal) bzw. 00000000 bis 11111111 (binär) annehmen können.</p>
+                    <p>In der Veranstaltungstechnik ist eine durchdachte IP-Adressierung besonders wichtig. Verschiedene Gerätegruppen erhalten oft eigene Adressbereiche: Audio-Geräte z.B. 192.168.10.x, Licht-Equipment 192.168.20.x, Video-Systeme 192.168.30.x. Dies erleichtert die Verwaltung und Fehlersuche erheblich.</p>
 
-                        <div class="tech-specs">
-                            <h4>Zahlensystem-Übersicht:</h4>
-                            <ul>
-                                <li><strong>Binär (Basis 2):</strong> Verwendet Ziffern 0 und 1</li>
-                                <li><strong>Oktal (Basis 8):</strong> Verwendet Ziffern 0-7</li>
-                                <li><strong>Dezimal (Basis 10):</strong> Verwendet Ziffern 0-9</li>
-                                <li><strong>Hexadezimal (Basis 16):</strong> Verwendet Ziffern 0-9 und Buchstaben A-F</li>
-                            </ul>
-                        </div>
+                    <div class="tech-specs">
+                        <h4>Wichtige Adressklassen:</h4>
+                        <ul>
+                            <li><strong>Klasse A:</strong> 1.0.0.0 - 126.255.255.255 (/8)</li>
+                            <li><strong>Klasse B:</strong> 128.0.0.0 - 191.255.255.255 (/16)</li>
+                            <li><strong>Klasse C:</strong> 192.0.0.0 - 223.255.255.255 (/24)</li>
+                        </ul>
+                    </div>
 
-                        <p>In der Veranstaltungstechnik begegnen uns Zahlensysteme in vielen Bereichen: DMX-Kanäle werden oft in hexadezimaler Notation angegeben, IP-Adressen müssen für Subnetzberechnungen in binärer Form verstanden werden, und Farbwerte in LED-Systemen werden häufig hexadezimal definiert (z.B. #FF0000 für Rot).</p>
+                    <div class="tech-specs">
+                        <h4>Private Adressbereiche (RFC 1918):</h4>
+                        <ul>
+                            <li><strong>10.0.0.0/8:</strong> 10.0.0.0 - 10.255.255.255</li>
+                            <li><strong>172.16.0.0/12:</strong> 172.16.0.0 - 172.31.255.255</li>
+                            <li><strong>192.168.0.0/16:</strong> 192.168.0.0 - 192.168.255.255</li>
+                        </ul>
+                    </div>
 
-                        <div class="warning-box">
-                            <h4>⚠️ Praktischer Tipp:</h4>
-                            <p>Lernen Sie die Potenzen von 2 auswendig (1, 2, 4, 8, 16, 32, 64, 128, 256). Diese sind essentiell für Subnetzberechnungen und das Verständnis von Netzwerkmasken.</p>
-                        </div>
+                    <p>Subnetzmasken definieren, welcher Teil einer IP-Adresse das Netzwerk und welcher Teil den Host identifiziert. Die CIDR-Notation (z.B. /24) gibt die Anzahl der Netzwerk-Bits an. Ein /24-Netz (255.255.255.0) kann 254 Hosts adressieren, ein /16-Netz (255.255.0.0) bereits 65.534 Hosts.</p>
 
-                        <div class="exercise-link">
-                            <h4>📝 Praktische Übung:</h4>
-                            <p><a href="Aufgabe 1 Zahlensysteme.html" target="_blank">Aufgabe 1: Zahlensysteme - Umrechnung und Anwendung</a></p>
-                            <p>In dieser Aufgabe üben Sie die Umrechnung zwischen verschiedenen Zahlensystemen und wenden das Gelernte auf praktische Netzwerk-Szenarien an.</p>
-                        </div>
+                    <div class="warning-box">
+                        <h4>⚠️ Besonderheiten in der Veranstaltungstechnik:</h4>
+                        <ul>
+                            <li>Multicast-Adressen für ArtNet (239.255.250.x)</li>
+                            <li>APIPA-Adressen (169.254.x.x) bei DHCP-Ausfällen</li>
+                            <li>Link-Local-Adressen für Auto-Konfiguration</li>
+                            <li>Reservierte Bereiche für Management-Interfaces</li>
+                        </ul>
+                    </div>
+
+                    <div class="exercise-link">
+                        <h4>📝 Praktische Übung:</h4>
+                        <p><a href="https://moodle.mm-bbs.de/moodle/mod/assign/view.php?id=335339" target="_blank">Aufgabe 2: Netzwerkadressen - IP-Adressierung und Subnetting</a></p>
+                        <p>Hier lernen Sie die praktische Anwendung von IP-Adressierung, Subnetting und die Planung von Netzwerkstrukturen für Veranstaltungen.</p>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Kapitel 3: Netzwerkadressen -->
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="icon">🏷️</span>
-                    <h2>3. Netzwerkadressen und IP-Adressierung</h2>
-                    <span class="toggle-icon">▼</span>
-                </div>
-                <div class="accordion-content">
-                    <div class="content-wrapper">
-                        <p>IP-Adressen sind die grundlegenden Identifikationsmerkmale von Geräten in einem Netzwerk. IPv4-Adressen bestehen aus 32 Bit (4 Oktetten à 8 Bit) und ermöglichen theoretisch über 4 Milliarden eindeutige Adressen. In der Praxis werden diese jedoch durch Subnetzmasken in kleinere, verwaltbare Netzwerksegmente unterteilt.</p>
+        <!-- Kapitel 4: IP-Pakete -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">📦</span>
+                <h2>4. Aufbau und Nutzgröße von IP-Paketen</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <p>IP-Pakete sind die grundlegenden Transporteinheiten in IP-Netzwerken. Sie bestehen aus einem Header (Kopfteil) mit Steuerinformationen und dem eigentlichen Datenbereich (Payload). Der IPv4-Header hat eine Mindestgröße von 20 Bytes und kann bis zu 60 Bytes umfassen. Die maximale Paketgröße (MTU - Maximum Transmission Unit) beträgt in Ethernet-Netzwerken standardmäßig 1500 Bytes.</p>
 
-                        <p>In der Veranstaltungstechnik ist eine durchdachte IP-Adressierung besonders wichtig. Verschiedene Gerätegruppen erhalten oft eigene Adressbereiche: Audio-Geräte z.B. 192.168.10.x, Licht-Equipment 192.168.20.x, Video-Systeme 192.168.30.x. Dies erleichtert die Verwaltung und Fehlersuche erheblich.</p>
+                    <p>Für die Veranstaltungstechnik ist das Verständnis von IP-Paketen besonders wichtig, da Audio- und Videodaten oft in Echtzeit übertragen werden müssen. Große Pakete reduzieren den Header-Overhead, können aber bei Verlusten zu hörbaren oder sichtbaren Störungen führen. Kleine Pakete erhöhen die Latenz durch mehr Header-Overhead.</p>
 
-                        <div class="tech-specs">
-                            <h4>Wichtige Adressklassen:</h4>
-                            <ul>
-                                <li><strong>Klasse A:</strong> 1.0.0.0 - 126.255.255.255 (/8)</li>
-                                <li><strong>Klasse B:</strong> 128.0.0.0 - 191.255.255.255 (/16)</li>
-                                <li><strong>Klasse C:</strong> 192.0.0.0 - 223.255.255.255 (/24)</li>
-                            </ul>
-                        </div>
+                    <div class="tech-specs">
+                        <h4>IPv4-Header Aufbau:</h4>
+                        <ul>
+                            <li><strong>Version (4 Bit):</strong> IP-Version (4 für IPv4)</li>
+                            <li><strong>Header Length (4 Bit):</strong> Header-Länge in 32-Bit-Worten</li>
+                            <li><strong>Type of Service (8 Bit):</strong> QoS-Markierungen</li>
+                            <li><strong>Total Length (16 Bit):</strong> Gesamtpaketlänge</li>
+                            <li><strong>TTL (8 Bit):</strong> Time to Live - max. Hops</li>
+                            <li><strong>Protocol (8 Bit):</strong> Nächste Protokollschicht</li>
+                        </ul>
+                    </div>
 
-                        <div class="tech-specs">
-                            <h4>Private Adressbereiche (RFC 1918):</h4>
-                            <ul>
-                                <li><strong>10.0.0.0/8:</strong> 10.0.0.0 - 10.255.255.255</li>
-                                <li><strong>172.16.0.0/12:</strong> 172.16.0.0 - 172.31.255.255</li>
-                                <li><strong>192.168.0.0/16:</strong> 192.168.0.0 - 192.168.255.255</li>
-                            </ul>
-                        </div>
+                    <p>Die Fragmentierung von IP-Paketen kann in der Veranstaltungstechnik problematisch werden. Wenn Pakete größer als die MTU sind, werden sie aufgeteilt und am Ziel wieder zusammengesetzt. Dies kann zu Verzögerungen und Jitter führen, was besonders bei Audio-Anwendungen kritisch ist.</p>
 
-                        <p>Subnetzmasken definieren, welcher Teil einer IP-Adresse das Netzwerk und welcher Teil den Host identifiziert. Die CIDR-Notation (z.B. /24) gibt die Anzahl der Netzwerk-Bits an. Ein /24-Netz (255.255.255.0) kann 254 Hosts adressieren, ein /16-Netz (255.255.0.0) bereits 65.534 Hosts.</p>
+                    <div class="tech-specs">
+                        <h4>Typische MTU-Größen:</h4>
+                        <ul>
+                            <li><strong>Ethernet:</strong> 1500 Bytes</li>
+                            <li><strong>Jumbo Frames:</strong> 9000 Bytes (in spezialisierten Netzwerken)</li>
+                            <li><strong>PPPoE:</strong> 1492 Bytes</li>
+                            <li><strong>WLAN:</strong> meist 1500 Bytes</li>
+                        </ul>
+                    </div>
 
-                        <div class="warning-box">
-                            <h4>⚠️ Besonderheiten in der Veranstaltungstechnik:</h4>
-                            <ul>
-                                <li>Multicast-Adressen für ArtNet (239.255.250.x)</li>
-                                <li>APIPA-Adressen (169.254.x.x) bei DHCP-Ausfällen</li>
-                                <li>Link-Local-Adressen für Auto-Konfiguration</li>
-                                <li>Reservierte Bereiche für Management-Interfaces</li>
-                            </ul>
-                        </div>
+                    <div class="warning-box">
+                        <h4>⚠️ Auswirkungen in der Praxis:</h4>
+                        <p>Dante-Audio-Systeme nutzen typischerweise kleine Pakete (64 Samples @ 48kHz = ~1,33ms Latenz). Große Video-Frames werden hingegen oft fragmentiert, was zu Jitter führen kann. Eine optimale MTU-Konfiguration ist daher essentiell.</p>
+                    </div>
 
-                        <div class="exercise-link">
-                            <h4>📝 Praktische Übung:</h4>
-                            <p><a href="Aufgabe 2 Netzwerkadressen.html" target="_blank">Aufgabe 2: Netzwerkadressen - IP-Adressierung und Subnetting</a></p>
-                            <p>Hier lernen Sie die praktische Anwendung von IP-Adressierung, Subnetting und die Planung von Netzwerkstrukturen für Veranstaltungen.</p>
-                        </div>
+                    <div class="exercise-link">
+                        <h4>📝 Praktische Übung:</h4>
+                        <p><a href="https://moodle.mm-bbs.de/moodle/mod/assign/view.php?id=335340" target="_blank">Aufgabe 3: IP-Pakete - Aufbau, Größe und praktische Auswirkungen</a></p>
+                        <p>In dieser Aufgabe analysieren Sie IP-Pakete und verstehen deren Auswirkungen auf Audio- und Video-Übertragungen in der Veranstaltungstechnik.</p>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Kapitel 4: IP-Pakete -->
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="icon">📦</span>
-                    <h2>4. Aufbau und Nutzgröße von IP-Paketen</h2>
-                    <span class="toggle-icon">▼</span>
-                </div>
-                <div class="accordion-content">
-                    <div class="content-wrapper">
-                        <p>IP-Pakete sind die grundlegenden Transporteinheiten in IP-Netzwerken. Sie bestehen aus einem Header (Kopfteil) mit Steuerinformationen und dem eigentlichen Datenbereich (Payload). Der IPv4-Header hat eine Mindestgröße von 20 Bytes und kann bis zu 60 Bytes umfassen. Die maximale Paketgröße (MTU - Maximum Transmission Unit) beträgt in Ethernet-Netzwerken standardmäßig 1500 Bytes.</p>
+        <!-- Kapitel 5: Switches und Router -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">🔀</span>
+                <h2>5. Switches und Router in der Veranstaltungstechnik</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <p>Switches und Router sind die zentralen Bausteine moderner Veranstaltungsnetzwerke. Switches arbeiten auf Layer 2 (Data Link Layer) und verbinden Geräte innerhalb eines lokalen Netzwerks. Sie lernen MAC-Adressen und leiten Frames intelligent nur an den korrekten Port weiter. Router hingegen arbeiten auf Layer 3 (Network Layer) und verbinden verschiedene Netzwerksegmente miteinander.</p>
 
-                        <p>Für die Veranstaltungstechnik ist das Verständnis von IP-Paketen besonders wichtig, da Audio- und Videodaten oft in Echtzeit übertragen werden müssen. Große Pakete reduzieren den Header-Overhead, können aber bei Verlusten zu hörbaren oder sichtbaren Störungen führen. Kleine Pakete erhöhen die Latenz durch mehr Header-Overhead.</p>
+                    <p>In der Veranstaltungstechnik werden überwiegend Managed Switches eingesetzt, da diese erweiterte Funktionen wie VLAN-Unterstützung, QoS, Port-Mirroring und SNMP-Management bieten. Diese Features sind essentiell für die Trennung verschiedener Datenströme und die Priorisierung zeitkritischer Übertragungen wie Audio oder Video.</p>
 
-                        <div class="tech-specs">
-                            <h4>IPv4-Header Aufbau:</h4>
-                            <ul>
-                                <li><strong>Version (4 Bit):</strong> IP-Version (4 für IPv4)</li>
-                                <li><strong>Header Length (4 Bit):</strong> Header-Länge in 32-Bit-Worten</li>
-                                <li><strong>Type of Service (8 Bit):</strong> QoS-Markierungen</li>
-                                <li><strong>Total Length (16 Bit):</strong> Gesamtpaketlänge</li>
-                                <li><strong>TTL (8 Bit):</strong> Time to Live - max. Hops</li>
-                                <li><strong>Protocol (8 Bit):</strong> Nächste Protokollschicht</li>
-                            </ul>
-                        </div>
+                    <div class="tech-specs">
+                        <h4>Switch-Eigenschaften für AV-Anwendungen:</h4>
+                        <ul>
+                            <li><strong>Low Latency:</strong> &lt; 10 µs für Audio-Anwendungen</li>
+                            <li><strong>Non-Blocking:</strong> Volle Wire-Speed auf allen Ports</li>
+                            <li><strong>IGMP Snooping:</strong> Effiziente Multicast-Verteilung</li>
+                            <li><strong>Jumbo Frame Support:</strong> Für hochauflösende Videodaten</li>
+                            <li><strong>PoE/PoE+:</strong> Stromversorgung für IP-Kameras, Access Points</li>
+                        </ul>
+                    </div>
 
-                        <p>Die Fragmentierung von IP-Paketen kann in der Veranstaltungstechnik problematisch werden. Wenn Pakete größer als die MTU sind, werden sie aufgeteilt und am Ziel wieder zusammengesetzt. Dies kann zu Verzögerungen und Jitter führen, was besonders bei Audio-Anwendungen kritisch ist.</p>
+                    <p>Router in Veranstaltungsnetzwerken dienen oft als Gateway zum Internet oder zur Verbindung verschiedener Standorte. Sie implementieren NAT (Network Address Translation), Firewall-Funktionen und VPN-Verbindungen. Bei großen Events können Router auch für die Lastverteilung zwischen verschiedenen Uplinks eingesetzt werden.</p>
 
-                        <div class="tech-specs">
-                            <h4>Typische MTU-Größen:</h4>
-                            <ul>
-                                <li><strong>Ethernet:</strong> 1500 Bytes</li>
-                                <li><strong>Jumbo Frames:</strong> 9000 Bytes (in spezialisierten Netzwerken)</li>
-                                <li><strong>PPPoE:</strong> 1492 Bytes</li>
-                                <li><strong>WLAN:</strong> meist 1500 Bytes</li>
-                            </ul>
-                        </div>
+                    <div class="tech-specs">
+                        <h4>Wichtige Router-Funktionen:</h4>
+                        <ul>
+                            <li><strong>Routing-Protokolle:</strong> OSPF, BGP für große Netzwerke</li>
+                            <li><strong>QoS:</strong> Traffic-Shaping und Priorisierung</li>
+                            <li><strong>VLAN Routing:</strong> Inter-VLAN-Kommunikation</li>
+                            <li><strong>Load Balancing:</strong> Verteilung auf mehrere Uplinks</li>
+                            <li><strong>Redundanz:</strong> HSRP/VRRP für Ausfallsicherheit</li>
+                        </ul>
+                    </div>
 
-                        <div class="warning-box">
-                            <h4>⚠️ Auswirkungen in der Praxis:</h4>
-                            <p>Dante-Audio-Systeme nutzen typischerweise kleine Pakete (64 Samples @ 48kHz = ~1,33ms Latenz). Große Video-Frames werden hingegen oft fragmentiert, was zu Jitter führen kann. Eine optimale MTU-Konfiguration ist daher essentiell.</p>
-                        </div>
+                    <div class="warning-box">
+                        <h4>⚠️ Häufige Konfigurationsfehler:</h4>
+                        <ul>
+                            <li>Spanning Tree Protocol kann Konvergenz-Delays verursachen</li>
+                            <li>Falsche MTU-Einstellungen führen zu Fragmentierung</li>
+                            <li>Unzureichende Buffer-Größen bei Burst-Traffic</li>
+                            <li>Fehlende QoS-Konfiguration für zeitkritische Daten</li>
+                        </ul>
+                    </div>
 
-                        <div class="exercise-link">
-                            <h4>📝 Praktische Übung:</h4>
-                            <p><a href="Aufgabe 3 Nutzgröße und Aufbau eines IP Paketes.html" target="_blank">Aufgabe 3: IP-Pakete - Aufbau, Größe und praktische Auswirkungen</a></p>
-                            <p>In dieser Aufgabe analysieren Sie IP-Pakete und verstehen deren Auswirkungen auf Audio- und Video-Übertragungen in der Veranstaltungstechnik.</p>
-                        </div>
+                    <div class="exercise-link">
+                        <h4>📝 Praktische Übung:</h4>
+                        <p><a href="https://moodle.mm-bbs.de/moodle/mod/assign/view.php?id=335341" target="_blank">Aufgabe 4: Switches und Router - Konfiguration und Optimierung</a></p>
+                        <p>Lernen Sie die praktische Konfiguration von Switches und Routern für Veranstaltungsnetzwerke kennen.</p>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Kapitel 5: Switches und Router -->
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="icon">🔀</span>
-                    <h2>5. Switches und Router in der Veranstaltungstechnik</h2>
-                    <span class="toggle-icon">▼</span>
-                </div>
-                <div class="accordion-content">
-                    <div class="content-wrapper">
-                        <p>Switches und Router sind die zentralen Bausteine moderner Veranstaltungsnetzwerke. Switches arbeiten auf Layer 2 (Data Link Layer) und verbinden Geräte innerhalb eines lokalen Netzwerks. Sie lernen MAC-Adressen und leiten Frames intelligent nur an den korrekten Port weiter. Router hingegen arbeiten auf Layer 3 (Network Layer) und verbinden verschiedene Netzwerksegmente miteinander.</p>
+        <!-- Kapitel 6: VLAN-Technologie -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">�️</span>
+                <h2>6. VLAN-Technologie für Veranstaltungsnetzwerke</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <p>Virtual Local Area Networks (VLANs) ermöglichen die logische Segmentierung eines physischen Netzwerks in mehrere getrennte Broadcast-Domänen. In der Veranstaltungstechnik ist dies besonders wertvoll, um verschiedene Systemgruppen voneinander zu isolieren: Audio-Equipment, Video-Systeme, Lichtsteuerung, Management-Netzwerk und Gäste-WLAN können so sicher getrennt werden.</p>
 
-                        <p>In der Veranstaltungstechnik werden überwiegend Managed Switches eingesetzt, da diese erweiterte Funktionen wie VLAN-Unterstützung, QoS, Port-Mirroring und SNMP-Management bieten. Diese Features sind essentiell für die Trennung verschiedener Datenströme und die Priorisierung zeitkritischer Übertragungen wie Audio oder Video.</p>
+                    <p>VLANs basieren auf dem IEEE 802.1Q-Standard und fügen jedem Ethernet-Frame einen 4-Byte-Tag hinzu, der die VLAN-ID (1-4094) enthält. Switches können Ports verschiedenen VLANs zuordnen und den Traffic entsprechend weiterleiten. Dies ermöglicht flexible Netzwerk-Topologien ohne physische Verkabelungsänderungen.</p>
 
-                        <div class="tech-specs">
-                            <h4>Switch-Eigenschaften für AV-Anwendungen:</h4>
-                            <ul>
-                                <li><strong>Low Latency:</strong> < 10 µs für Audio-Anwendungen</li>
-                                <li><strong>Non-Blocking:</strong> Volle Wire-Speed auf allen Ports</li>
-                                <li><strong>IGMP Snooping:</strong> Effiziente Multicast-Verteilung</li>
-                                <li><strong>Jumbo Frame Support:</strong> Für hochauflösende Videodaten</li>
-                                <li><strong>PoE/PoE+:</strong> Stromversorgung für IP-Kameras, Access Points</li>
-                            </ul>
-                        </div>
+                    <div class="tech-specs">
+                        <h4>Typische VLAN-Struktur in der Veranstaltungstechnik:</h4>
+                        <ul>
+                            <li><strong>VLAN 10:</strong> Audio-Systeme (Dante, MADI-over-IP)</li>
+                            <li><strong>VLAN 20:</strong> Video-Systeme (NDI, Kameras, Recorder)</li>
+                            <li><strong>VLAN 30:</strong> Lichtsteuerung (ArtNet, sACN, DMX-Gateways)</li>
+                            <li><strong>VLAN 40:</strong> Show-Control (Timecode, Cue-Systeme)</li>
+                            <li><strong>VLAN 50:</strong> Management (Switch-Config, Monitoring)</li>
+                            <li><strong>VLAN 99:</strong> Gäste-Netzwerk (Internet-Zugang)</li>
+                        </ul>
+                    </div>
 
-                        <p>Router in Veranstaltungsnetzwerken dienen oft als Gateway zum Internet oder zur Verbindung verschiedener Standorte. Sie implementieren NAT (Network Address Translation), Firewall-Funktionen und VPN-Verbindungen. Bei großen Events können Router auch für die Lastverteilung zwischen verschiedenen Uplinks eingesetzt werden.</p>
+                    <p>Die VLAN-Konfiguration erfolgt über Trunk-Ports (transportieren mehrere VLANs mit Tags) und Access-Ports (gehören zu einem VLAN, entfernen Tags). Inter-VLAN-Routing ermöglicht kontrollierten Datenverkehr zwischen VLANs, während gleichzeitig Broadcast-Traffic und potenzielle Sicherheitsrisiken begrenzt werden.</p>
 
-                        <div class="tech-specs">
-                            <h4>Wichtige Router-Funktionen:</h4>
-                            <ul>
-                                <li><strong>Routing-Protokolle:</strong> OSPF, BGP für große Netzwerke</li>
-                                <li><strong>QoS:</strong> Traffic-Shaping und Priorisierung</li>
-                                <li><strong>VLAN Routing:</strong> Inter-VLAN-Kommunikation</li>
-                                <li><strong>Load Balancing:</strong> Verteilung auf mehrere Uplinks</li>
-                                <li><strong>Redundanz:</strong> HSRP/VRRP für Ausfallsicherheit</li>
-                            </ul>
-                        </div>
+                    <div class="tech-specs">
+                        <h4>VLAN-Vorteile in der Praxis:</h4>
+                        <ul>
+                            <li><strong>Sicherheit:</strong> Isolation kritischer Systeme</li>
+                            <li><strong>Performance:</strong> Reduzierung von Broadcast-Traffic</li>
+                            <li><strong>Flexibilität:</strong> Logische statt physische Gruppierung</li>
+                            <li><strong>QoS:</strong> VLAN-basierte Traffic-Priorisierung</li>
+                            <li><strong>Troubleshooting:</strong> Einfachere Fehlereingrenzung</li>
+                        </ul>
+                    </div>
 
-                        <div class="warning-box">
-                            <h4>⚠️ Häufige Konfigurationsfehler:</h4>
-                            <ul>
-                                <li>Spanning Tree Protocol kann Konvergenz-Delays verursachen</li>
-                                <li>Falsche MTU-Einstellungen führen zu Fragmentierung</li>
-                                <li>Unzureichende Buffer-Größen bei Burst-Traffic</li>
-                                <li>Fehlende QoS-Konfiguration für zeitkritische Daten</li>
-                            </ul>
-                        </div>
+                    <div class="warning-box">
+                        <h4>⚠️ VLAN-Design-Prinzipien:</h4>
+                        <ul>
+                            <li>Native VLAN sollte nicht für Produktiv-Traffic verwendet werden</li>
+                            <li>VLAN 1 (Default) sollte deaktiviert oder umkonfiguriert werden</li>
+                            <li>Voice VLANs benötigen spezielle QoS-Behandlung</li>
+                            <li>Management-VLANs sollten aus Sicherheitsgründen getrennt sein</li>
+                        </ul>
+                    </div>
 
-                        <div class="exercise-link">
-                            <h4>📝 Praktische Übung:</h4>
-                            <p><a href="Aufgabe 4 Switches und Router.html" target="_blank">Aufgabe 4: Switches und Router - Konfiguration und Optimierung</a></p>
-                            <p>Lernen Sie die praktische Konfiguration von Switches und Routern für Veranstaltungsnetzwerke kennen.</p>
-                        </div>
+                    <div class="exercise-link">
+                        <h4>📝 Praktische Übung:</h4>
+                        <p><a href="https://moodle.mm-bbs.de/moodle/mod/assign/view.php?id=335343" target="_blank">Aufgabe 5: VLAN - Design und Konfiguration</a></p>
+                        <p>Planen und konfigurieren Sie eine VLAN-Struktur für ein komplexes Veranstaltungsnetzwerk mit verschiedenen Systemgruppen.</p>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Kapitel 6: Praktische Anwendung -->
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="icon">🎭</span>
-                    <h2>6. Praktische Anwendung in der Veranstaltungstechnik</h2>
-                    <span class="toggle-icon">▼</span>
-                </div>
-                <div class="accordion-content">
-                    <div class="content-wrapper">
-                        <p>Die praktische Anwendung der Netzwerktechnik in der Veranstaltungstechnik umfasst die Integration verschiedenster Systeme: Audio-over-IP (Dante, AVB/TSN), Video-over-IP (NDI, SMPTE ST 2110), Lichtsteuerung (ArtNet, sACN), Intercom-Systeme und Show-Control. Jedes System hat spezifische Anforderungen an Bandbreite, Latenz und Zuverlässigkeit.</p>
-
-                        <p>Moderne Veranstaltungen setzen auf konvergente Netzwerke, in denen alle Mediendaten über eine gemeinsame IP-Infrastruktur übertragen werden. Dies erfordert eine sorgfältige Planung der Netzwerkarchitektur, einschließlich Bandbreiten-Dimensionierung, Redundanz-Konzepten und Monitoring-Strategien.</p>
-
-                        <div class="tech-specs">
-                            <h4>Typische Protokolle und Bandbreiten:</h4>
-                            <ul>
-                                <li><strong>Dante Audio:</strong> ~1 Mbit/s pro Kanal (48kHz/24bit)</li>
-                                <li><strong>NDI|HX Video:</strong> 10-20 Mbit/s (1080p komprimiert)</li>
-                                <li><strong>ArtNet/sACN:</strong> ~5 kbit/s pro Universum</li>
-                                <li><strong>SMPTE ST 2110:</strong> bis 12 Gbit/s (4K unkomprimiert)</li>
-                                <li><strong>Intercom (VoIP):</strong> ~100 kbit/s pro Kanal</li>
-                            </ul>
-                        </div>
-
-                        <p>Die Integration erfordert auch das Verständnis verschiedener Zeitdomänen: Audio-Systeme arbeiten mit Sample-Clocks, Video mit Genlock-Signalen, und Lichtsysteme mit DMX-Refresh-Raten. Network Time Protocol (NTP) oder Precision Time Protocol (PTP) sorgen für die nötige Synchronisation.</p>
-
-                        <div class="warning-box">
-                            <h4>⚠️ Kritische Erfolgsfaktoren:</h4>
-                            <ul>
-                                <li>Präzise Timing-Synchronisation zwischen allen Systemen</li>
-                                <li>Redundante Netzwerkpfade für ausfallkritische Verbindungen</li>
-                                <li>Kontinuierliches Monitoring der Netzwerk-Performance</li>
-                                <li>Dokumentierte Fallback-Strategien bei Netzwerkausfällen</li>
-                            </ul>
-                        </div>
-
-                        <div class="exercise-link">
-                            <h4>📝 Praktische Übung:</h4>
-                            <p><a href="Aufgabe 5 Anwendung.html" target="_blank">Aufgabe 5: Anwendung - Planung eines Veranstaltungsnetzwerks</a></p>
-                            <p>Entwickeln Sie ein vollständiges Netzwerkkonzept für eine komplexe Veranstaltung mit Audio-, Video- und Lichtsystemen.</p>
-                        </div>
-                    </div>
-                </div>
+        <!-- Kapitel 7: Praktische Anwendung -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">�</span>
+                <h2>7. Praktische Anwendung in der Veranstaltungstechnik</h2>
+                <span class="toggle-icon">▼</span>
             </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <p>Die praktische Anwendung der Netzwerktechnik in der Veranstaltungstechnik umfasst die Integration verschiedenster Systeme: Audio-over-IP (Dante, AVB/TSN), Video-over-IP (NDI, SMPTE ST 2110), Lichtsteuerung (ArtNet, sACN), Intercom-Systeme und Show-Control. Jedes System hat spezifische Anforderungen an Bandbreite, Latenz und Zuverlässigkeit.</p>
 
-            <!-- Kapitel 7: VLAN-Technologie -->
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="icon">🏗️</span>
-                    <h2>7. VLAN-Technologie für Veranstaltungsnetzwerke</h2>
-                    <span class="toggle-icon">▼</span>
-                </div>
-                <div class="accordion-content">
-                    <div class="content-wrapper">
-                        <p>Virtual Local Area Networks (VLANs) ermöglichen die logische Segmentierung eines physischen Netzwerks in mehrere getrennte Broadcast-Domänen. In der Veranstaltungstechnik ist dies besonders wertvoll, um verschiedene Systemgruppen voneinander zu isolieren: Audio-Equipment, Video-Systeme, Lichtsteuerung, Management-Netzwerk und Gäste-WLAN können so sicher getrennt werden.</p>
+                    <p>Moderne Veranstaltungen setzen auf konvergente Netzwerke, in denen alle Mediendaten über eine gemeinsame IP-Infrastruktur übertragen werden. Dies erfordert eine sorgfältige Planung der Netzwerkarchitektur, einschließlich Bandbreiten-Dimensionierung, Redundanz-Konzepten und Monitoring-Strategien.</p>
 
-                        <p>VLANs basieren auf dem IEEE 802.1Q-Standard und fügen jedem Ethernet-Frame einen 4-Byte-Tag hinzu, der die VLAN-ID (1-4094) enthält. Switches können Ports verschiedenen VLANs zuordnen und den Traffic entsprechend weiterleiten. Dies ermöglicht flexible Netzwerk-Topologien ohne physische Verkabelungsänderungen.</p>
+                    <div class="tech-specs">
+                        <h4>Typische Protokolle und Bandbreiten:</h4>
+                        <ul>
+                            <li><strong>Dante Audio:</strong> ~1 Mbit/s pro Kanal (48kHz/24bit)</li>
+                            <li><strong>NDI|HX Video:</strong> 10-20 Mbit/s (1080p komprimiert)</li>
+                            <li><strong>ArtNet/sACN:</strong> ~5 kbit/s pro Universum</li>
+                            <li><strong>SMPTE ST 2110:</strong> bis 12 Gbit/s (4K unkomprimiert)</li>
+                            <li><strong>Intercom (VoIP):</strong> ~100 kbit/s pro Kanal</li>
+                        </ul>
+                    </div>
 
-                        <div class="tech-specs">
-                            <h4>Typische VLAN-Struktur in der Veranstaltungstechnik:</h4>
-                            <ul>
-                                <li><strong>VLAN 10:</strong> Audio-Systeme (Dante, MADI-over-IP)</li>
-                                <li><strong>VLAN 20:</strong> Video-Systeme (NDI, Kameras, Recorder)</li>
-                                <li><strong>VLAN 30:</strong> Lichtsteuerung (ArtNet, sACN, DMX-Gateways)</li>
-                                <li><strong>VLAN 40:</strong> Show-Control (Timecode, Cue-Systeme)</li>
-                                <li><strong>VLAN 50:</strong> Management (Switch-Config, Monitoring)</li>
-                                <li><strong>VLAN 99:</strong> Gäste-Netzwerk (Internet-Zugang)</li>
-                            </ul>
-                        </div>
+                    <p>Die Integration erfordert auch das Verständnis verschiedener Zeitdomänen: Audio-Systeme arbeiten mit Sample-Clocks, Video mit Genlock-Signalen, und Lichtsysteme mit DMX-Refresh-Raten. Network Time Protocol (NTP) oder Precision Time Protocol (PTP) sorgen für die nötige Synchronisation.</p>
 
-                        <p>Die VLAN-Konfiguration erfolgt über Trunk-Ports (transportieren mehrere VLANs mit Tags) und Access-Ports (gehören zu einem VLAN, entfernen Tags). Inter-VLAN-Routing ermöglicht kontrollierten Datenverkehr zwischen VLANs, während gleichzeitig Broadcast-Traffic und potenzielle Sicherheitsrisiken begrenzt werden.</p>
+                    <div class="warning-box">
+                        <h4>⚠️ Kritische Erfolgsfaktoren:</h4>
+                        <ul>
+                            <li>Präzise Timing-Synchronisation zwischen allen Systemen</li>
+                            <li>Redundante Netzwerkpfade für ausfallkritische Verbindungen</li>
+                            <li>Kontinuierliches Monitoring der Netzwerk-Performance</li>
+                            <li>Dokumentierte Fallback-Strategien bei Netzwerkausfällen</li>
+                        </ul>
+                    </div>
 
-                        <div class="tech-specs">
-                            <h4>VLAN-Vorteile in der Praxis:</h4>
-                            <ul>
-                                <li><strong>Sicherheit:</strong> Isolation kritischer Systeme</li>
-                                <li><strong>Performance:</strong> Reduzierung von Broadcast-Traffic</li>
-                                <li><strong>Flexibilität:</strong> Logische statt physische Gruppierung</li>
-                                <li><strong>QoS:</strong> VLAN-basierte Traffic-Priorisierung</li>
-                                <li><strong>Troubleshooting:</strong> Einfachere Fehlereingrenzung</li>
-                            </ul>
-                        </div>
-
-                        <div class="warning-box">
-                            <h4>⚠️ VLAN-Design-Prinzipien:</h4>
-                            <ul>
-                                <li>Native VLAN sollte nicht für Produktiv-Traffic verwendet werden</li>
-                                <li>VLAN 1 (Default) sollte deaktiviert oder umkonfiguriert werden</li>
-                                <li>Voice VLANs benötigen spezielle QoS-Behandlung</li>
-                                <li>Management-VLANs sollten aus Sicherheitsgründen getrennt sein</li>
-                            </ul>
-                        </div>
-
-                        <div class="exercise-link">
-                            <h4>📝 Praktische Übung:</h4>
-                            <p><a href="Aufgabe 7 VLAN.html" target="_blank">Aufgabe 7: VLAN - Design und Konfiguration</a></p>
-                            <p>Planen und konfigurieren Sie eine VLAN-Struktur für ein komplexes Veranstaltungsnetzwerk mit verschiedenen Systemgruppen.</p>
-                        </div>
+                    <div class="exercise-link">
+                        <h4>📝 Praktische Übung:</h4>
+                        <p><a href="https://moodle.mm-bbs.de/moodle/mod/assign/view.php?id=335342" target="_blank">Aufgabe 7: Anwendung - Planung eines Veranstaltungsnetzwerks</a></p>
+                        <p>Entwickeln Sie ein vollständiges Netzwerkkonzept für eine komplexe Veranstaltung mit Audio-, Video- und Lichtsystemen.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        // CSS Styles durch JavaScript einbetten (für Moodle-Kompatibilität)
-        (function() {
-            const style = document.createElement('style');
-            style.textContent = `
+<script>
+    // CSS Styles durch JavaScript einbetten (für Moodle-Kompatibilität)
+    (function() {
+        const style = document.createElement('style');
+        style.textContent = `
                 * {
                     margin: 0;
                     padding: 0;
@@ -664,43 +659,41 @@
                     }
                 }
             `;
-            document.head.appendChild(style);
-        })();
+        document.head.appendChild(style);
+    })();
 
-        // Accordion-Funktionalität
-        function toggleAccordion(header) {
-            const content = header.nextElementSibling;
-            const isActive = content.classList.contains('active');
-            
-            // Alle anderen Akkordeons schließen
-            document.querySelectorAll('.accordion-content.active').forEach(item => {
-                if (item !== content) {
-                    item.classList.remove('active');
-                    item.previousElementSibling.classList.remove('active');
-                }
-            });
-            
-            // Aktuelles Akkordeon umschalten
-            if (isActive) {
-                content.classList.remove('active');
-                header.classList.remove('active');
-            } else {
-                content.classList.add('active');
-                header.classList.add('active');
-            }
-        }
+    // Accordion-Funktionalität
+    function toggleAccordion(header) {
+        const content = header.nextElementSibling;
+        const isActive = content.classList.contains('active');
 
-        // Smooth Scrolling für bessere UX
-        document.addEventListener('DOMContentLoaded', function() {
-            // Erstes Accordion automatisch öffnen
-            const firstAccordion = document.querySelector('.accordion-item');
-            if (firstAccordion) {
-                const firstHeader = firstAccordion.querySelector('.accordion-header');
-                const firstContent = firstAccordion.querySelector('.accordion-content');
-                firstHeader.classList.add('active');
-                firstContent.classList.add('active');
+        // Alle anderen Akkordeons schließen
+        document.querySelectorAll('.accordion-content.active').forEach(item => {
+            if (item !== content) {
+                item.classList.remove('active');
+                item.previousElementSibling.classList.remove('active');
             }
         });
-    </script>
-</body>
-</html>
+
+        // Aktuelles Akkordeon umschalten
+        if (isActive) {
+            content.classList.remove('active');
+            header.classList.remove('active');
+        } else {
+            content.classList.add('active');
+            header.classList.add('active');
+        }
+    }
+
+    // Smooth Scrolling für bessere UX
+    document.addEventListener('DOMContentLoaded', function() {
+        // Erstes Accordion automatisch öffnen
+        const firstAccordion = document.querySelector('.accordion-item');
+        if (firstAccordion) {
+            const firstHeader = firstAccordion.querySelector('.accordion-header');
+            const firstContent = firstAccordion.querySelector('.accordion-content');
+            firstHeader.classList.add('active');
+            firstContent.classList.add('active');
+        }
+    });
+</script>

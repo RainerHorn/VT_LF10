@@ -2,9 +2,70 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Einheit 4 – Switches und Router in der Veranstaltungstechnik</title>
+    <title>Einheit 6 – Praktische Anwendung in der Veranstaltungstechnik</title>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // Funktion zum Kopieren von Code in die Zwischenablage
+            window.copyToClipboard = function(code) {
+                navigator.clipboard.writeText(code).then(() => {
+                    const tooltip = document.createElement('div');
+                    tooltip.textContent = 'Code kopiert!';
+                    tooltip.style.position = 'fixed';
+                    tooltip.style.top = '50%';
+                    tooltip.style.left = '50%';
+                    tooltip.style.transform = 'translate(-50%, -50%)';
+                    tooltip.style.backgroundColor = '#333';
+                    tooltip.style.color = '#fff';
+                    tooltip.style.padding = '10px';
+                    tooltip.style.borderRadius = '5px';
+                    tooltip.style.zIndex = '1000';
+                    document.body.appendChild(tooltip);
+                    setTimeout(() => {
+                        document.body.removeChild(tooltip);
+                    }, 1000);
+                }).catch(err => {
+                    console.error('Fehler beim Kopieren:', err);
+                });
+            };
+
+            // Funktion zum Erklären des Codes mithilfe des Chatbots
+            window.explainCode = function(code) {
+                console.log('Erkläre Code:', code); // Debugging
+                sendToChatbot(code);
+            };
+
+            // Funktion zum Simulieren eines Klicks auf den Chatbot-Button
+            window.simulateChatbotClick = function() {
+                // Der Chatbot-Button hat die ID 'chat-icon' in mmbbs-bot.js
+                const chatButton = document.getElementById('chat-icon');
+                if (chatButton) {
+                    console.log('Chatbot-Button gefunden. Simuliere Klick.'); // Debugging
+                    chatButton.click();
+                } else {
+                    console.error('Chatbot-Button nicht gefunden.');
+                }
+            };
+
+            // Funktion zum Senden von Nachrichten an den Chatbot
+            window.sendToChatbot = function(message) {
+                // Öffne den Chatbot-Chatfenster durch Klick auf das Chat-Icon
+                simulateChatbotClick();
+
+                // Warte kurz, bis das Chatfenster geöffnet ist
+                setTimeout(() => {
+                    const chatInput = document.getElementById('chat-input');
+                    const sendButton = document.getElementById('send-button');
+
+                    if (chatInput && sendButton) {
+                        chatInput.value = message;
+                        sendButton.click();
+                        console.log('Nachricht an Chatbot gesendet:', message); // Debugging
+                    } else {
+                        console.error('Chat-Eingabefeld oder Senden-Button nicht gefunden.');
+                    }
+                }, 500); // Verzögerung von 500 ms
+            };
+            
             const style = document.createElement('style');
             style.innerHTML = `
                 * {
@@ -181,8 +242,76 @@
                         padding: 0.8rem;
                     }
                 }
+
+                /* Chatbot-spezifische Styles */
+                #chat-container {
+                    color: white !important;
+                }
+
+                #chat-container * {
+                    color: white !important;
+                }
+
+                #chat-container .chat-message {
+                    color: white !important;
+                }
+
+                #chat-container .bot-message {
+                    color: white !important;
+                    background-color: rgba(59, 130, 246, 0.8) !important;
+                }
+
+                #chat-container .user-message {
+                    color: white !important;
+                    background-color: rgba(107, 114, 128, 0.8) !important;
+                }
+
+                #chat-container input, #chat-container textarea {
+                    color: white !important;
+                    background-color: rgba(55, 65, 81, 0.9) !important;
+                }
+
+                #chat-container button {
+                    color: white !important;
+                }
             `;
             document.head.appendChild(style);
+        });
+
+        // Funktion zum Initialisieren des Chatbots
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const { MMBBSBOT } = await import('https://dev.mm-bbs.de:8085/mmbbs-bot.js');
+
+                // Wählt das erste Element mit der Klasse "activity-description" aus (falls vorhanden)
+                var element = document.querySelector('.activity-description');
+
+                // Prüft, ob das Element existiert und Inhalt hat
+                var htmlContent = element ? element.innerHTML : '';
+
+                const settings = {
+                    "host": "dev.mm-bbs.de",
+                    "protocol": "https",
+                    "port": 8085,
+                    "opener": "Hallo, wie kann ich Ihnen bei der Aufgabe helfen?",
+                    "chat_icon": "",
+                    "chat_icon_style": "border-radius: 50%; width: 40px; height: 40px;",
+                    "title": "VT GPT",
+                    "task": htmlContent,
+                    "hints": "Sie sind Netzwerkexperte im Bereich Veranstaltungstechnik. Sie erstellen keine fertigen Lösungen, sondern geben Erklärungen zu den Fragen. Ihre Schüler sind Fachinformatiker Systemintegration im ersten Ausbildungsjahr.",
+                    "cookie": document.cookie
+                };
+
+                const bot = new MMBBSBOT(settings);
+                console.log('Chatbot initialisiert:', bot); // Debugging
+
+                // Make toggleChat, sendMessage, and handleKeyDown available globally
+                window.toggleChat = bot.toggleChat.bind(bot);
+                window.sendMessage = bot.sendMessage.bind(bot);
+                window.handleKeyDown = bot.handleKeyDown.bind(bot);
+            } catch (error) {
+                console.error('Fehler beim Laden des Chatbots:', error);
+            }
         });
     </script>
 </head>
@@ -190,7 +319,7 @@
 <!-- Inhalt entfernt für Übersichtlichkeit -->
 <div class="container">
 <div class="section">
-    <h2>5. Aufgaben – Anwendungsorientiertes Arbeiten mit Switches und Routern</h2>
+    <h1>Einheit 6: Praktische Anwendung in der Veranstaltungstechnik</h1>
     <p>Im Folgenden finden Sie eine umfangreiche Sammlung an praxisnahen Aufgaben, die Ihnen helfen sollen, das Wissen aus dieser Einheit aktiv anzuwenden. Jede Aufgabe ist so gestaltet, dass sie ein realistisches Szenario aus dem Umfeld der Veranstaltungstechnik widerspiegelt und typische Problemstellungen behandelt. Durch diese Übungen erweitern Sie nicht nur Ihr technisches Verständnis, sondern schärfen auch Ihre Fähigkeit zur Analyse, Planung und Fehlersuche in Netzwerken mit Switches und Routern.</p>
 
     <div class="task">
