@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installation von ROS2 Humble auf Ubuntu 22.04</title>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            // Akkordeon-Funktionalität
+            const accordionHeaders = document.querySelectorAll("h2.accordion-header");
+            accordionHeaders.forEach(header => {
+                header.addEventListener("click", function () {
+                    const content = this.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                });
+            });
+
+            // Funktion zum Kopieren von Code in die Zwischenablage
+            window.copyToClipboard = function(code) {
+                navigator.clipboard.writeText(code).then(() => {
+                    const tooltip = document.createElement('div');
+                    tooltip.textContent = 'Code kopiert!';
+                    tooltip.style.position = 'fixed';
+                    tooltip.style.top = '50%';
+                    tooltip.style.left = '50%';
+                    tooltip.style.transform = 'translate(-50%, -50%)';
+                    tooltip.style.backgroundColor = '#333';
+                    tooltip.style.color = '#fff';
+                    tooltip.style.padding = '10px';
+                    tooltip.style.borderRadius = '5px';
+                    tooltip.style.zIndex = '1000';
+                    document.body.appendChild(tooltip);
+                    setTimeout(() => {
+                        document.body.removeChild(tooltip);
+                    }, 1000);
+                }).catch(err => {
+                    console.error('Fehler beim Kopieren:', err);
+                });
+            };
+
+            // Funktion zum Erklären des Codes mithilfe des Chatbots
+            window.explainCode = function(code) {
+                console.log('Erkläre Code:', code); // Debugging
+                sendToChatbot(code);
+            };
+
+            // Funktion zum Simulieren eines Klicks auf den Chatbot-Button
+            window.simulateChatbotClick = function() {
+                // Der Chatbot-Button hat die ID 'chat-icon' in mmbbs-bot.js
+                const chatButton = document.getElementById('chat-icon');
+                if (chatButton) {
+                    console.log('Chatbot-Button gefunden. Simuliere Klick.'); // Debugging
+                    chatButton.click();
+                } else {
+                    console.error('Chatbot-Button nicht gefunden.');
+                }
+            };
+
+            // Funktion zum Senden von Nachrichten an den Chatbot
+            window.sendToChatbot = function(message) {
+                // Öffne den Chatbot-Chatfenster durch Klick auf das Chat-Icon
+                simulateChatbotClick();
+
+                // Warte kurz, bis das Chatfenster geöffnet ist
+                setTimeout(() => {
+                    const chatInput = document.getElementById('chat-input');
+                    const sendButton = document.getElementById('send-button');
+
+                    if (chatInput && sendButton) {
+                        chatInput.value = message;
+                        sendButton.click();
+                        console.log('Nachricht an Chatbot gesendet:', message); // Debugging
+                    } else {
+                        console.error('Chat-Eingabefeld oder Senden-Button nicht gefunden.');
+                    }
+                }, 500); // Verzögerung von 500 ms
+            };
+        });
+
+        // Funktion zum Initialisieren des Chatbots
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const { MMBBSBOT } = await import('https://dev.mm-bbs.de:8085/mmbbs-bot.js');
+
+                // Wählt das erste Element mit der Klasse "activity-description" aus (falls vorhanden)
+                var element = document.querySelector('.activity-description');
+
+                // Prüft, ob das Element existiert und Inhalt hat
+                var htmlContent = element ? element.innerHTML : '';
+
+                const settings = {
+                    "host": "dev.mm-bbs.de",
+                    "protocol": "https",
+                    "port": 8085,
+                    "opener": "Hallo, wie kann ich Ihnen bei der Aufgabe helfen?",
+                    "chat_icon": "https://moodle.mm-bbs.de/moodle/draftfile.php/269440/user/draft/96848125/tb3.jpg",
+                    "chat_icon_style": "border-radius: 50%; width: 40px; height: 40px;",
+                    "title": "TB3 GPT",
+                    "task": htmlContent,
+                    "hints": "Sie sind Linux-Experte. Sie erstellen keine fertigen Lösungen, sondern geben Erklärungen zu den Fragen. Ihre Schüler sind Fachinformatiker Systemintegration im ersten Ausbildungsjahr.",
+                    "cookie": document.cookie
+                };
+
+                const bot = new MMBBSBOT(settings);
+                console.log('Chatbot initialisiert:', bot); // Debugging
+
+                // Make toggleChat, sendMessage, and handleKeyDown available globally
+                window.toggleChat = bot.toggleChat.bind(bot);
+                window.sendMessage = bot.sendMessage.bind(bot);
+                window.handleKeyDown = bot.handleKeyDown.bind(bot);
+            } catch (error) {
+                console.error('Fehler beim Laden des Chatbots:', error);
+            }
+        });
+    </script>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; background-color: #f9f9f9; color: #333; max-width: 800px; margin: 0 auto; padding: 20px;">
+    <h1 style="text-align: center; color: #0056b3;">Installation von ROS2 Humble auf Ubuntu 22.04</h1>
+    <p>Diese Anleitung führt Sie durch die Installation von ROS2 Humble Hawksbill auf Ubuntu 22.04. Dies gilt sowohl für eine native Ubuntu-Installation, alle VM-Lösungen und auch für WSL (Windows Subsystem for Linux).</p>
+
+    <h2 class="accordion-header" style="color: #0056b3; cursor: pointer; background-color: #e6f7ff; border-left: 4px solid #0056b3; padding: 10px;">Voraussetzungen</h2>
+    <div style="display: none;">
+        <ul style="margin-left: 20px; padding-left: 20px;">
+            <li>Ein installiertes Ubuntu 22.04 System (nativ oder unter WSL 2).</li>
+            <li>Grundlegende Kenntnisse im Umgang mit der Kommandozeile.</li>
+            <li>Eine funktionierende Internetverbindung.</li>
+        </ul>
+    </div>
+
+    <h2 class="accordion-header" style="color: #0056b3; cursor: pointer; background-color: #e6f7ff; border-left: 4px solid #0056b3; padding: 10px;">Schritt 1: Systemupdates durchführen</h2>
+    <div style="display: none;">
+        <p>Bevor Sie ROS2 installieren, aktualisieren Sie Ihr System:</p>
+        <div style="background-color: #f4f4f4; border: 1px solid #ccc; padding: 10px; margin-top: 10px; margin-bottom: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #333; position: relative;">
+            <div style="display: flex; align-items: center;"><span style="flex-grow: 1;">sudo apt update && sudo apt upgrade -y</span><button style="background-color: #0056b3; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 10px;" onclick="copyToClipboard('sudo apt update && sudo apt upgrade -y')">Copy</button><button style="background-color: #28a745; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 5px;" onclick="explainCode('sudo apt update && sudo apt upgrade -y')">Explain</button></div>
+        </div>
+    </div>
+
+    <h2 class="accordion-header" style="color: #0056b3; cursor: pointer; background-color: #e6f7ff; border-left: 4px solid #0056b3; padding: 10px;">Schritt 2: ROS2-Paketquellen hinzufügen</h2>
+    <div style="display: none;">
+        <p>Fügen Sie die ROS2-Paketquellen zu Ihrem System hinzu:</p>
+        <ol style="margin-left: 20px; padding-left: 20px;">
+            <li>Installieren Sie zunächst notwendige Abhängigkeiten:
+                <div style="background-color: #f4f4f4; border: 1px solid #ccc; padding: 10px; margin-top: 10px; margin-bottom: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #333; position: relative;">
+                    <div style="display: flex; align-items: center;"><span style="flex-grow: 1;">sudo apt install software-properties-common</span><button style="background-color: #0056b3; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 10px;" onclick="copyToClipboard('sudo apt install software-properties-common')">Copy</button><button style="background-color: #28a745; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 5px;" onclick="explainCode('sudo apt install software-properties-common')">Explain</button></div>
+                </div>
+            </li>
+            <li>Fügen Sie den ROS2-Repository-Schlüssel hinzu:
+                <div style="background-color: #f4f4f4; border: 1px solid #ccc; padding: 10px; margin-top: 10px; margin-bottom: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #333; position: relative;">
+                    <div style="display: flex; align-items: center;"><span style="flex-grow: 1;">sudo apt update && sudo apt install curl -y</span><button style="background-color: #0056b3; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 10px;" onclick="copyToClipboard('sudo apt update && sudo apt install curl -y')">Copy</button><button style="background-color: #28a745; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 5px;" onclick="explainCode('sudo apt update && sudo apt install curl -y')">Explain</button></div>
+                    <div style="display: flex; align-items: center; margin-top: 10px;"><span style="flex-grow: 1;">sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -</span><button style="background-color: #0056b3; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 10px;" onclick="copyToClipboard('sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -')">Copy</button><button style="background-color: #28a745; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 5px;" onclick="explainCode('sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -')">Explain</button></div>
+                </div>
+            </li>
+            <li>Fügen Sie die ROS2-Repository-Quelle hinzu:
+                <div style="background-color: #f4f4f4; border: 1px solid #ccc; padding: 10px; margin-top: 10px; margin-bottom: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #333; position: relative;">
+                    <div style="display: flex; align-items: center;"><span style="flex-grow: 1;">sudo sh -c 'echo "deb [arch=amd64] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'</span><button style="background-color: #0056b3; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 10px;" onclick="copyToClipboard(getRos2RepoCommand())">Copy</button><button style="background-color: #28a745; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 5px;" onclick="explainCode(getRos2RepoCommand())">Explain</button></div>
+                </div>
+            </li>
+        </ol>
+    </div>
+
+    <h2 class="accordion-header" style="color: #0056b3; cursor: pointer; background-color: #e6f7ff; border-left: 4px solid #0056b3; padding: 10px;">Schritt 3: ROS2 Humble installieren</h2>
+    <div style="display: none;">
+        <ol style="margin-left: 20px; padding-left: 20px;">
+            <li>Aktualisieren Sie die Paketquellen:
+                <div style="background-color: #f4f4f4; border: 1px solid #ccc; padding: 10px; margin-top: 10px; margin-bottom: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #333; position: relative;">
+                    <div style="display: flex; align-items: center;"><span style="flex-grow: 1;">sudo apt update</span><button style="background-color: #0056b3; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 10px;" onclick="copyToClipboard('sudo apt update')">Copy</button><button style="background-color: #28a745; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 5px;" onclick="explainCode('sudo apt update')">Explain</button></div>
+                </div>
+            </li>
+            <li>Installieren Sie ROS2 Humble und einige grundlegende Tools:
+                <div style="background-color: #f4f4f4; border: 1px solid #ccc; padding: 10px; margin-top: 10px; margin-bottom: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #333; position: relative;">
+                    <div style="display: flex; align-items: center;"><span style="flex-grow: 1;">sudo apt install ros-humble-desktop</span><button style="background-color: #0056b3; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 10px;" onclick="copyToClipboard('sudo apt install ros-humble-desktop')">Copy</button><button style="background-color: #28a745; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 5px;" onclick="explainCode('sudo apt install ros-humble-desktop')">Explain</button></div>
+                </div>
+            </li>
+            <li>Entwicklerwerkzeuge und ROS-Pakete:
+                <div style="background-color: #f4f4f4; border: 1px solid #ccc; padding: 10px; margin-top: 10px; margin-bottom: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #333; position: relative;">
+                    <div style="display: flex; align-items: center;"><span style="flex-grow: 1;">sudo apt install ros-dev-tools</span><button style="background-color: #0056b3; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 10px;" onclick="copyToClipboard('sudo apt install ros-dev-tools')">Copy</button><button style="background-color: #28a745; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 5px;" onclick="explainCode('sudo apt install ros-dev-tools')">Explain</button></div>
+                </div>
+            </li>
+        </ol>
+    </div>
+
+    <h2 class="accordion-header" style="color: #0056b3; cursor: pointer; background-color: #e6f7ff; border-left: 4px solid #0056b3; padding: 10px;">Schritt 4: ROS2 Umgebung einrichten</h2>
+    <div style="display: none;">
+        <p>Um die ROS2-Umgebung bei jedem Start automatisch zu laden, fügen Sie den folgenden Befehl zu Ihrer <code style="background-color: #f4f4f4; padding: 2px 5px;">~/.bashrc</code> hinzu:</p>
+        <div style="background-color: #f4f4f4; border: 1px solid #ccc; padding: 10px; margin-top: 10px; margin-bottom: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #333; position: relative;">
+            <div style="display: flex; align-items: center;"><span style="flex-grow: 1;">echo 'source /opt/ros/humble/setup.bash' >> ~/.bashrc</span><button style="background-color: #0056b3; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 10px;" onclick="copyToClipboard('echo \'source /opt/ros/humble/setup.bash\' >> ~/.bashrc')">Copy</button><button style="background-color: #28a745; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 5px;" onclick="explainCode('echo \'source /opt/ros/humble/setup.bash\' >> ~/.bashrc')">Explain</button></div>
+        </div>
+        <p>Führen Sie den Befehl anschließend aus:</p>
+        <div style="background-color: #f4f4f4; border: 1px solid #ccc; padding: 10px; margin-top: 10px; margin-bottom: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #333; position: relative;">
+            <div style="display: flex; align-items: center;"><span style="flex-grow: 1;">source ~/.bashrc</span><button style="background-color: #0056b3; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 10px;" onclick="copyToClipboard('source ~/.bashrc')">Copy</button><button style="background-color: #28a745; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 5px;" onclick="explainCode('source ~/.bashrc')">Explain</button></div>
+        </div>
+    </div>
+
+    <h2 class="accordion-header" style="color: #0056b3; cursor: pointer; background-color: #e6f7ff; border-left: 4px solid #0056b3; padding: 10px;">Schritt 5: Testen der Installation</h2>
+    <div style="display: none;">
+        <p>Stellen Sie sicher, dass die Installation erfolgreich war, indem Sie ROS2 testen:</p>
+        <ol style="margin-left: 20px; padding-left: 20px;">
+            <li>Öffnen Sie ein neues Terminal und starten Sie einen ROS2-Knoten:
+                <div style="background-color: #f4f4f4; border: 1px solid #ccc; padding: 10px; margin-top: 10px; margin-bottom: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #333; position: relative;">
+                    <div style="display: flex; align-items: center;"><span style="flex-grow: 1;">ros2 run demo_nodes_cpp talker</span><button style="background-color: #0056b3; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 10px;" onclick="copyToClipboard('ros2 run demo_nodes_cpp talker')">Copy</button><button style="background-color: #28a745; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 5px;" onclick="explainCode('ros2 run demo_nodes_cpp talker')">Explain</button></div>
+                </div>
+            </li>
+            <li>Öffnen Sie ein weiteres Terminal und starten Sie einen Listener, um die Nachrichten des Talkers zu empfangen:
+                <div style="background-color: #f4f4f4; border: 1px solid #ccc; padding: 10px; margin-top: 10px; margin-bottom: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #333; position: relative;">
+                    <div style="display: flex; align-items: center;"><span style="flex-grow: 1;">ros2 run demo_nodes_cpp listener</span><button style="background-color: #0056b3; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 10px;" onclick="copyToClipboard('ros2 run demo_nodes_cpp listener')">Copy</button><button style="background-color: #28a745; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 5px;" onclick="explainCode('ros2 run demo_nodes_cpp listener')">Explain</button></div>
+                </div>
+            </li>
+            <li>Wenn beide Terminals Nachrichten austauschen, ist die Installation erfolgreich.</li>
+        </ol>
+    </div>
+
+    <h2 class="accordion-header" style="color: #0056b3; cursor: pointer; background-color: #e6f7ff; border-left: 4px solid #0056b3; padding: 10px;">Zusätzliche Konfigurationen</h2>
+    <div style="display: none;">
+        <ul style="margin-left: 20px; padding-left: 20px;">
+            <li><strong>Colcon-Build-Tool installieren:</strong> Wenn Sie eigene ROS2-Pakete entwickeln möchten, installieren Sie Colcon:
+                <div style="background-color: #f4f4f4; border: 1px solid #ccc; padding: 10px; margin-top: 10px; margin-bottom: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #333; position: relative;">
+                    <div style="display: flex; align-items: center;"><span style="flex-grow: 1;">sudo apt install python3-colcon-common-extensions</span><button style="background-color: #0056b3; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 10px;" onclick="copyToClipboard('sudo apt install python3-colcon-common-extensions')">Copy</button><button style="background-color: #28a745; color: #fff; border: none; padding: 2px 5px; cursor: pointer; border-radius: 3px; font-size: 0.7em; margin-left: 5px;" onclick="explainCode('sudo apt install python3-colcon-common-extensions')">Explain</button></div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <h2 class="accordion-header" style="color: #0056b3; cursor: pointer; background-color: #e6f7ff; border-left: 4px solid #0056b3; padding: 10px;">Weitere Informationen</h2>
+    <div style="display: none;">
+        <p>Weitere Informationen zur Nutzung von ROS2 finden Sie in der offiziellen <a href="https://docs.ros.org/en/humble/index.html" target="_blank" style="color: #0056b3; text-decoration: none;">ROS2-Dokumentation</a>.</p>
+    </div>
+</body>
+</html>
