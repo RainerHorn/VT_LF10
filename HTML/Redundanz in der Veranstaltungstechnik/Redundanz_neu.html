@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Redundanz in der Netzwerktechnik – Unterrichtseinheit</title>
+</head>
+
+<body>
+<div class="container">
+    <header class="main-header">
+        <h1>Redundanz in der Netzwerktechnik</h1>
+        <div class="header-subtitle">Unterrichtseinheit für Veranstaltungstechniker</div>
+        <div class="header-icon">🔄 🌐 🛡️</div>
+    </header>
+
+    <div class="accordion">
+        <!-- 1. Lernziele -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">🎯</span>
+                <h2>1. Lernziele</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <div class="tech-specs">
+                        <h4>Lernziele der Unterrichtseinheit:</h4>
+                        <table class="modern-table">
+                            <tr><th>Lernziel</th><th>Messbarkeit</th><th>Kompetenzbereich</th></tr>
+                            <tr><td>Redundanzdefinition, Gründe und Nutzen erklären</td><td>Kurzantwort/Quiz</td><td>Fachwissen</td></tr>
+                            <tr><td>Kernkomponenten einer redundanten Netzwerkinfrastruktur benennen</td><td>Multiple‑Choice</td><td>Fachwissen</td></tr>
+                            <tr><td>Prinzipien von STP/RSTP/MSTP erklären</td><td>Flussdiagramm</td><td>Fachwissen</td></tr>
+                            <tr><td>STP/RSTP praktisch konfigurieren und Failover testen</td><td>Praktische Übung</td><td>Anwendungs­kompetenz</td></tr>
+                            <tr><td>Redundanz im Audio/Video‑Bereich beschreiben</td><td>Präsentation</td><td>Transfer‑Kompetenz</td></tr>
+                            <tr><td>Risiken von Redundanz‑Fehlern identifizieren und Gegenmaßnahmen planen</td><td>Fallstudie</td><td>Problemlösungs­kompetenz</td></tr>
+                            <tr><td>Redundanz‑Strategien für drahtlose Netzwerke skizzieren</td><td>Gruppenarbeit</td><td>Planungs­kompetenz</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Vorkenntnisse -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">📚</span>
+                <h2>2. Vorkenntnisse / Voraussetzungen</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <div class="warning-box">
+                        <h4>🎓 Erforderliche Vorkenntnisse:</h4>
+                        <ul>
+                            <li>Grundlegende Netzwerke (IP‑Adressen, Subnetting, Switches)</li>
+                            <li>Grundkenntnisse in Windows/Linux Konfiguration</li>
+                            <li>Audio‑/Videotechnik (RTP, RTSP, NTP) – optional, wird kurz eingearbeitet</li>
+                        </ul>
+                        <p>Diese Kenntnisse sind wichtig für das Verständnis redundanter Netzwerkarchitekturen in der Veranstaltungstechnik.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Didaktische Grundstruktur -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">🏗️</span>
+                <h2>3. Didaktische Grundstruktur</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <div class="tech-specs">
+                        <h4>Unterrichtsaufbau im Überblick:</h4>
+                        <table class="modern-table">
+                            <tr><th>Phase</th><th>Zeit</th><th>Inhalt</th><th>Methode</th><th>Medien/Materialien</th></tr>
+                            <tr><td>Einstieg & Motivation</td><td>10 min</td><td>Redundanz‑Beispiel</td><td>Video & Diskussion</td><td>Video‑Clip, Flipchart</td></tr>
+                            <tr><td>Theoretische Grundlagen</td><td>20 min</td><td>Definition, Ziele, Typen</td><td>Vortrag + Q&A</td><td>PowerPoint, Whiteboard</td></tr>
+                            <tr><td>STP / RSTP</td><td>30 min</td><td>Funktionsweise, BPDU, RSTP‑Verbesserungen</td><td>Flipchart + Visualisierung</td><td>Diagramme, PPT</td></tr>
+                            <tr><td>Praktische Übung – STP einrichten</td><td>30 min</td><td>Switch‑Setup, Failover testen</td><td>Hands‑On Lab</td><td>Switches, Cables, Laptop</td></tr>
+                            <tr><td>Redundanz in Audio/Video</td><td>20 min</td><td>IP‑Video‑Redundanz, Time‑code‑Backup</td><td>Demo</td><td>Demo‑Set‑up (Camera, Encoder)</td></tr>
+                            <tr><td>WLAN‑Redundanz</td><td>20 min</td><td>AP‑Dual, Mesh, VLAN‑Zugriff</td><td>Gruppenarbeit</td><td>WLAN‑AP‑Geräte, WLAN‑Simulator</td></tr>
+                            <tr><td>Risikoanalyse & Planung</td><td>20 min</td><td>Failure‑Mode‑Analysis, Checkliste</td><td>Fallstudie</td><td>Checkliste‑Dokument</td></tr>
+                            <tr><td>Abschluss & Feedback</td><td>10 min</td><td>Zusammenfassung, Evaluation</td><td>Plenum</td><td>Feedback‑Formular</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Materialien & Ausstattung -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">🛠️</span>
+                <h2>4. Materialien & Ausstattung</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <div class="exercise-link">
+                        <h4>💰 Benötigte Ausstattung:</h4>
+                        <table class="modern-table">
+                            <tr><th>Item</th><th>Menge</th><th>Zweck</th><th>Kosten (≈)</th></tr>
+                            <tr><td>Managed‑Switches (z. B. Cisco SG250)</td><td>2</td><td>STP‑Übung</td><td>1 200 €</td></tr>
+                            <tr><td>Patch‑Cables (Cat 6)</td><td>4</td><td>Verbindung</td><td>50 €</td></tr>
+                            <tr><td>Laptop / PC</td><td>1</td><td>CLI‑Zugriff</td><td>500 €</td></tr>
+                            <tr><td>Audio‑/Video‑Encoder + Kamera</td><td>1</td><td>Redundanz‑Demo</td><td>600 €</td></tr>
+                            <tr><td>WLAN‑AP‑Geräte (Dual‑Band)</td><td>2</td><td>WLAN‑Redundanz</td><td>400 €</td></tr>
+                            <tr><td>Flipchart + Marker</td><td>1</td><td>Visualisierung</td><td>30 €</td></tr>
+                            <tr><td>Projektor + Leinwand</td><td>1</td><td>Präsentation</td><td>300 €</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Detailplan – Jede Stunde -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">📋</span>
+                <h2>5. Detailplan – Jede Stunde</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <h3>Stunde 1 – Einführung & STP‑Grundlagen</h3>
+                    <div class="tech-specs">
+                        <ul>
+                            <li>0‑10 min: Einstieg (Video‑Clip + Brainstorming)</li>
+                            <li>10‑30 min: Theorie (Definition, Ziele, Typen)</li>
+                            <li>30‑45 min: Diagramme (STP‑Flow, Port‑States)</li>
+                            <li>45‑60 min: Hands‑On Lab (Switch‑Setup, Konfiguration)</li>
+                            <li>60‑75 min: Failover‑Test (Link‑Ausfall)</li>
+                            <li>75‑90 min: Reflexion & Quiz</li>
+                        </ul>
+                    </div>
+
+                    <h3>Stunde 2 – RSTP & Layer‑7 Redundanz</h3>
+                    <div class="tech-specs">
+                        <ul>
+                            <li>0‑15 min: Review (STP‑Ergebnisse)</li>
+                            <li>15‑35 min: RSTP‑Prinzipien (Schneller Failover)</li>
+                            <li>35‑55 min: Lab (RSTP aktivieren, Test)</li>
+                            <li>55‑70 min: Layer‑7‑Demo (Encoder‑Failover)</li>
+                            <li>70‑85 min: Audio/Video‑Redundanz (IP‑Streams)</li>
+                            <li>85‑90 min: Quiz (Multiple‑Choice)</li>
+                        </ul>
+                    </div>
+
+                    <h3>Stunde 3 – WLAN‑Redundanz & VLAN‑Zugriff</h3>
+                    <div class="tech-specs">
+                        <ul>
+                            <li>0‑10 min: Motivation (Mobile Geräte bei Events)</li>
+                            <li>10‑30 min: AP‑Redundanz (Dual‑Band, Failover)</li>
+                            <li>30‑55 min: Mesh‑Netzwerke (Konfiguration, Vorteile)</li>
+                            <li>55‑70 min: VLAN‑Zugriff (Segmentation, Sicherheit)</li>
+                            <li>70‑85 min: Praktische Übung (AP‑Set‑up, Signal‑Monitoring)</li>
+                            <li>85‑90 min: Checkliste (SOP‑Erstellung)</li>
+                        </ul>
+                    </div>
+
+                    <h3>Stunde 4 – Risikoanalyse & Abschluss</h3>
+                    <div class="warning-box">
+                        <ul>
+                            <li>0‑15 min: Fallstudie (Verlust eines Kabels)</li>
+                            <li>15‑35 min: Failure‑Mode‑Analysis (Ursachen, Folgen)</li>
+                            <li>35‑55 min: Checkliste (Redundanz‑SOP)</li>
+                            <li>55‑70 min: Gruppenpräsentation (Redundanz‑Plan)</li>
+                            <li>70‑85 min: Abschlusstest (Szenario‑Quiz)</li>
+                            <li>85‑90 min: Feedback & Zertifikat (Auswertung)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Evaluation -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">📊</span>
+                <h2>6. Evaluation</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <div class="exercise-link">
+                        <h4>📈 Bewertungskriterien:</h4>
+                        <table class="modern-table">
+                            <tr><th>Kriterium</th><th>Methode</th><th>Bewertung</th></tr>
+                            <tr><td>Wissen</td><td>Kurzquiz (Ende jeder Stunde)</td><td>0‑10 Punkte</td></tr>
+                            <tr><td>Praktische Kompetenz</td><td>Lab‑Protokoll (Konfiguration + Failover‑Demo)</td><td>0‑10 Punkte</td></tr>
+                            <tr><td>Analysefähigkeit</td><td>Fallstudie‑Ergebnis</td><td>0‑10 Punkte</td></tr>
+                            <tr><td>Präsentationsfähigkeit</td><td>Gruppenpräsentation</td><td>0‑5 Punkte</td></tr>
+                            <tr><td>Gesamt</td><td>Gesamtnote</td><td>40‑Punkte Skala</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. Praxistransfer‑Tipps -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">💡</span>
+                <h2>7. Tipps für den Praxistransfer</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <div class="exercise-link">
+                        <h4>🚀 Umsetzung in der Praxis:</h4>
+                        <ol>
+                            <li>Verknüpfen mit bestehenden Netzwerken – Switch‑Check‑Up.</li>
+                            <li>Checkliste „Failover‑Procedure" – Vorlage für jede Veranstaltung.</li>
+                            <li>Dokumentation in Team‑Tools (Confluence, Notion) – verlinken zu Lab‑Konfigurationen.</li>
+                            <li>Kontinuierliche Weiterbildung – Webinare, Zertifikatskurse (CCNA, CompTIA Network+).</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. Fazit -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">🎯</span>
+                <h2>8. Fazit</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <div class="warning-box">
+                        <h4>🏆 Zusammenfassung:</h4>
+                        <p>Mit dieser Einheit erhalten Veranstaltungstechniker ein praxisnahes, umsetzbares Fundament in der Netzwerkredundanz. Durch die Kombination aus Theorie, Live‑Demonstrationen und realen Fallstudien entsteht ein handlungsorientiertes Lernumfeld, das sofort in der täglichen Arbeit (Live‑Shows, Festivals, Konferenzen) angewendet werden kann.</p>
+                        
+                        <p>Die Teilnehmer verlassen den Kurs mit praktischen Fähigkeiten in der Konfiguration redundanter Netzwerkstrukturen und einem tiefen Verständnis für die kritische Bedeutung von Ausfallsicherheit in der Veranstaltungstechnik.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // CSS-Integration für Moodle-Kompatibilität
+    (function() {
+        const style = document.createElement('style');
+        style.textContent = `
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+                    min-height: 100vh;
+                }
+
+                .container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }
+
+                .main-header {
+                    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                    color: white;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    margin-bottom: 2rem;
+                    text-align: center;
+                    box-shadow: 0 8px 32px rgba(37, 99, 235, 0.3);
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .main-header::before {
+                    content: '';
+                    position: absolute;
+                    top: -50%;
+                    left: -50%;
+                    width: 200%;
+                    height: 200%;
+                    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+                    animation: pulse 4s ease-in-out infinite;
+                }
+
+                @keyframes pulse {
+                    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.3; }
+                    50% { transform: scale(1.1) rotate(180deg); opacity: 0.1; }
+                }
+
+                .main-header h1 {
+                    font-size: 2.5rem;
+                    font-weight: 700;
+                    margin-bottom: 0.5rem;
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .header-subtitle {
+                    font-size: 1.2rem;
+                    opacity: 0.9;
+                    margin-bottom: 1rem;
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .header-icon {
+                    font-size: 2rem;
+                    margin-top: 1rem;
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .accordion {
+                    background: white;
+                    border-radius: 15px;
+                    overflow: hidden;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                }
+
+                .accordion-item {
+                    border-bottom: 1px solid #e0e0e0;
+                }
+
+                .accordion-item:last-child {
+                    border-bottom: none;
+                }
+
+                .accordion-header {
+                    padding: 1.5rem 2rem;
+                    background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+                    color: white;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    transition: all 0.3s ease;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .accordion-header:hover {
+                    background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                }
+
+                .accordion-header::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+                    transition: left 0.5s;
+                }
+
+                .accordion-header:hover::before {
+                    left: 100%;
+                }
+
+                .accordion-header.active {
+                    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+                    box-shadow: inset 0 -3px 0 #3b82f6;
+                }
+
+                .accordion-header .icon {
+                    font-size: 1.5rem;
+                    margin-right: 1rem;
+                    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+                }
+
+                .accordion-header h2 {
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    flex-grow: 1;
+                    margin: 0;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+                }
+
+                .toggle-icon {
+                    font-size: 1.2rem;
+                    transition: transform 0.3s ease;
+                    filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.3));
+                }
+
+                .accordion-header.active .toggle-icon {
+                    transform: rotate(180deg);
+                }
+
+                .accordion-content {
+                    max-height: 0;
+                    overflow: hidden;
+                    transition: max-height 0.3s ease-out;
+                    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+                }
+
+                .accordion-content.active {
+                    max-height: 2000px;
+                }
+
+                .content-wrapper {
+                    padding: 2rem;
+                    color: #374151;
+                    line-height: 1.8;
+                }
+
+                .content-wrapper p {
+                    margin-bottom: 1.5rem;
+                    font-size: 1.05rem;
+                    color: #4b5563;
+                    text-align: justify;
+                }
+
+                .content-wrapper h3 {
+                    color: #1f2937;
+                    margin-bottom: 1rem;
+                    margin-top: 2rem;
+                    font-size: 1.4rem;
+                    font-weight: 600;
+                    border-bottom: 2px solid #e5e7eb;
+                    padding-bottom: 0.5rem;
+                }
+
+                .content-wrapper h4 {
+                    color: #374151;
+                    margin-bottom: 1rem;
+                    margin-top: 1.5rem;
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                }
+
+                .content-wrapper ul, .content-wrapper ol {
+                    margin-left: 1.5rem;
+                    margin-bottom: 1.5rem;
+                }
+
+                .content-wrapper li {
+                    margin-bottom: 0.8rem;
+                    color: #4b5563;
+                    font-size: 1.05rem;
+                }
+
+                .modern-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 1.5rem 0;
+                    background: white;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                }
+
+                .modern-table th {
+                    background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+                    color: white;
+                    padding: 1rem;
+                    text-align: left;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }
+
+                .modern-table td {
+                    padding: 1rem;
+                    border-bottom: 1px solid #e5e7eb;
+                    color: #374151;
+                    vertical-align: top;
+                    font-size: 0.95rem;
+                }
+
+                .modern-table tr:nth-child(even) td {
+                    background: #f8fafc;
+                }
+
+                .modern-table tr:hover td {
+                    background: #e0f2fe;
+                    transition: background-color 0.2s ease;
+                }
+
+                .tech-specs {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    border-left: 4px solid #0288d1;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(2, 136, 209, 0.1);
+                }
+
+                .tech-specs h4 {
+                    color: #01579b;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+
+                .tech-specs ul {
+                    list-style: none;
+                    padding-left: 0;
+                }
+
+                .tech-specs li {
+                    margin-bottom: 0.5rem;
+                    padding-left: 1.5rem;
+                    position: relative;
+                    color: #0277bd;
+                }
+
+                .tech-specs li::before {
+                    content: '⚙️';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                }
+
+                .warning-box {
+                    background: linear-gradient(135deg, #fff3cd 0%, #fdeaa7 100%);
+                    border-left: 4px solid #f39c12;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(243, 156, 18, 0.1);
+                }
+
+                .warning-box h4 {
+                    color: #d68910;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+
+                .warning-box ul {
+                    list-style: none;
+                    padding-left: 0;
+                }
+
+                .warning-box li {
+                    margin-bottom: 0.5rem;
+                    padding-left: 1.5rem;
+                    position: relative;
+                    color: #b7950b;
+                }
+
+                .warning-box li::before {
+                    content: '⚠️';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                }
+
+                .warning-box p {
+                    color: #b7950b !important;
+                }
+
+                .exercise-link {
+                    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+                    border-left: 4px solid #4caf50;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(76, 175, 80, 0.1);
+                }
+
+                .exercise-link h4 {
+                    color: #2e7d32;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+
+                .exercise-link p {
+                    color: #388e3c !important;
+                    margin-bottom: 0.5rem;
+                }
+
+                .exercise-link a {
+                    color: #1b5e20;
+                    text-decoration: none;
+                    font-weight: 600;
+                    transition: color 0.3s ease;
+                }
+
+                .exercise-link a:hover {
+                    color: #4caf50;
+                    text-decoration: underline;
+                }
+
+                @media (max-width: 768px) {
+                    .container {
+                        padding: 10px;
+                    }
+
+                    .main-header h1 {
+                        font-size: 2rem;
+                    }
+
+                    .accordion-header {
+                        padding: 1rem 1.5rem;
+                    }
+
+                    .accordion-header h2 {
+                        font-size: 1.1rem;
+                    }
+
+                    .content-wrapper {
+                        padding: 1.5rem;
+                    }
+
+                    .tech-specs, .warning-box, .exercise-link {
+                        padding: 1rem;
+                        margin: 1rem 0;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .main-header {
+                        padding: 1.5rem;
+                    }
+
+                    .main-header h1 {
+                        font-size: 1.7rem;
+                    }
+
+                    .accordion-header {
+                        padding: 0.8rem 1rem;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 0.5rem;
+                    }
+
+                    .accordion-header h2 {
+                        font-size: 1rem;
+                    }
+
+                    .content-wrapper {
+                        padding: 1rem;
+                    }
+
+                    .tech-specs, .warning-box, .exercise-link {
+                        padding: 1rem;
+                    }
+                }
+            `;
+        document.head.appendChild(style);
+    })();
+
+    // Accordion-Funktionalität
+    function toggleAccordion(header) {
+        const content = header.nextElementSibling;
+        const isActive = content.classList.contains('active');
+
+        // Alle anderen Akkordeons schließen
+        document.querySelectorAll('.accordion-content.active').forEach(item => {
+            if (item !== content) {
+                item.classList.remove('active');
+                item.previousElementSibling.classList.remove('active');
+            }
+        });
+
+        // Aktuelles Akkordeon umschalten
+        if (isActive) {
+            content.classList.remove('active');
+            header.classList.remove('active');
+        } else {
+            content.classList.add('active');
+            header.classList.add('active');
+        }
+    }
+
+    // Smooth Scrolling für bessere UX
+    document.addEventListener('DOMContentLoaded', function() {
+        // Erstes Accordion automatisch öffnen
+        const firstAccordion = document.querySelector('.accordion-item');
+        if (firstAccordion) {
+            const firstHeader = firstAccordion.querySelector('.accordion-header');
+            const firstContent = firstAccordion.querySelector('.accordion-content');
+            firstHeader.classList.add('active');
+            firstContent.classList.add('active');
+        }
+    });
+</script>
+</body>
+</html>

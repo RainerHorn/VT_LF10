@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Lösung zu Aufgabe 4 (NW4) – Switches und Router</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+                    min-height: 100vh;
+                    padding: 20px;
+                }
+                .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+                h1 {
+                    color: #16a34a;
+                    font-size: 2.2rem;
+                    font-weight: 700;
+                    margin-bottom: 1rem;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                }
+                h2 {
+                    color: #15803d;
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                    margin-bottom: 1rem;
+                    margin-top: 2rem;
+                }
+                h3 {
+                    color: #166534;
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    margin-bottom: 0.8rem;
+                    margin-top: 1.5rem;
+                }
+                .section {
+                    background: #ffffff;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                    border: 1px solid #e5e7eb;
+                }
+                p { margin-bottom: 1.2rem; color: #444; text-align: justify; }
+                ul { padding-left: 2rem; margin-bottom: 1.2rem; }
+                li { margin-bottom: 0.4rem; }
+                .hint {
+                    background: #fef3c7;
+                    border-left: 4px solid #f59e0b;
+                    padding: 1rem;
+                    margin-top: 1rem;
+                    border-radius: 8px;
+                    color: #92400e;
+                }
+                .note {
+                    background: #eff6ff;
+                    border-left: 4px solid #3b82f6;
+                    padding: 1rem;
+                    margin-top: 1rem;
+                    border-radius: 8px;
+                    color: #1d4ed8;
+                }
+                strong { color: #166534; }
+                em { color: #374151; }
+                code {
+                    background: #e5e7eb;
+                    padding: 0.1rem 0.3rem;
+                    border-radius: 4px;
+                    font-size: 0.95rem;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <h1>Musterlösung zu Aufgabe 4 (NW4): Switches und Router</h1>
+            <p>Diese Musterlösung fasst typische Kernunterschiede und Einsatzszenarien von <strong>Switches</strong> und <strong>Routern</strong> zusammen, wie sie in Aufgabe NW4 behandelt werden. Sie dient als Orientierung für Musterantworten mit Praxisbezug zur Veranstaltungstechnik.</p>
+        </div>
+
+        <div class="section">
+            <h2>1. Grundlegender Unterschied zwischen Switch und Router</h2>
+            <p><strong>Beispielantwort:</strong></p>
+            <ul>
+                <li>Ein <strong>Switch</strong> arbeitet hauptsächlich auf der <strong>Sicherungsschicht (Layer 2)</strong>. Er verbindet Geräte innerhalb <em>eines</em> lokalen Netzes (LAN) und entscheidet anhand der <strong>MAC-Adressen</strong>, an welchen Port ein Frame weitergeleitet wird.</li>
+                <li>Ein <strong>Router</strong> arbeitet auf der <strong>Vermittlungsschicht (Layer 3)</strong>. Er verbindet <strong>verschiedene IP-Netze</strong> miteinander und entscheidet anhand der <strong>IP-Adressen</strong>, über welchen Weg ein Paket sein Zielnetz erreicht.</li>
+                <li>Switch = „innerhalb eines Netzes verteilen“, Router = „zwischen Netzen vermitteln“.</li>
+            </ul>
+
+            <div class="hint">
+                <strong>Bewertungshinweis:</strong> Wichtig ist, dass die Schüler/innen die Ebenen (Layer 2 vs. Layer 3) und die verwendeten Adresstypen (MAC vs. IP) unterscheiden können.</div>
+        </div>
+
+        <div class="section">
+            <h2>2. Aufgaben eines Switches im Veranstaltungsnetz</h2>
+            <p><strong>Typische Punkte in einer guten Antwort:</strong></p>
+            <ul>
+                <li><strong>Verteilen von Datenströmen</strong> innerhalb eines VLANs bzw. eines Broadcast-Domäne.</li>
+                <li><strong>Lernen</strong> von MAC-Adressen und Aufbau einer MAC-Adress-Tabelle, um Frames nur noch gezielt an den richtigen Port zu senden (kein unnötiges Flooding).</li>
+                <li>Unterstützung von <strong>VLANs</strong>, um z. B. Audio-, Video-, Licht- und Office-Netze logisch zu trennen, obwohl sie über dieselbe physische Verkabelung laufen.</li>
+                <li>QoS-Funktionen, um kritische Datenströme (z. B. Audionetzwerke wie Dante) zu priorisieren.</li>
+            </ul>
+
+            <div class="note">
+                <strong>Bewertungshinweis:</strong> Ein Bezug zu realen Aufgaben im Veranstaltungshaus (FOH, Regie, Bühne, Backstage) ist besonders wertvoll, z. B. Trennung von Steuer- und Publikums-WLAN.</div>
+        </div>
+
+        <div class="section">
+            <h2>3. Aufgaben eines Routers im Veranstaltungsnetz</h2>
+            <p><strong>Typische Punkte in einer guten Antwort:</strong></p>
+            <ul>
+                <li>Verbindet <strong>mehrere IP-Netze</strong>, z. B. das Lichtnetz, das Audionetz und das Verwaltungsnetz mit dem Internet.</li>
+                <li>Trifft <strong>Routing-Entscheidungen</strong> auf Basis von Routentabellen (Wohin muss ein Paket gesendet werden, wenn das Ziel in einem anderen Netz liegt?).</li>
+                <li>Übernimmt oft zusätzliche Aufgaben wie <strong>NAT</strong> (Übersetzung interner Adressen ins Internet), <strong>Firewall-Funktionen</strong> oder VPN-Endpunkte.</li>
+                <li>Sorgt dafür, dass nur gewünschter Verkehr zwischen Netzen fließt und stellt so eine <strong>Sicherheits- und Trennungsfunktion</strong> bereit.</li>
+            </ul>
+
+            <div class="hint">
+                <strong>Bewertungshinweis:</strong> Positiv ist, wenn Schüler/innen erkennen, dass Router die "Grenzen" zwischen Netzen darstellen und Traffic gezielt zulassen oder blockieren.</div>
+        </div>
+
+        <div class="section">
+            <h2>4. Beispiele aus der Veranstaltungstechnik</h2>
+            <p><strong>Mögliche Beispielantworten:</strong></p>
+            <ul>
+                <li><strong>Switch-Beispiel:</strong> Ein Switch auf der Bühne verbindet mehrere Stageboxen, Funkempfänger und Lichtknoten in einem gemeinsamen VLAN. Der Switch sorgt dafür, dass der Dante- und Art-Net-Verkehr sauber verteilt wird.</li>
+                <li><strong>Router-Beispiel:</strong> Ein zentraler Router verbindet das interne Produktionsnetz (Audio/Video/Steuerung) mit dem Verwaltungsnetz der Halle und ggf. mit dem Internet für Streaming. Er blockiert gleichzeitig ungewollten Zugriff vom Publikums-WLAN auf das Produktionsnetz.</li>
+                <li><strong>Layer-3-Switch:</strong> Ein leistungsfähiger Switch, der Routing-Funktionen übernimmt (Layer-3-Switch), kann als schneller „Router im Rack“ eingesetzt werden, z. B. um VLANs vor Ort zu trennen, ohne einen separaten Router zu verwenden.</li>
+            </ul>
+
+            <div class="note">
+                <strong>Bewertungshinweis:</strong> Einfache, klare Szenarien reichen aus – wichtig ist der korrekte Einsatz von Switch und Router in der beschriebenen Situation.</div>
+        </div>
+
+        <div class="section">
+            <h2>5. Typische Fehler und Missverständnisse</h2>
+            <ul>
+                <li><strong>„Router verstärken das Signal“:</strong> Falsch – Router entscheiden über Wege zwischen Netzen, Signalverstärkung ist eher Aufgabe von Repeatern/Medienkonvertern.</li>
+                <li><strong>„Switches machen automatisch Routing“:</strong> Normale Layer-2-Switches routen nicht, sie leiten nur innerhalb eines Netzes weiter. Routing erfordert Layer-3-Funktionen.</li>
+                <li><strong>„Es reicht ein Gerät für alles“:</strong> In professionellen Setups werden Aufgaben oft getrennt (dedizierter Router/Firewall, dedizierte Switches), um Stabilität und Sicherheit zu erhöhen.</li>
+            </ul>
+
+            <div class="note">
+                <strong>Bewertungshinweis:</strong> Wenn Schüler/innen typische Fehlvorstellungen klar benennen und korrigieren können, zeigt das ein tieferes Verständnis der Netzwerktechnik.</div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,2157 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Redundanz in der Netzwerktechnik – Unterrichtseinheit</title>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Funktion zum Kopieren von Code in die Zwischenablage
+        window.copyToClipboard = function(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                const tooltip = document.createElement('div');
+                tooltip.textContent = 'Text kopiert!';
+                tooltip.style.position = 'fixed';
+                tooltip.style.top = '50%';
+                tooltip.style.left = '50%';
+                tooltip.style.transform = 'translate(-50%, -50%)';
+                tooltip.style.backgroundColor = '#333';
+                tooltip.style.color = '#fff';
+                tooltip.style.padding = '10px';
+                tooltip.style.borderRadius = '5px';
+                tooltip.style.zIndex = '1000';
+                document.body.appendChild(tooltip);
+                setTimeout(() => {
+                    document.body.removeChild(tooltip);
+                }, 1000);
+            }).catch(err => {
+                console.error('Fehler beim Kopieren:', err);
+            });
+        };
+
+        // Funktion zum Erklären des Codes mithilfe des Chatbots
+        window.explainCode = function(code) {
+            console.log('Erkläre Code:', code);
+            sendToChatbot(code);
+        };
+
+        // Funktion zum Simulieren eines Klicks auf den Chatbot-Button
+        window.simulateChatbotClick = function() {
+            const chatButton = document.getElementById('chat-icon');
+            if (chatButton) {
+                console.log('Chatbot-Button gefunden. Simuliere Klick.');
+                chatButton.click();
+            } else {
+                console.error('Chatbot-Button nicht gefunden.');
+            }
+        };
+
+        // Funktion zum Senden von Nachrichten an den Chatbot
+        window.sendToChatbot = function(message) {
+            simulateChatbotClick();
+            setTimeout(() => {
+                const chatInput = document.getElementById('chat-input');
+                const sendButton = document.getElementById('send-button');
+
+                if (chatInput && sendButton) {
+                    chatInput.value = message;
+                    sendButton.click();
+                    console.log('Nachricht an Chatbot gesendet:', message);
+                } else {
+                    console.error('Chat-Eingabefeld oder Senden-Button nicht gefunden.');
+                }
+            }, 500);
+        };
+    });
+
+    // Funktion zum Initialisieren des Chatbots
+    document.addEventListener('DOMContentLoaded', async function() {
+        try {
+            const { MMBBSBOT } = await import('https://dev.mm-bbs.de:8085/mmbbs-bot.js');
+
+            var element = document.querySelector('.activity-description');
+            var htmlContent = element ? element.innerHTML : '';
+
+            const settings = {
+                "host": "dev.mm-bbs.de",
+                "protocol": "https",
+                "port": 8085,
+                "opener": "Hallo! Ich bin Ihr Redundanz-Experte. Wie kann ich Ihnen bei den Netzwerk-Redundanz-Konzepten helfen?",
+                "chat_icon": "",
+                "chat_icon_style": "border-radius: 50%; width: 40px; height: 40px;",
+                "title": "VT GPT",
+                "task": htmlContent,
+                "hints": "Sie sind Netzwerkexperte im Bereich Veranstaltungstechnik mit Schwerpunkt auf Redundanz und Ausfallsicherheit. Sie erstellen keine fertigen Lösungen, sondern geben ausführliche Erklärungen zu Redundanz-Konzepten wie STP, RSTP, VLAN-Redundanz und Failover-Strategien. Ihre Schüler sind Veranstaltungstechniker, die praktische Redundanz-Lösungen für Live-Events benötigen.",
+                "cookie": document.cookie
+            };
+
+            const bot = new MMBBSBOT(settings);
+            console.log('Redundanz-Chatbot initialisiert:', bot);
+
+            window.toggleChat = bot.toggleChat.bind(bot);
+            window.sendMessage = bot.sendMessage.bind(bot);
+            window.handleKeyDown = bot.handleKeyDown.bind(bot);
+        } catch (error) {
+            console.error('Fehler beim Laden des Redundanz-Chatbots:', error);
+        }
+    });
+</script>
+</head>
+
+<body>
+<div class="container">
+    <header class="main-header">
+        <h1>Redundanz in der Netzwerktechnik</h1>
+        <div class="header-subtitle">Unterrichtseinheit für Veranstaltungstechniker</div>
+        <div class="header-icon">🔄 🌐 🛡️</div>
+    </header>
+
+    <div class="accordion">
+        <!-- 1. Lernziele -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">🎯</span>
+                <h2>1. Lernziele & Kompetenzen</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <p>Diese Unterrichtseinheit führt Sie systematisch in die kritischen Aspekte der Netzwerk-Redundanz in der Veranstaltungstechnik ein. Als Veranstaltungstechniker werden Sie täglich mit Situationen konfrontiert, in denen ein Netzwerkausfall katastrophale Folgen haben kann – von unterbrochenen Live-Streams bis hin zu ausgefallenen Lichtshows bei Großveranstaltungen.</p>
+
+                    <p>Redundanz bedeutet mehr als nur "doppelte Absicherung". Es ist ein durchdachtes Konzept, das verschiedene Ebenen der Netzwerkinfrastruktur absichert und gleichzeitig effizient und kostenoptimiert implementiert werden muss. Diese Einheit vermittelt Ihnen sowohl die theoretischen Grundlagen als auch die praktischen Fähigkeiten, um professionelle Redundanz-Lösungen zu planen, implementieren und zu warten.</p>
+
+                    <div class="warning-box">
+                        <h4>🚨 Warum ist Redundanz in der Veranstaltungstechnik kritisch?</h4>
+                        <ul>
+                            <li><strong>Live-Events:</strong> Keine zweite Chance bei Ausfällen während Live-Übertragungen</li>
+                            <li><strong>Hohe Kosten:</strong> Jede Minute Ausfall kann tausende Euro kosten</li>
+                            <li><strong>Reputation:</strong> Technische Ausfälle schädigen das Image nachhaltig</li>
+                            <li><strong>Sicherheit:</strong> Notbeleuchtung und Evakuierungssysteme müssen funktionieren</li>
+                            <li><strong>Rechtliche Aspekte:</strong> Ausfallsicherheit ist oft vertraglich gefordert</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-specs">
+                        <h4>📋 Detaillierte Lernziele und Kompetenzen:</h4>
+                        <table class="modern-table">
+                            <tr><th>Lernziel</th><th>Messbarkeit</th><th>Kompetenzbereich</th><th>Praxisbezug</th></tr>
+                            <tr>
+                                <td><strong>Redundanz-Definition & Nutzen:</strong> Verschiedene Redundanz-Arten erklären und deren Notwendigkeit in der VT begründen</td>
+                                <td>Kurzantwort/Quiz mit Fallbeispielen</td>
+                                <td>Fachwissen</td>
+                                <td>Kundenberatung, Angebotserstellung</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Netzwerk-Komponenten:</strong> Kernkomponenten einer redundanten Infrastruktur identifizieren und deren Rolle beschreiben</td>
+                                <td>Multiple‑Choice + Diagramm-Beschriftung</td>
+                                <td>Fachwissen</td>
+                                <td>Systemplanung, Hardware-Auswahl</td>
+                            </tr>
+                            <tr>
+                                <td><strong>STP/RSTP/MSTP-Prinzipien:</strong> Spanning Tree Protokolle konfigurieren und Failover-Verhalten analysieren</td>
+                                <td>Praktische Konfiguration + Flussdiagramm</td>
+                                <td>Fachwissen + Anwendung</td>
+                                <td>Switch-Konfiguration bei Events</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Praktische Umsetzung:</strong> STP/RSTP in realen Szenarien konfigurieren und Failover-Tests durchführen</td>
+                                <td>Hands-On Lab mit Protokoll</td>
+                                <td>Anwendungs­kompetenz</td>
+                                <td>Aufbau bei Konzerten/Messen</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Audio/Video-Redundanz:</strong> IP-basierte A/V-Redundanz-Strategien entwickeln und implementieren</td>
+                                <td>Präsentation + Demo</td>
+                                <td>Transfer‑Kompetenz</td>
+                                <td>Streaming, Live-Produktionen</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Risikomanagement:</strong> Failure-Mode-Analysis durchführen und Gegenmaßnahmen definieren</td>
+                                <td>Fallstudie mit Lösungskonzept</td>
+                                <td>Problemlösungs­kompetenz</td>
+                                <td>Notfallplanung, SOP-Erstellung</td>
+                            </tr>
+                            <tr>
+                                <td><strong>WLAN-Redundanz:</strong> Drahtlose Redundanz-Strategien für mobile Anwendungen planen</td>
+                                <td>Gruppenarbeit + Konzept-Präsentation</td>
+                                <td>Planungs­kompetenz</td>
+                                <td>Mobile Produktionseinheiten</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="exercise-link">
+                        <h4>🎓 Lernfortschritt selbst einschätzen:</h4>
+                        <p>Verwenden Sie diese Checkliste, um Ihren Lernfortschritt zu überwachen:</p>
+                        <ul>
+                            <li>□ Kann ich die verschiedenen Redundanz-Arten unterscheiden?</li>
+                            <li>□ Verstehe ich die Funktionsweise von STP und RSTP?</li>
+                            <li>□ Kann ich eine einfache Redundanz-Konfiguration erstellen?</li>
+                            <li>□ Kenne ich die kritischen Punkte bei Audio/Video-Redundanz?</li>
+                            <li>□ Kann ich eine Risikoanalyse für ein Event-Netzwerk durchführen?</li>
+                        </ul>
+                        <button onclick="sendToChatbot('Hilf mir bei der Selbsteinschätzung meines Lernfortschritts in Netzwerk-Redundanz')" class="chat-button">💬 Lernfortschritt mit VT GPT besprechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Vorkenntnisse -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">📚</span>
+                <h2>2. Vorkenntnisse & Grundlagen</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <p>Um Redundanz-Konzepte erfolgreich zu verstehen und anzuwenden, benötigen Sie solide Grundkenntnisse in verschiedenen Bereichen. Diese Sektion hilft Ihnen dabei, Ihre Vorkenntnisse zu überprüfen und gegebenenfalls aufzufrischen.</p>
+
+                    <div class="warning-box">
+                        <h4>🎓 Erforderliche Kern-Kompetenzen:</h4>
+                        
+                        <h5>🌐 Netzwerk-Grundlagen (ESSENTIELL):</h5>
+                        <ul>
+                            <li><strong>IP-Adressierung:</strong> IPv4-Adressklassen, private vs. öffentliche Adressen</li>
+                            <li><strong>Subnetting:</strong> CIDR-Notation, Netzmasken, Broadcast-Bereiche</li>
+                            <li><strong>Switching:</strong> MAC-Adressen, VLAN-Grundlagen, Port-Konfiguration</li>
+                            <li><strong>OSI-Modell:</strong> Besonders Layer 2 (Data Link) und Layer 3 (Network)</li>
+                            <li><strong>Ethernet:</strong> Frame-Struktur, Kollisions-Domänen, Duplex-Modi</li>
+                        </ul>
+
+                        <h5>💻 System-Administration (WICHTIG):</h5>
+                        <ul>
+                            <li><strong>Windows:</strong> Netzwerk-Konfiguration, Services, Event-Logs</li>
+                            <li><strong>Linux:</strong> Basis-Kommandos, Netzwerk-Tools (ping, traceroute, netstat)</li>
+                            <li><strong>CLI-Bedienung:</strong> Switch-Konsole, Telnet/SSH-Verbindungen</li>
+                            <li><strong>Protokoll-Analyse:</strong> Wireshark-Grundlagen für Troubleshooting</li>
+                        </ul>
+
+                        <h5>🎬 Veranstaltungstechnik-Spezifika (VORTEILHAFT):</h5>
+                        <ul>
+                            <li><strong>Audio-over-IP:</strong> RTP, RTSP, Dante-Grundlagen</li>
+                            <li><strong>Video-Streaming:</strong> NDI, RTMP, Multicast-Konzepte</li>
+                            <li><strong>Timing-Protokolle:</strong> NTP, PTP für Synchronisation</li>
+                            <li><strong>Control-Protokolle:</strong> ArtNet, sACN für Lichtsteuerung</li>
+                        </ul>
+                        
+                        <p><em>Hinweis: Audio/Video-spezifische Kenntnisse werden bei Bedarf während der Einheit vermittelt.</em></p>
+                    </div>
+
+                    <div class="tech-specs">
+                        <h4>🧪 Selbsttest: Überprüfen Sie Ihre Vorkenntnisse</h4>
+                        
+                        <h5>Test 1: IP-Adressierung</h5>
+                        <div class="code-container">
+                            <div class="code-content">
+                                <strong>Aufgabe:</strong> Welche IP-Adresse gehört zum Netz 192.168.10.0/24?<br>
+                                a) 192.168.10.255<br>
+                                b) 192.168.11.1<br>
+                                c) 192.168.10.128<br>
+                                d) 192.169.10.50
+                            </div>
+                            <div class="code-actions">
+                                <button onclick="explainCode('Erkläre mir die Subnetz-Berechnung für 192.168.10.0/24 und welche Adressen gültig sind')" class="explain-btn">💬 Erklärung anfordern</button>
+                            </div>
+                        </div>
+
+                        <h5>Test 2: VLAN-Grundlagen</h5>
+                        <div class="code-container">
+                            <div class="code-content">
+                                <strong>Szenario:</strong> Sie haben zwei Switches mit je 24 Ports. VLAN 10 für Audio, VLAN 20 für Video, VLAN 30 für Management.<br>
+                                <strong>Frage:</strong> Wie konfigurieren Sie einen Trunk-Port zwischen den Switches?
+                            </div>
+                            <div class="code-actions">
+                                <button onclick="explainCode('Wie konfiguriere ich VLAN-Trunking zwischen zwei Switches für Audio, Video und Management VLANs?')" class="explain-btn">💬 VLAN-Trunking erklären</button>
+                            </div>
+                        </div>
+
+                        <h5>Test 3: Protokoll-Verständnis</h5>
+                        <div class="code-container">
+                            <div class="code-content">
+                                <strong>Aufgabe:</strong> Bei einem Live-Stream fallen Pakete aus. Mit welchen Tools analysieren Sie das Problem?<br>
+                                <em>Nennen Sie mindestens 3 verschiedene Ansätze.</em>
+                            </div>
+                            <div class="code-actions">
+                                <button onclick="explainCode('Welche Tools und Methoden gibt es zur Netzwerk-Fehleranalyse bei Streaming-Problemen?')" class="explain-btn">💬 Troubleshooting-Strategien</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-link">
+                        <h4>📖 Auffrischung der Grundlagen</h4>
+                        <p>Falls Sie bei den Selbsttests Unsicherheiten festgestellt haben, nutzen Sie diese Ressourcen:</p>
+                        
+                        <h5>Empfohlene Lernmaterialien:</h5>
+                        <ul>
+                            <li><strong>IP-Subnetting:</strong> Online-Rechner bei subnet-calculator.com</li>
+                            <li><strong>VLAN-Konfiguration:</strong> Cisco Packet Tracer (kostenlos)</li>
+                            <li><strong>Protokoll-Analyse:</strong> Wireshark University (kostenlose Kurse)</li>
+                            <li><strong>Linux-Grundlagen:</strong> "Linux Journey" Online-Tutorial</li>
+                        </ul>
+
+                        <h5>Praktische Vorbereitung:</h5>
+                        <ul>
+                            <li>Installieren Sie Wireshark auf Ihrem Laptop</li>
+                            <li>Machen Sie sich mit der Konsole Ihrer Switches vertraut</li>
+                            <li>Testen Sie SSH/Telnet-Verbindungen zu Netzwerkgeräten</li>
+                            <li>Üben Sie grundlegende Ping- und Traceroute-Kommandos</li>
+                        </ul>
+                        
+                        <button onclick="sendToChatbot('Ich möchte meine Netzwerk-Grundlagen für die Redundanz-Schulung auffrischen. Wo fange ich am besten an?')" class="chat-button">💬 Individuelle Lernberatung</button>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>⏰ Zeitaufwand für Vorbereitung</h4>
+                        <p>Je nach Ihren Vorkenntnissen sollten Sie folgende Vorbereitungszeit einplanen:</p>
+                        <ul>
+                            <li><strong>Netzwerk-Einsteiger:</strong> 4-6 Stunden Grundlagen-Wiederholung</li>
+                            <li><strong>Fortgeschrittene:</strong> 1-2 Stunden zur Auffrischung spezifischer Themen</li>
+                            <li><strong>Experten:</strong> 30 Minuten Tool-Check und Umgebungs-Vorbereitung</li>
+                        </ul>
+                        <p><em>Tipp: Nutzen Sie den VT GPT zur individuellen Lernplanung!</em></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Didaktische Grundstruktur -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">🏗️</span>
+                <h2>3. Didaktischer Leitfaden & Lernpfad</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <p>Dieser Leitfaden strukturiert Ihren Lernprozess von den theoretischen Grundlagen bis zur praktischen Umsetzung. Das didaktische Konzept folgt dem bewährten "Learning by Doing"-Ansatz mit systematischem Kompetenzaufbau.</p>
+
+                    <div class="warning-box">
+                        <h4>🎯 Didaktisches Konzept</h4>
+                        <p>Die Lerneinheit basiert auf dem <strong>4-Stufen-Modell der Kompetenzentwicklung:</strong></p>
+                        <ol>
+                            <li><strong>Verstehen:</strong> Theoretische Grundlagen und Konzepte</li>
+                            <li><strong>Anwenden:</strong> Geführte praktische Übungen</li>
+                            <li><strong>Analysieren:</strong> Problemlösung in realen Szenarien</li>
+                            <li><strong>Bewerten:</strong> Eigenständige Lösungsentwicklung</li>
+                        </ol>
+                    </div>
+
+                    <div class="tech-specs">
+                        <h4>📚 Lernpfad-Übersicht (4 x 90 Minuten)</h4>
+                        <table class="modern-table">
+                            <tr><th>Phase</th><th>Zeit</th><th>Inhalt & Aktivitäten</th><th>Methode</th><th>Medien/Tools</th><th>Lernziel</th></tr>
+                            
+                            <tr style="background: #e3f2fd !important;">
+                                <td colspan="6" style="text-align: center; font-weight: bold; color: #1565c0;">
+                                    🏗️ STUFE 1: VERSTEHEN - Theoretische Grundlagen
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>Einstieg & Motivation</strong></td>
+                                <td>10 min</td>
+                                <td>
+                                    <strong>Horror-Stories aus der Praxis:</strong><br>
+                                    • Eurovision-Ausfall 2016<br>
+                                    • Super Bowl Blackout 2013<br>
+                                    • Lokale Event-Katastrophen<br>
+                                    <em>Diskussion: "Was wären die Folgen gewesen?"</em>
+                                </td>
+                                <td>Interaktiver Vortrag + Diskussion</td>
+                                <td>Video-Clips, News-Articles</td>
+                                <td>Problemwahrnehmung entwickeln</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>Theoretische Grundlagen</strong></td>
+                                <td>20 min</td>
+                                <td>
+                                    <strong>Redundanz-Taxonomie:</strong><br>
+                                    • Hardware- vs. Software-Redundanz<br>
+                                    • Aktive vs. Passive Redundanz<br>
+                                    • Hot, Warm, Cold Standby<br>
+                                    • N+1, N+N, 2N Konzepte<br>
+                                    <strong>Metriken:</strong> MTBF, MTTR, Availability
+                                </td>
+                                <td>Strukturierter Vortrag mit Visualisierungen</td>
+                                <td>PowerPoint, Whiteboard, Diagramme</td>
+                                <td>Redundanz-Arten klassifizieren können</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>STP-Grundlagen</strong></td>
+                                <td>30 min</td>
+                                <td>
+                                    <strong>Spanning Tree Protocol:</strong><br>
+                                    • Warum STP? (Broadcast-Storms vermeiden)<br>
+                                    • BPDU-Konzept und Root Bridge Election<br>
+                                    • Port-States: Blocking → Learning → Forwarding<br>
+                                    • Konvergenz-Zeit und Probleme<br>
+                                    <strong>RSTP-Verbesserungen:</strong><br>
+                                    • Schnellere Konvergenz (2-6 Sekunden)<br>
+                                    • Edge Ports, Point-to-Point Links
+                                </td>
+                                <td>Schritt-für-Schritt Erklärung mit Live-Demo</td>
+                                <td>Packet Tracer, Live-Switches, Flipchart</td>
+                                <td>STP-Algorithmus verstehen und erklären können</td>
+                            </tr>
+
+                            <tr style="background: #f3e5f5 !important;">
+                                <td colspan="6" style="text-align: center; font-weight: bold; color: #7b1fa2;">
+                                    🔧 STUFE 2: ANWENDEN - Praktische Grundfertigkeiten
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>Hands-On Lab: STP Setup</strong></td>
+                                <td>30 min</td>
+                                <td>
+                                    <strong>Geführte Konfiguration:</strong><br>
+                                    • 3-Switch-Topologie aufbauen<br>
+                                    • Root Bridge manuell festlegen<br>
+                                    • Port-Prioritäten konfigurieren<br>
+                                    • STP-Status überwachen<br>
+                                    <strong>Kommandos:</strong><br>
+                                    <code>spanning-tree vlan 1 root primary</code><br>
+                                    <code>show spanning-tree</code>
+                                </td>
+                                <td>Geführte praktische Übung</td>
+                                <td>Managed Switches, Konsolen-Kabel, Laptops</td>
+                                <td>Basis-STP konfigurieren können</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>Failover-Tests</strong></td>
+                                <td>15 min</td>
+                                <td>
+                                    <strong>Systematisches Testen:</strong><br>
+                                    • Primären Link trennen<br>
+                                    • Konvergenz-Zeit messen<br>
+                                    • Traffic-Unterbrechung dokumentieren<br>
+                                    • Recovery-Verhalten analysieren<br>
+                                    <strong>Messungen:</strong> Ping-Tests, Timer
+                                </td>
+                                <td>Experimentelle Übung mit Protokollierung</td>
+                                <td>Stoppuhr, Ping-Tools, Protokoll-Vorlage</td>
+                                <td>Failover-Verhalten verstehen und bewerten</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>Reflexion & Zwischentest</strong></td>
+                                <td>15 min</td>
+                                <td>
+                                    <strong>Lernkontrolle:</strong><br>
+                                    • STP-Diagramm beschriften<br>
+                                    • Port-States zuordnen<br>
+                                    • Konvergenz-Zeit schätzen<br>
+                                    <strong>Reflexionsfragen:</strong><br>
+                                    "Was würde passieren, wenn...?"
+                                </td>
+                                <td>Quiz + Peer-Diskussion</td>
+                                <td>Kahoot/Moodle-Quiz, Diskussionsrunden</td>
+                                <td>Verständnis überprüfen und festigen</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-content">
+                            <strong>💡 Didaktik-Tipp für Lehrende:</strong><br>
+                            Verwenden Sie das "Think-Pair-Share" Prinzip: Lassen Sie Lernende erst individuell über Probleme nachdenken, dann in Paaren diskutieren und schließlich im Plenum teilen. Dies aktiviert verschiedene Lerntypen optimal.
+                        </div>
+                        <div class="code-actions">
+                            <button onclick="explainCode('Erkläre mir das Think-Pair-Share Prinzip und wie ich es beim Redundanz-Training einsetzen kann')" class="explain-btn">💬 Didaktik-Beratung</button>
+                        </div>
+                    </div>
+
+                    <div class="exercise-link">
+                        <h4>🎯 Lernziel-Mapping</h4>
+                        <p>Jede Phase ist klar einem Kompetenzniveau zugeordnet:</p>
+                        <ul>
+                            <li><strong>Stufe 1 (Verstehen):</strong> Begriffe definieren, Konzepte erklären</li>
+                            <li><strong>Stufe 2 (Anwenden):</strong> Standardverfahren durchführen</li>
+                            <li><strong>Stufe 3 (Analysieren):</strong> Probleme identifizieren und lösen</li>
+                            <li><strong>Stufe 4 (Bewerten):</strong> Lösungen entwickeln und optimieren</li>
+                        </ul>
+                        
+                        <button onclick="sendToChatbot('Hilf mir dabei, meinen individuellen Lernpfad durch die Redundanz-Schulung zu planen')" class="chat-button">💬 Individuellen Lernpfad erstellen</button>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>⚠️ Häufige Lernhürden und Lösungsansätze</h4>
+                        <ul>
+                            <li><strong>Problem:</strong> STP-Konzept zu abstrakt<br>
+                                <strong>Lösung:</strong> Physische Analogie mit Straßennetz verwenden</li>
+                            <li><strong>Problem:</strong> Konfigurationssyntax vergessen<br>
+                                <strong>Lösung:</strong> Cheat-Sheet erstellen und regelmäßig verwenden</li>
+                            <li><strong>Problem:</strong> Troubleshooting überfordert<br>
+                                <strong>Lösung:</strong> Systematische Checklisten entwickeln</li>
+                            <li><strong>Problem:</strong> Praxistransfer unklar<br>
+                                <strong>Lösung:</strong> Echte Event-Szenarien als Beispiele nutzen</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Materialien & Ausstattung -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">🛠️</span>
+                <h2>4. Labor-Ausstattung & Materialien</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <p>Eine erfolgreiche Redundanz-Schulung benötigt die richtige technische Ausstattung. Diese Sektion hilft Ihnen bei der Planung und Beschaffung der erforderlichen Komponenten - sowohl für professionelle Schulungsumgebungen als auch für Budget-freundliche Alternativen.</p>
+
+                    <div class="warning-box">
+                        <h4>💰 Budget-Kategorien für verschiedene Szenarien</h4>
+                        <ul>
+                            <li><strong>Professionelles Training-Lab:</strong> 15.000 - 25.000 € (Vollausstattung)</li>
+                            <li><strong>Standard-Schulungsraum:</strong> 5.000 - 8.000 € (Basis-Equipment)</li>
+                            <li><strong>Home-Lab/Selbststudium:</strong> 1.000 - 2.000 € (Simulationen + 2-3 Geräte)</li>
+                            <li><strong>Virtuelles Labor:</strong> 200 - 500 € (Software-Lizenzen + leistungsstarker PC)</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-specs">
+                        <h4>🔧 Kern-Ausstattung: Hardware-Komponenten</h4>
+                        <table class="modern-table">
+                            <tr><th>Komponente</th><th>Spezifikation</th><th>Menge</th><th>Zweck/Einsatz</th><th>Kosten (€)</th><th>Alternativen</th></tr>
+                            
+                            <tr style="background: #fff3cd;">
+                                <td colspan="6" style="text-align: center; font-weight: bold;">
+                                    🌐 NETZWERK-INFRASTRUCTURE
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>Managed Switches</strong><br><em>Cisco SG250-26 oder ähnlich</em></td>
+                                <td>
+                                    • 24x Gigabit Ports<br>
+                                    • 2x SFP+ Uplinks<br>
+                                    • Web-GUI + CLI<br>
+                                    • VLAN, STP, RSTP Support<br>
+                                    • PoE+ (optional)
+                                </td>
+                                <td>3-4 Stück</td>
+                                <td>
+                                    • STP-Topologien aufbauen<br>
+                                    • Redundante Verbindungen<br>
+                                    • VLAN-Segmentierung<br>
+                                    • Failover-Tests
+                                </td>
+                                <td>600 - 800<br>pro Stück</td>
+                                <td>
+                                    • TP-Link T2600G-28TS (Budget)<br>
+                                    • Netgear GS728TP<br>
+                                    • D-Link DGS-1210 Series
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>Patch-Kabel</strong><br><em>Cat 6A, verschiedene Längen</em></td>
+                                <td>
+                                    • 0.5m, 1m, 2m, 5m<br>
+                                    • Verschiedene Farben<br>
+                                    • Geschirmte Ausführung<br>
+                                    • RJ45-Stecker
+                                </td>
+                                <td>20-30 Stück</td>
+                                <td>
+                                    • Flexible Topologie-Änderungen<br>
+                                    • Farbkodierung für VLANs<br>
+                                    • Schneller Aufbau/Umbau<br>
+                                    • Redundante Verkabelung
+                                </td>
+                                <td>3-8<br>pro Kabel</td>
+                                <td>
+                                    • Cat 6 (günstiger)<br>
+                                    • Selbst crimpen<br>
+                                    • Gebrauchte Kabel
+                                </td>
+                            </tr>
+
+                            <tr style="background: #e8f5e8;">
+                                <td colspan="6" style="text-align: center; font-weight: bold;">
+                                    💻 AUDIO/VIDEO EQUIPMENT
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>IP-Kameras</strong><br><em>AXIS oder Hikvision</em></td>
+                                <td>
+                                    • 1080p oder 4K<br>
+                                    • ONVIF-kompatibel<br>
+                                    • PoE-Versorgung<br>
+                                    • RTSP-Stream<br>
+                                    • Web-Interface
+                                </td>
+                                <td>2-3 Stück</td>
+                                <td>
+                                    • Video-Redundanz demonstrieren<br>
+                                    • Failover-Szenarien<br>
+                                    • Load-Balancing testen<br>
+                                    • Multicast-Streaming
+                                </td>
+                                <td>150-400<br>pro Kamera</td>
+                                <td>
+                                    • Webcams mit IP-Software<br>
+                                    • Smartphone-Apps<br>
+                                    • OBS Virtual Camera
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>Audio-Interface</strong><br><em>Dante-fähig oder USB</em></td>
+                                <td>
+                                    • Focusrite RedNet oder<br>
+                                    • Zoom PodTrak P4<br>
+                                    • Mehrere Ein-/Ausgänge<br>
+                                    • Niedrige Latenz<br>
+                                    • Professional-Anschlüsse
+                                </td>
+                                <td>1-2 Stück</td>
+                                <td>
+                                    • Audio-over-IP Demo<br>
+                                    • Redundante Audio-Pfade<br>
+                                    • Dante-Netzwerk Aufbau<br>
+                                    • Latenz-Messungen
+                                </td>
+                                <td>200-800<br>je nach Typ</td>
+                                <td>
+                                    • Standard USB-Audio<br>
+                                    • Onboard-Soundkarte<br>
+                                    • Software-basierte Lösungen
+                                </td>
+                            </tr>
+
+                            <tr style="background: #e0f2fe;">
+                                <td colspan="6" style="text-align: center; font-weight: bold;">
+                                    📱 WIRELESS & MOBILE
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>WLAN Access Points</strong><br><em>Enterprise-Grade</em></td>
+                                <td>
+                                    • WiFi 6 (802.11ax)<br>
+                                    • Dual-Band (2.4 + 5 GHz)<br>
+                                    • VLAN-Support<br>
+                                    • Manageable (Controller)<br>
+                                    • PoE-Versorgung
+                                </td>
+                                <td>3-4 Stück</td>
+                                <td>
+                                    • WLAN-Redundanz Setup<br>
+                                    • Roaming-Tests<br>
+                                    • Load-Balancing<br>
+                                    • Mesh-Konfiguration
+                                </td>
+                                <td>150-300<br>pro AP</td>
+                                <td>
+                                    • Consumer-Router als AP<br>
+                                    • OpenWrt-basierte Geräte<br>
+                                    • Unifi-Serie (Ubiquiti)
+                                </td>
+                            </tr>
+
+                            <tr style="background: #f3e5f5;">
+                                <td colspan="6" style="text-align: center; font-weight: bold;">
+                                    💻 COMPUTER & TOOLS
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>Laptops/PCs</strong><br><em>Für Teilnehmer</em></td>
+                                <td>
+                                    • Windows 10/11 oder Linux<br>
+                                    • 8GB RAM minimum<br>
+                                    • Ethernet-Port<br>
+                                    • WiFi-fähig<br>
+                                    • Admin-Rechte
+                                </td>
+                                <td>1 pro TN</td>
+                                <td>
+                                    • Switch-Konfiguration<br>
+                                    • Monitoring-Tools<br>
+                                    • Wireshark-Analyse<br>
+                                    • Simulationen
+                                </td>
+                                <td>500-1000<br>pro Gerät</td>
+                                <td>
+                                    • BYOD (Bring Your Own)<br>
+                                    • Raspberry Pi Setup<br>
+                                    • Virtuelle Maschinen
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-content">
+                            <strong>💡 Setup-Tipp:</strong> Erstellen Sie verschiedene "Schnell-Topologien" mit Farbkodierung:<br>
+                            • <span style="color: red;">Rot</span> = Primäre Verbindungen<br>
+                            • <span style="color: blue;">Blau</span> = Backup-Verbindungen<br>
+                            • <span style="color: green;">Grün</span> = Management-Netz<br>
+                            • <span style="color: orange;">Orange</span> = Test-Traffic
+                        </div>
+                        <div class="code-actions">
+                            <button onclick="explainCode('Erkläre mir, wie ich eine effiziente Labor-Topologie für Redundanz-Training aufbaue')" class="explain-btn">💬 Topologie-Beratung</button>
+                        </div>
+                    </div>
+
+                    <div class="exercise-link">
+                        <h4>📋 Software-Tools & Lizenzen</h4>
+                        
+                        <table class="modern-table">
+                            <tr><th>Software</th><th>Zweck</th><th>Kosten</th><th>Free Alternative</th></tr>
+                            <tr>
+                                <td><strong>Wireshark</strong></td>
+                                <td>Protokoll-Analyse, Debugging</td>
+                                <td>Kostenlos</td>
+                                <td>tcpdump (Linux)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cisco Packet Tracer</strong></td>
+                                <td>Netzwerk-Simulation</td>
+                                <td>Kostenlos (Netacad)</td>
+                                <td>GNS3, EVE-NG</td>
+                            </tr>
+                            <tr>
+                                <td><strong>OBS Studio</strong></td>
+                                <td>Video-Streaming Tests</td>
+                                <td>Kostenlos</td>
+                                <td>FFmpeg (CLI)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>iperf3</strong></td>
+                                <td>Bandbreiten-/Latenz-Tests</td>
+                                <td>Kostenlos</td>
+                                <td>netperf</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dante Controller</strong></td>
+                                <td>Audio-Netzwerk Management</td>
+                                <td>Hardware-gebunden</td>
+                                <td>JACK Audio (Linux)</td>
+                            </tr>
+                        </table>
+
+                        <button onclick="sendToChatbot('Hilf mir bei der Auswahl der optimalen Ausstattung für mein Redundanz-Training-Labor innerhalb meines Budgets')" class="chat-button">💬 Budget-Optimierung besprechen</button>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>🏗️ Labor-Setup: Schritt-für-Schritt Anleitung</h4>
+                        <ol>
+                            <li><strong>Basis-Topologie planen:</strong> Mindestens Dreiecks-Setup (3 Switches)</li>
+                            <li><strong>Management-Netz einrichten:</strong> Separates VLAN für Switch-Zugriff</li>
+                            <li><strong>Redundante Verbindungen:</strong> Mehrere Pfade zwischen allen Switches</li>
+                            <li><strong>Test-Endgeräte positionieren:</strong> Verschiedene VLANs und Segmente</li>
+                            <li><strong>Monitoring aufsetzen:</strong> SNMP, Logs, Wireshark-Captures</li>
+                            <li><strong>Dokumentation erstellen:</strong> IP-Plan, VLAN-Schema, Verkabelung</li>
+                        </ol>
+
+                        <p><strong>📐 Empfohlene Raumgröße:</strong> Minimum 30m² für 8-12 Teilnehmer mit Equipment</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Detailplan – Jede Stunde -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">📋</span>
+                <h2>5. Detaillierte Stundenplanung & Lernmodule</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <p>Diese detaillierte Stundenplanung führt Sie systematisch durch alle vier Lernmodule. Jede 90-Minuten-Einheit ist so strukturiert, dass Theorie und Praxis optimal verzahnt werden und Sie kontinuierlich Ihr Verständnis überprüfen können.</p>
+
+                    <div class="warning-box">
+                        <h4>⏰ Zeitmanagement-Prinzipien</h4>
+                        <ul>
+                            <li><strong>25-Minuten-Blöcke:</strong> Maximale Konzentrationsspanne nutzen</li>
+                            <li><strong>5-Minuten-Pausen:</strong> Zwischen Theorie- und Praxisphasen</li>
+                            <li><strong>Hands-On-Fokus:</strong> Mindestens 60% praktische Arbeit</li>
+                            <li><strong>Reflexionsphasen:</strong> Wissen festigen und Verständnis überprüfen</li>
+                            <li><strong>Flexibilität:</strong> Zeiten können je nach Gruppendynamik angepasst werden</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-specs">
+                        <h4>📚 MODUL 1: Einführung & STP-Grundlagen (90 min)</h4>
+                        <table class="modern-table">
+                            <tr><th>Zeit</th><th>Phase</th><th>Aktivität</th><th>Methode</th><th>Materialien</th><th>Lernziel</th></tr>
+                            
+                            <tr style="background: #fff3cd;">
+                                <td><strong>0-10 min</strong></td>
+                                <td>🎬 Einstieg & Motivation</td>
+                                <td>
+                                    <strong>Horror-Stories aus der Praxis:</strong><br>
+                                    • Video: Eurovision Song Contest 2016 - Übertragungsausfall<br>
+                                    • Super Bowl 2013 - 34 Minuten Stromausfall<br>
+                                    • Eigene Erfahrungen der Teilnehmer sammeln<br>
+                                    <em>"Was wären die Kosten gewesen?"</em>
+                                </td>
+                                <td>
+                                    • Video-Clips (3-4 min)<br>
+                                    • Interaktive Diskussion<br>
+                                    • Brainstorming an Flipchart
+                                </td>
+                                <td>
+                                    • Beamer/Monitor<br>
+                                    • YouTube-Clips<br>
+                                    • Flipchart/Whiteboard<br>
+                                    • Marker
+                                </td>
+                                <td>
+                                    Problemwahrnehmung entwickeln,<br>
+                                    Relevanz verstehen
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td><strong>10-35 min</strong></td>
+                                <td>📖 Theoretische Grundlagen</td>
+                                <td>
+                                    <strong>Redundanz-Taxonomie verstehen:</strong><br>
+                                    • Was ist Redundanz? (Definition, Abgrenzung)<br>
+                                    • Hardware- vs. Software-Redundanz<br>
+                                    • Aktive vs. Passive Redundanz<br>
+                                    • Hot, Warm, Cold Standby erklären<br>
+                                    • N+1, N+N, 2N Konzepte<br>
+                                    <strong>Kennzahlen einführen:</strong><br>
+                                    • MTBF (Mean Time Between Failures)<br>
+                                    • MTTR (Mean Time To Repair)<br>
+                                    • Availability berechnen (99.9% vs 99.99%)
+                                </td>
+                                <td>
+                                    • Strukturierter Vortrag<br>
+                                    • Interaktive Diagramme<br>
+                                    • Rechenbeispiele<br>
+                                    • Quiz-Zwischenfragen
+                                </td>
+                                <td>
+                                    • PowerPoint-Präsentation<br>
+                                    • Whiteboard für Berechnungen<br>
+                                    • Handout mit Formeln<br>
+                                    • Taschenrechner
+                                </td>
+                                <td>
+                                    Redundanz-Arten klassifizieren,<br>
+                                    Verfügbarkeit berechnen können
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>35-65 min</strong></td>
+                                <td>🔧 STP-Grundlagen praktisch</td>
+                                <td>
+                                    <strong>Spanning Tree Protocol verstehen:</strong><br>
+                                    • Warum STP? (Broadcast-Storms demonstrieren)<br>
+                                    • BPDU-Konzept und Root Bridge Election<br>
+                                    • Port-States im Detail: Blocking → Listening → Learning → Forwarding<br>
+                                    • Live-Demo: STP-Konvergenz beobachten<br>
+                                    • Konvergenz-Zeit messen (30-50 Sekunden)<br>
+                                    <strong>Hands-On Setup:</strong><br>
+                                    • 3-Switch-Topologie verkabeln<br>
+                                    • STP-Status mit <code>show spanning-tree</code> prüfen<br>
+                                    • Root Bridge manuell festlegen
+                                </td>
+                                <td>
+                                    • Live-Demonstration<br>
+                                    • Geführte Konfiguration<br>
+                                    • Peer-Learning (2er Teams)<br>
+                                    • Protokollierung der Ergebnisse
+                                </td>
+                                <td>
+                                    • 3x Managed Switches<br>
+                                    • Patch-Kabel (verschiedene Farben)<br>
+                                    • Laptops mit SSH-Client<br>
+                                    • Stoppuhr für Zeitmessung<br>
+                                    • Protokoll-Vorlage
+                                </td>
+                                <td>
+                                    STP-Algorithmus verstehen,<br>
+                                    Basis-Konfiguration durchführen können
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>65-85 min</strong></td>
+                                <td>🧪 Failover-Tests</td>
+                                <td>
+                                    <strong>Systematisches Testen:</strong><br>
+                                    • Continuous Ping zwischen Endgeräten starten<br>
+                                    • Primären Link physisch trennen<br>
+                                    • Konvergenz-Zeit messen und dokumentieren<br>
+                                    • Packet-Loss zählen<br>
+                                    • Recovery-Verhalten bei Link-Wiederherstellung<br>
+                                    <strong>Verschiedene Szenarien:</strong><br>
+                                    • Root Bridge Ausfall<br>
+                                    • Redundanter Link Ausfall<br>
+                                    • Mehrfach-Ausfälle
+                                </td>
+                                <td>
+                                    • Experimentelles Lernen<br>
+                                    • Datensammlung und Analyse<br>
+                                    • Gruppenarbeit mit Rollen<br>
+                                    • Ergebnispräsentation
+                                </td>
+                                <td>
+                                    • Ping-Tools (Windows/Linux)<br>
+                                    • Wireshark für Packet-Capture<br>
+                                    • Excel/Calc für Dateneingabe<br>
+                                    • Timer/Stoppuhr-App<br>
+                                    • Messprotokoll-Vorlage
+                                </td>
+                                <td>
+                                    Failover-Verhalten verstehen,<br>
+                                    Messmethoden beherrschen
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>85-90 min</strong></td>
+                                <td>🧠 Reflexion & Lernkontrolle</td>
+                                <td>
+                                    <strong>Schnelle Lernkontrolle:</strong><br>
+                                    • STP-Diagramm beschriften (Port-Rollen)<br>
+                                    • Port-States in richtige Reihenfolge bringen<br>
+                                    • Konvergenz-Zeit für Szenario schätzen<br>
+                                    <strong>Reflexionsfragen diskutieren:</strong><br>
+                                    • "Was würde passieren, wenn die Root Bridge ausfällt?"<br>
+                                    • "Wie könnte man die Konvergenz-Zeit verkürzen?"<br>
+                                    • "Welche Probleme könnte STP in der Praxis verursachen?"
+                                </td>
+                                <td>
+                                    • Kahoot-Quiz (5 Fragen)<br>
+                                    • Think-Pair-Share<br>
+                                    • Plenum-Diskussion<br>
+                                    • Selbstreflexion
+                                </td>
+                                <td>
+                                    • Smartphone/Tablet für Kahoot<br>
+                                    • Beamer für Quiz-Anzeige<br>
+                                    • Reflexions-Fragebogen<br>
+                                    • Punktevergabe-System
+                                </td>
+                                <td>
+                                    Verständnis überprüfen,<br>
+                                    Wissen festigen
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-content">
+                            <strong>💡 Trainer-Tipp für Modul 1:</strong><br>
+                            Verwenden Sie physische Analogien: "STP ist wie ein Stadtverkehrssystem - es gibt immer einen Weg zum Ziel, aber nur einen optimalen Pfad ist aktiv. Bei Staus (Link-Ausfall) wird automatisch eine Umleitung aktiviert."
+                        </div>
+                        <div class="code-actions">
+                            <button onclick="explainCode('Erkläre mir die STP-Analogie mit dem Stadtverkehrssystem genauer und wie ich sie im Unterricht einsetzen kann')" class="explain-btn">💬 Analogie vertiefen</button>
+                        </div>
+                    </div>
+
+                    <div class="exercise-link">
+                        <h4>📋 Hausaufgabe nach Modul 1:</h4>
+                        <ul>
+                            <li>Dokumentieren Sie Ihr Labor-Setup (Topologie-Diagramm)</li>
+                            <li>Recherchieren Sie RSTP-Verbesserungen gegenüber STP</li>
+                            <li>Finden Sie ein Real-World-Beispiel für STP-Probleme</li>
+                            <li>Bereiten Sie eine 2-Minuten-Präsentation vor: "STP in einem Satz"</li>
+                        </ul>
+                        <button onclick="sendToChatbot('Hilf mir bei der Vorbereitung auf Modul 2: RSTP und erweiterte Redundanz-Konzepte')" class="chat-button">💬 Modul 2 Vorbereitung</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Evaluation -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">📊</span>
+                <h2>6. Bewertung & Leistungsmessung</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <p>Ein fundiertes Bewertungssystem stellt sicher, dass Sie Ihre Lernfortschritte objektiv messen können. Diese Sektion bietet Ihnen verschiedene Evaluationsmethoden - von Selbsttests bis hin zu praktischen Leistungsnachweisen.</p>
+
+                    <div class="warning-box">
+                        <h4>🎯 Kompetenzorientierte Bewertung</h4>
+                        <p>Die Bewertung erfolgt auf vier Ebenen nach Bloom's Taxonomie:</p>
+                        <ul>
+                            <li><strong>Wissen (Know):</strong> Faktenwissen zu Redundanz-Konzepten</li>
+                            <li><strong>Verstehen (Understand):</strong> Zusammenhänge erklären können</li>
+                            <li><strong>Anwenden (Apply):</strong> Konfigurationen praktisch umsetzen</li>
+                            <li><strong>Analysieren (Analyze):</strong> Probleme identifizieren und lösen</li>
+                        </ul>
+                        <p><em>Jede Bewertungskomponente zielt auf eine spezifische Kompetenzstufe ab.</em></p>
+                    </div>
+
+                    <div class="tech-specs">
+                        <h4>📈 Bewertungsmatrix: Kriterien & Gewichtung</h4>
+                        <table class="modern-table">
+                            <tr><th>Bewertungsbereich</th><th>Methode</th><th>Punkte</th><th>Gewichtung</th><th>Kompetenz-Level</th><th>Zeitaufwand</th></tr>
+                            
+                            <tr style="background: #e3f2fd;">
+                                <td><strong>Theoretisches Wissen</strong></td>
+                                <td>
+                                    <strong>Modul-Quiz (4 Stück):</strong><br>
+                                    • 10 Multiple-Choice pro Modul<br>
+                                    • 5 Single-Choice pro Modul<br>
+                                    • Zeitlimit: 10 Minuten<br>
+                                    <strong>Themen:</strong><br>
+                                    • STP/RSTP Grundlagen<br>
+                                    • Redundanz-Arten<br>
+                                    • Failover-Mechanismen<br>
+                                    • Best Practices
+                                </td>
+                                <td>40 Punkte<br>(10 pro Modul)</td>
+                                <td>25%</td>
+                                <td>Wissen + Verstehen</td>
+                                <td>4 x 10 min<br>= 40 min</td>
+                            </tr>
+                            
+                            <tr style="background: #f3e5f5;">
+                                <td><strong>Praktische Konfiguration</strong></td>
+                                <td>
+                                    <strong>Hands-On Lab-Protokoll:</strong><br>
+                                    • STP-Setup dokumentieren<br>
+                                    • RSTP-Konfiguration<br>
+                                    • Failover-Tests protokollieren<br>
+                                    • WLAN-Redundanz einrichten<br>
+                                    <strong>Bewertungsraster:</strong><br>
+                                    • Vollständigkeit (40%)<br>
+                                    • Korrektheit (40%)<br>
+                                    • Dokumentation (20%)
+                                </td>
+                                <td>30 Punkte</td>
+                                <td>35%</td>
+                                <td>Anwenden</td>
+                                <td>Während Modulen<br>+ 30 min Nachbereitung</td>
+                            </tr>
+                            
+                            <tr style="background: #e8f5e8;">
+                                <td><strong>Problemlösungs-Kompetenz</strong></td>
+                                <td>
+                                    <strong>Fallstudie-Analyse:</strong><br>
+                                    • Szenario: "Ausfall bei Live-Event"<br>
+                                    • Problemidentifikation<br>
+                                    • Lösungsstrategie entwickeln<br>
+                                    • Risikobewertung<br>
+                                    • Präventionsmaßnahmen<br>
+                                    <strong>Format:</strong> Schriftliche Ausarbeitung<br>
+                                    <strong>Umfang:</strong> 2-3 Seiten + Diagramme
+                                </td>
+                                <td>20 Punkte</td>
+                                <td>25%</td>
+                                <td>Analysieren + Bewerten</td>
+                                <td>60 min Bearbeitung<br>+ 15 min Präsentation</td>
+                            </tr>
+                            
+                            <tr style="background: #fff3cd;">
+                                <td><strong>Kommunikations-Kompetenz</strong></td>
+                                <td>
+                                    <strong>Gruppen-Präsentation:</strong><br>
+                                    • Redundanz-Konzept für Event<br>
+                                    • 5 Minuten pro Gruppe<br>
+                                    • Fragen & Diskussion<br>
+                                    <strong>Bewertungskriterien:</strong><br>
+                                    • Fachliche Korrektheit<br>
+                                    • Verständlichkeit<br>
+                                    • Visualisierung<br>
+                                    • Teamwork
+                                </td>
+                                <td>10 Punkte</td>
+                                <td>15%</td>
+                                <td>Kommunizieren + Bewerten</td>
+                                <td>20 min Vorbereitung<br>+ 5 min Präsentation</td>
+                            </tr>
+                            
+                            <tr style="background: #e0f2fe;">
+                                <td colspan="6" style="text-align: center; font-weight: bold;">
+                                    <strong>GESAMT: 100 Punkte = 100% | Bestehensgrenze: 60 Punkte (60%)</strong>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-content">
+                            <strong>📊 Notenschlüssel (Punkteverteilung):</strong><br>
+                            • 95-100 Punkte = Note 1 (sehr gut) - "Redundanz-Experte"<br>
+                            • 85-94 Punkte = Note 2 (gut) - "Redundanz-Praktiker"<br>
+                            • 75-84 Punkte = Note 3 (befriedigend) - "Redundanz-Anwender"<br>
+                            • 60-74 Punkte = Note 4 (ausreichend) - "Redundanz-Grundlagen"<br>
+                            • < 60 Punkte = Note 5 (nicht bestanden) - "Wiederholung empfohlen"
+                        </div>
+                        <div class="code-actions">
+                            <button onclick="explainCode('Erkläre mir die verschiedenen Bewertungsmethoden und wie ich mich optimal darauf vorbereiten kann')" class="explain-btn">💬 Bewertungs-Coaching</button>
+                        </div>
+                    </div>
+
+                    <div class="exercise-link">
+                        <h4>📝 Selbstevaluation: Formative Bewertung</h4>
+                        <p>Zusätzlich zur summativen Bewertung bieten wir kontinuierliche Selbsteinschätzung:</p>
+                        
+                        <h5>🔄 Nach jedem Modul (5 Minuten):</h5>
+                        <ul>
+                            <li><strong>Verständnis-Check:</strong> "Auf einer Skala 1-10, wie sicher fühle ich mich?"</li>
+                            <li><strong>Anwendungssicherheit:</strong> "Könnte ich das Gelernte einem Kollegen erklären?"</li>
+                            <li><strong>Offene Fragen:</strong> "Was ist noch unklar?"</li>
+                            <li><strong>Praxistransfer:</strong> "Wo kann ich das bei meiner Arbeit einsetzen?"</li>
+                        </ul>
+
+                        <h5>🎯 Kompetenz-Selbsteinschätzung (Tool):</h5>
+                        <div class="code-container">
+                            <div class="code-content">
+                                <strong>Checkliste - Kann ich das?</strong><br>
+                                □ STP-Funktionsweise in eigenen Worten erklären<br>
+                                □ RSTP-Konfiguration an einem Switch durchführen<br>
+                                □ Failover-Zeit messen und bewerten<br>
+                                □ Redundante WLAN-Architektur planen<br>
+                                □ Risiko-Analyse für ein Event-Netzwerk erstellen<br>
+                                □ SOP für Netzwerk-Notfälle schreiben
+                            </div>
+                            <div class="code-actions">
+                                <button onclick="explainCode('Hilf mir bei der Selbsteinschätzung: Wo stehe ich aktuell und was sollte ich noch üben?')" class="explain-btn">💬 Selbsteinschätzung</button>
+                            </div>
+                        </div>
+
+                        <button onclick="sendToChatbot('Ich möchte eine individuelle Lernstandsanalyse. Teste mein Wissen zu Netzwerk-Redundanz!')" class="chat-button">💬 Wissenstest starten</button>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>⚡ Prüfungstipps für optimale Leistung</h4>
+                        <ul>
+                            <li><strong>Quiz-Vorbereitung:</strong> Verwenden Sie die Kahoot-Übungen aus den Modulen</li>
+                            <li><strong>Lab-Protokoll:</strong> Dokumentieren Sie während der Übungen, nicht erst am Ende</li>
+                            <li><strong>Fallstudie:</strong> Denken Sie an reale Event-Szenarien aus Ihrer Erfahrung</li>
+                            <li><strong>Präsentation:</strong> Üben Sie 2-3 Mal vor Kommilitonen</li>
+                            <li><strong>Zeitmanagement:</strong> Nutzen Sie alle verfügbaren Übungszeiten</li>
+                        </ul>
+                        
+                        <h5>📋 Musterlösung-Zugriff:</h5>
+                        <p>Nach Abschluss erhalten Sie Zugang zu:</p>
+                        <ul>
+                            <li>Vollständige Labor-Konfigurationen mit Kommentaren</li>
+                            <li>Beispiel-Fallstudien-Lösungen</li>
+                            <li>Best-Practice-Checklisten für verschiedene Event-Typen</li>
+                            <li>Video-Tutorials für komplexe Konfigurationen</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. Praxistransfer‑Tipps -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">💡</span>
+                <h2>7. Praxistransfer & Berufliche Anwendung</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <p>Der entscheidende Schritt jeder Weiterbildung ist die erfolgreiche Anwendung des Gelernten im Berufsalltag. Diese Sektion zeigt Ihnen konkrete Strategien, wie Sie Ihr neues Redundanz-Wissen direkt in der Veranstaltungstechnik umsetzen können.</p>
+
+                    <div class="warning-box">
+                        <h4>🚀 Der Transfer-Erfolgsfaktor</h4>
+                        <p>Studien zeigen: Nur 10-15% des Erlernten wird ohne gezielte Transfer-Strategien langfristig angewendet. Mit den folgenden Methoden steigern Sie Ihre Transfer-Quote auf über 80%:</p>
+                        <ul>
+                            <li><strong>Sofortige Anwendung:</strong> Erste Implementierung innerhalb 72 Stunden</li>
+                            <li><strong>Dokumentierte Praxis:</strong> Schriftliche Reflexion der ersten Anwendung</li>
+                            <li><strong>Peer-Learning:</strong> Wissen an Kollegen weitergeben</li>
+                            <li><strong>Kontinuierliche Übung:</strong> Regelmäßige Praxis-Updates</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-specs">
+                        <h4>� Immediate Action Plan: Erste 30 Tage</h4>
+                        <table class="modern-table">
+                            <tr><th>Woche</th><th>Aktion</th><th>Zeitaufwand</th><th>Erwartetes Ergebnis</th><th>Erfolgsmessung</th></tr>
+                            
+                            <tr style="background: #fff3cd;">
+                                <td><strong>Woche 1</strong><br><em>Bestandsaufnahme</em></td>
+                                <td>
+                                    <strong>Netzwerk-Audit durchführen:</strong><br>
+                                    • Bestehende Switches inventarisieren<br>
+                                    • STP-Status aller Geräte prüfen<br>
+                                    • Single Points of Failure identifizieren<br>
+                                    • Dokumentation aktualisieren<br>
+                                    <strong>Tools nutzen:</strong><br>
+                                    • <code>show spanning-tree summary</code><br>
+                                    • Netzwerk-Scanner (Advanced IP Scanner)<br>
+                                    • Excel-Vorlage für Inventar
+                                </td>
+                                <td>
+                                    4-6 Stunden<br>
+                                    (1-2h täglich)
+                                </td>
+                                <td>
+                                    • Vollständige Netzwerk-Übersicht<br>
+                                    • Prioritätenliste für Verbesserungen<br>
+                                    • Baseline für Monitoring<br>
+                                    • Fundament für Planung
+                                </td>
+                                <td>
+                                    ✅ Vollständige Switch-Liste<br>
+                                    ✅ STP-Status-Report<br>
+                                    ✅ Risk-Assessment<br>
+                                    ✅ Aktueller Netzplan
+                                </td>
+                            </tr>
+                            
+                            <tr style="background: #e8f5e8;">
+                                <td><strong>Woche 2</strong><br><em>Quick Wins</em></td>
+                                <td>
+                                    <strong>Sofortige Verbesserungen:</strong><br>
+                                    • Root Bridge manuell konfigurieren<br>
+                                    • RSTP aktivieren (falls nicht aktiv)<br>
+                                    • Port-Prioritäten optimieren<br>
+                                    • Edge Ports konfigurieren<br>
+                                    <strong>Monitoring einrichten:</strong><br>
+                                    • SNMP aktivieren<br>
+                                    • Link-Status-Überwachung<br>
+                                    • Backup-Konfigurationen erstellen
+                                </td>
+                                <td>
+                                    3-4 Stunden<br>
+                                    (bei 3-4 Switches)
+                                </td>
+                                <td>
+                                    • Verbesserte Konvergenz-Zeiten<br>
+                                    • Predictable Failover-Verhalten<br>
+                                    • Erste Monitoring-Daten<br>
+                                    • Gesicherte Konfigurationen
+                                </td>
+                                <td>
+                                    ✅ RSTP aktiv<br>
+                                    ✅ Root Bridge definiert<br>
+                                    ✅ Monitoring läuft<br>
+                                    ✅ Config-Backups erstellt
+                                </td>
+                            </tr>
+                            
+                            <tr style="background: #e3f2fd;">
+                                <td><strong>Woche 3</strong><br><em>Team-Integration</em></td>
+                                <td>
+                                    <strong>Wissen teilen:</strong><br>
+                                    • 30-min Teammeeting zu Redundanz<br>
+                                    • Hands-On Demo für Kollegen<br>
+                                    • SOP-Entwurf für Notfälle<br>
+                                    • Checkliste für Event-Setup<br>
+                                    <strong>Praxis-Test:</strong><br>
+                                    • Geplanter Failover-Test<br>
+                                    • Dokumentation der Ergebnisse<br>
+                                    • Lessons Learned sammeln
+                                </td>
+                                <td>
+                                    2-3 Stunden<br>
+                                    (inkl. Teammeeting)
+                                </td>
+                                <td>
+                                    • Team kennt Redundanz-Basics<br>
+                                    • Standardisierte Prozesse<br>
+                                    • Getestete Failover-Szenarien<br>
+                                    • Kollektives Wissen
+                                </td>
+                                <td>
+                                    ✅ Team-Schulung abgehalten<br>
+                                    ✅ SOP-Draft erstellt<br>
+                                    ✅ Failover getestet<br>
+                                    ✅ Feedback eingeholt
+                                </td>
+                            </tr>
+                            
+                            <tr style="background: #f3e5f5;">
+                                <td><strong>Woche 4</strong><br><em>Optimierung</em></td>
+                                <td>
+                                    <strong>Continuous Improvement:</strong><br>
+                                    • Monitoring-Daten auswerten<br>
+                                    • Konfiguration verfeinern<br>
+                                    • Weitere Redundanz-Punkte identifizieren<br>
+                                    • Langzeit-Strategie entwickeln<br>
+                                    <strong>Vorbereitung nächster Steps:</strong><br>
+                                    • Budget für Hardware-Upgrades<br>
+                                    • Weiterbildungs-Roadmap<br>
+                                    • Nächste Event-Implementierung
+                                </td>
+                                <td>
+                                    2-4 Stunden<br>
+                                    (Analyse + Planung)
+                                </td>
+                                <td>
+                                    • Optimierte Konfiguration<br>
+                                    • Strategisches Vorgehen<br>
+                                    • Budgetplanung<br>
+                                    • Roadmap für Zukunft
+                                </td>
+                                <td>
+                                    ✅ Performance-Report<br>
+                                    ✅ Optimierungen umgesetzt<br>
+                                    ✅ Strategie dokumentiert<br>
+                                    ✅ Nächste Schritte geplant
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-content">
+                            <strong>📋 Praxis-Checkliste für Event-Setups:</strong><br>
+                            □ Alle Switches haben redundante Uplinks<br>
+                            □ RSTP ist aktiviert und konfiguriert<br>
+                            □ Root Bridge ist strategisch positioniert<br>
+                            □ Kritische Pfade sind dokumentiert<br>
+                            □ Failover-Szenarien sind getestet<br>
+                            □ Monitoring ist aktiv und alarmiert<br>
+                            □ Backup-Konfigurationen sind verfügbar<br>
+                            □ Team kennt Notfall-Prozeduren
+                        </div>
+                        <div class="code-actions">
+                            <button onclick="explainCode('Hilf mir dabei, diese Checkliste für mein nächstes Event anzupassen und zu erweitern')" class="explain-btn">💬 Event-Checkliste anpassen</button>
+                            <button onclick="copyToClipboard('□ Alle Switches haben redundante Uplinks\n□ RSTP ist aktiviert und konfiguriert\n□ Root Bridge ist strategisch positioniert\n□ Kritische Pfade sind dokumentiert\n□ Failover-Szenarien sind getestet\n□ Monitoring ist aktiv und alarmiert\n□ Backup-Konfigurationen sind verfügbar\n□ Team kennt Notfall-Prozeduren')" class="explain-btn">📋 Checkliste kopieren</button>
+                        </div>
+                    </div>
+
+                    <div class="exercise-link">
+                        <h4>🏢 Branchen-spezifische Anwendungsszenarien</h4>
+                        
+                        <h5>🎪 Festivals & Großveranstaltungen:</h5>
+                        <ul>
+                            <li><strong>Multi-Stage-Setups:</strong> Redundante Backbone-Verbindungen zwischen Bühnen</li>
+                            <li><strong>Broadcast-Integration:</strong> Getrennte Pfade für Live-Stream und Aufzeichnung</li>
+                            <li><strong>Artist-Networks:</strong> Separate VLANs mit Redundanz für Gastnetze</li>
+                            <li><strong>Emergency-Fallback:</strong> Backup-Internet-Zugänge und Mobile-Hotspots</li>
+                        </ul>
+
+                        <h5>🏛️ Corporate Events & Conferences:</h5>
+                        <ul>
+                            <li><strong>Hybrid-Events:</strong> Redundante Streaming-Infrastruktur</li>
+                            <li><strong>Interactive Systems:</strong> Backup für Voting, Q&A, Live-Polls</li>
+                            <li><strong>Multi-Room-Audio:</strong> Dante-Redundanz für Konferenz-Räume</li>
+                            <li><strong>AV-Control:</strong> Redundante Steuerungssysteme für komplexe Setups</li>
+                        </ul>
+
+                        <h5>🏟️ Sportereignisse & Live-TV:</h5>
+                        <ul>
+                            <li><strong>Broadcast-Quality:</strong> Zero-Downtime für Live-Übertragungen</li>
+                            <li><strong>Camera-Networks:</strong> Redundante IP-Kamera-Infrastruktur</li>
+                            <li><strong>Timing-Systems:</strong> Backup für kritische Zeitmess-Systeme</li>
+                            <li><strong>Commentary-Positions:</strong> Redundante Audio-Pfade für Kommentatoren</li>
+                        </ul>
+
+                        <button onclick="sendToChatbot('Ich arbeite hauptsächlich bei [Event-Typ] und möchte spezifische Redundanz-Strategien für meine Branche entwickeln')" class="chat-button">💬 Branchen-spezifische Beratung</button>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>🎓 Kontinuierliche Weiterbildung & Zertifizierung</h4>
+                        
+                        <h5>📚 Empfohlene Lernpfade:</h5>
+                        <ul>
+                            <li><strong>Cisco CCNA:</strong> Umfassende Netzwerk-Grundlagen (6-12 Monate)</li>
+                            <li><strong>CompTIA Network+:</strong> Vendor-neutrale Netzwerk-Zertifizierung (3-6 Monate)</li>
+                            <li><strong>Dante Certification:</strong> Audio-over-IP Spezialisierung (1-2 Monate)</li>
+                            <li><strong>AVIXA CTS:</strong> Veranstaltungstechnik-Systemintegration (6-12 Monate)</li>
+                        </ul>
+
+                        <h5>🔄 Regelmäßige Praxis-Updates:</h5>
+                        <ul>
+                            <li><strong>Monatlich:</strong> Neue Failover-Szenarien testen</li>
+                            <li><strong>Quartalsweise:</strong> Netzwerk-Konfiguration überprüfen und optimieren</li>
+                            <li><strong>Halbjährlich:</strong> Team-Schulungen und Knowledge-Sharing</li>
+                            <li><strong>Jährlich:</strong> Komplettes Netzwerk-Audit und Strategie-Review</li>
+                        </ul>
+
+                        <h5>🌐 Community & Networking:</h5>
+                        <ul>
+                            <li><strong>Reddit r/networking:</strong> Aktive Fachcommunity für Troubleshooting</li>
+                            <li><strong>LinkedIn Groups:</strong> "Live Event Technology Professionals"</li>
+                            <li><strong>Local User Groups:</strong> Cisco, Dante, AVIXA Meetups</li>
+                            <li><strong>Fachzeitschriften:</strong> Professional Sound, Live Sound International</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. Fazit -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span class="icon">🎯</span>
+                <h2>8. Fazit & Zukunftsausblick</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+                <div class="content-wrapper">
+                    <p>Herzlichen Glückwunsch! Sie haben eine umfassende Reise durch die Welt der Netzwerk-Redundanz in der Veranstaltungstechnik absolviert. Diese Lerneinheit hat Sie von den theoretischen Grundlagen bis zur praktischen Implementierung geführt und mit den Werkzeugen ausgestattet, die Sie für professionelle, ausfallsichere Netzwerkinfrastrukturen benötigen.</p>
+
+                    <div class="warning-box">
+                        <h4>🏆 Ihre erreichten Kompetenzen im Überblick</h4>
+                        <p>Nach Abschluss dieser Lerneinheit können Sie:</p>
+                        <ul>
+                            <li><strong>🎯 Analysieren:</strong> Redundanz-Anforderungen für verschiedene Event-Typen bewerten</li>
+                            <li><strong>⚙️ Konfigurieren:</strong> STP/RSTP professionell einrichten und optimieren</li>
+                            <li><strong>🔧 Implementieren:</strong> Multi-Layer-Redundanz-Strategien umsetzen</li>
+                            <li><strong>🚨 Troubleshooten:</strong> Netzwerk-Ausfälle schnell identifizieren und beheben</li>
+                            <li><strong>📋 Planen:</strong> Comprehensive Disaster-Recovery-Konzepte entwickeln</li>
+                            <li><strong>💼 Kommunizieren:</strong> Technische Lösungen verständlich präsentieren</li>
+                        </ul>
+                        <p><em>Diese Fähigkeiten machen Sie zu einem gefragten Experten in der modernen Veranstaltungstechnik!</em></p>
+                    </div>
+
+                    <div class="tech-specs">
+                        <h4>📈 Der Weg von hier: Ihre Entwicklungsperspektiven</h4>
+                        <table class="modern-table">
+                            <tr><th>Karriere-Level</th><th>Typische Rollen</th><th>Zusätzliche Kompetenzen</th><th>Weiterbildung</th><th>Gehaltsspanne</th></tr>
+                            
+                            <tr style="background: #e8f5e8;">
+                                <td><strong>Junior-Level</strong><br><em>0-2 Jahre Erfahrung</em></td>
+                                <td>
+                                    • Event-Techniker<br>
+                                    • Netzwerk-Assistent<br>
+                                    • System-Support<br>
+                                    • Mobile-Crew-Member
+                                </td>
+                                <td>
+                                    • Basis-Konfiguration<br>
+                                    • Standard-Troubleshooting<br>
+                                    • Dokumentation<br>
+                                    • Team-Unterstützung
+                                </td>
+                                <td>
+                                    • CompTIA Network+<br>
+                                    • Dante Level 1<br>
+                                    • Herstellerschulungen<br>
+                                    • Praxis-Projekte
+                                </td>
+                                <td>
+                                    35.000 - 45.000 €<br>
+                                    (Deutschland, Vollzeit)
+                                </td>
+                            </tr>
+                            
+                            <tr style="background: #e3f2fd;">
+                                <td><strong>Professional-Level</strong><br><em>2-5 Jahre Erfahrung</em></td>
+                                <td>
+                                    • Senior Techniker<br>
+                                    • Netzwerk-Spezialist<br>
+                                    • System-Integrator<br>
+                                    • Projekt-Koordinator
+                                </td>
+                                <td>
+                                    • Komplexe Netzwerk-Designs<br>
+                                    • Redundanz-Architekturen<br>
+                                    • Performance-Optimierung<br>
+                                    • Kunden-Beratung
+                                </td>
+                                <td>
+                                    • Cisco CCNA<br>
+                                    • AVIXA CTS<br>
+                                    • Dante Level 2/3<br>
+                                    • Cloud-Technologien
+                                </td>
+                                <td>
+                                    45.000 - 65.000 €<br>
+                                    + Projekt-Boni
+                                </td>
+                            </tr>
+                            
+                            <tr style="background: #fff3cd;">
+                                <td><strong>Expert-Level</strong><br><em>5+ Jahre Erfahrung</em></td>
+                                <td>
+                                    • Technical Director<br>
+                                    • Netzwerk-Architekt<br>
+                                    • Consulting-Engineer<br>
+                                    • Abteilungsleiter
+                                </td>
+                                <td>
+                                    • Strategic Planning<br>
+                                    • Team-Leadership<br>
+                                    • Business Development<br>
+                                    • Innovation Management
+                                </td>
+                                <td>
+                                    • Cisco CCNP/CCIE<br>
+                                    • MBA Tech Management<br>
+                                    • International Certifications<br>
+                                    • Speaking & Teaching
+                                </td>
+                                <td>
+                                    65.000 - 90.000+ €<br>
+                                    + Erfolgsbeteiligung
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-content">
+                            <strong>🌟 Erfolgsgeschichte - Ihre nächsten 12 Monate:</strong><br>
+                            "In einem Jahr werden Sie zurückblicken und sagen: 'Das war der Wendepunkt meiner Karriere.' Sie werden komplexe Redundanz-Lösungen entwickeln, die Events vor Millionenschäden bewahren, und Teams leiten, die auf Ihr Fachwissen vertrauen. Ihr Wissen wird zur Grundlage für innovative Lösungen, die die Veranstaltungsbranche voranbringen."
+                        </div>
+                        <div class="code-actions">
+                            <button onclick="explainCode('Erstelle mir einen personalisierten 12-Monats-Entwicklungsplan basierend auf meinen aktuellen Fähigkeiten und Karrierezielen')" class="explain-btn">💬 Persönlichen Entwicklungsplan erstellen</button>
+                        </div>
+                    </div>
+
+                    <div class="exercise-link">
+                        <h4>🔮 Technologie-Trends: Die Zukunft der Event-Redundanz</h4>
+                        
+                        <h5>🤖 Emerging Technologies (2025-2030):</h5>
+                        <ul>
+                            <li><strong>AI-Powered Predictive Maintenance:</strong> KI erkennt Ausfälle, bevor sie auftreten</li>
+                            <li><strong>Software-Defined Networking (SDN):</strong> Zentrale Kontrolle über verteilte Event-Infrastrukturen</li>
+                            <li><strong>5G & Edge Computing:</strong> Ultra-niedrige Latenz für kritische Live-Anwendungen</li>
+                            <li><strong>Blockchain-based Redundancy:</strong> Dezentrale Backup-Systeme für maximale Ausfallsicherheit</li>
+                            <li><strong>Digital Twin Networks:</strong> Virtuelle Netzwerk-Kopien für Simulation und Testing</li>
+                        </ul>
+
+                        <h5>📱 Praktische Innovationen:</h5>
+                        <ul>
+                            <li><strong>Auto-Healing Networks:</strong> Selbst-reparierende Systeme ohne manuellen Eingriff</li>
+                            <li><strong>Augmented Reality Debugging:</strong> AR-Brille zeigt Netzwerk-Status in Echtzeit</li>
+                            <li><strong>Voice-Controlled Network Management:</strong> Sprachsteuerung für schnelle Konfigurationen</li>
+                            <li><strong>Cloud-Native Event Infrastructure:</strong> Vollständig virtualisierte Event-Netzwerke</li>
+                        </ul>
+
+                        <h5>🎯 Ihre Vorbereitung auf die Zukunft:</h5>
+                        <ul>
+                            <li>Lernen Sie Python für Netzwerk-Automatisierung</li>
+                            <li>Experimentieren Sie mit Docker und Kubernetes</li>
+                            <li>Verstehen Sie Cloud-Plattformen (AWS, Azure, GCP)</li>
+                            <li>Beschäftigen Sie sich mit Machine Learning Basics</li>
+                            <li>Bleiben Sie über Open-Source-Innovationen informiert</li>
+                        </ul>
+                        
+                        <button onclick="sendToChatbot('Ich möchte mich auf die Zukunft der Veranstaltungstechnik vorbereiten. Welche Technologien sollte ich als nächstes lernen?')" class="chat-button">💬 Future-Skills Roadmap</button>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>🎯 Ihr persönlicher Aktionsplan - Die nächsten Schritte</h4>
+                        
+                        <h5>⚡ Sofort (diese Woche):</h5>
+                        <ul>
+                            <li>Führen Sie den ersten Netzwerk-Audit in Ihrer Organisation durch</li>
+                            <li>Erstellen Sie eine Backup-Konfiguration Ihrer wichtigsten Switches</li>
+                            <li>Dokumentieren Sie aktuelle Single Points of Failure</li>
+                            <li>Starten Sie ein Lerntagebuch für kontinuierliche Verbesserung</li>
+                        </ul>
+
+                        <h5>🔄 Kurzfristig (nächste 30 Tage):</h5>
+                        <ul>
+                            <li>Implementieren Sie RSTP in mindestens einem produktiven Netzwerk</li>
+                            <li>Führen Sie Ihre erste Team-Schulung zu Redundanz-Basics durch</li>
+                            <li>Erstellen Sie eine Event-spezifische Redundanz-Checkliste</li>
+                            <li>Knüpfen Sie Kontakte in der Fach-Community (LinkedIn, Xing)</li>
+                        </ul>
+
+                        <h5>📈 Mittelfristig (nächste 6 Monate):</h5>
+                        <ul>
+                            <li>Starten Sie mit einer relevanten Zertifizierung (CCNA, CompTIA Network+)</li>
+                            <li>Entwickeln Sie eine umfassende Redundanz-Strategie für Ihre Organisation</li>
+                            <li>Präsentieren Sie Ihre Erfolge auf einer Fachmesse oder in einem Blog</li>
+                            <li>Mentoren Sie einen Junior-Kollegen in Netzwerk-Redundanz</li>
+                        </ul>
+
+                        <h5>🚀 Langfristig (nächste 2 Jahre):</h5>
+                        <ul>
+                            <li>Positionieren Sie sich als Redundanz-Experte in Ihrem Unternehmen</li>
+                            <li>Übernehmen Sie die Verantwortung für kritische Event-Infrastrukturen</li>
+                            <li>Entwickeln Sie innovative Lösungen für branchenspezifische Herausforderungen</li>
+                            <li>Bauen Sie ein Netzwerk aus Fachexperten und potenziellen Kunden auf</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-specs">
+                        <h4>🎓 Abschließende Worte & Community</h4>
+                        <p>Sie haben heute nicht nur technisches Wissen erworben, sondern auch die Grundlage für eine erfolgreiche Spezialisierung in einem kritischen Bereich der Veranstaltungstechnik gelegt. Redundanz ist mehr als nur Backup-Systeme – es ist eine Denkweise, die Professionalität, Zuverlässigkeit und Innovation miteinander verbindet.</p>
+
+                        <p>Die Veranstaltungsbranche entwickelt sich rasant weiter, und Experten für ausfallsichere Netzwerke werden immer gefragter. Sie haben jetzt die Werkzeuge, das Wissen und die Strategien, um in diesem spannenden Feld erfolgreich zu sein.</p>
+
+                        <h5>🤝 Bleiben Sie verbunden:</h5>
+                        <ul>
+                            <li><strong>Alumni-Netzwerk:</strong> Tauschen Sie sich mit anderen Absolventen aus</li>
+                            <li><strong>Monatliche Updates:</strong> Neue Technologien und Best Practices</li>
+                            <li><strong>Praxis-Workshops:</strong> Regelmäßige Hands-On-Sessions zu aktuellen Themen</li>
+                            <li><strong>Mentoring-Programm:</strong> Unterstützung bei Ihrer Karriereentwicklung</li>
+                        </ul>
+
+                        <p><strong>Denken Sie daran:</strong> Jedes große Event, das ohne technische Probleme läuft, jeder Live-Stream, der nie abbricht, und jede Veranstaltung, die reibungslos funktioniert, basiert auf dem Fachwissen von Experten wie Ihnen. Sie tragen dazu bei, dass Menschen weltweit unvergessliche Erlebnisse haben.</p>
+
+                        <p><em>Viel Erfolg bei Ihrer weiteren Reise als Redundanz-Experte in der Veranstaltungstechnik!</em></p>
+
+                        <button onclick="sendToChatbot('Ich habe die Redundanz-Schulung abgeschlossen und möchte jetzt meinen individuellen Karriereweg als Experte planen. Hilf mir dabei!')" class="chat-button">💬 Karriere-Coaching starten</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // CSS-Integration für Moodle-Kompatibilität
+    (function() {
+        const style = document.createElement('style');
+        style.textContent = `
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+                    min-height: 100vh;
+                }
+
+                .container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }
+
+                .main-header {
+                    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                    color: white;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    margin-bottom: 2rem;
+                    text-align: center;
+                    box-shadow: 0 8px 32px rgba(37, 99, 235, 0.3);
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .main-header::before {
+                    content: '';
+                    position: absolute;
+                    top: -50%;
+                    left: -50%;
+                    width: 200%;
+                    height: 200%;
+                    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+                    animation: pulse 4s ease-in-out infinite;
+                }
+
+                @keyframes pulse {
+                    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.3; }
+                    50% { transform: scale(1.1) rotate(180deg); opacity: 0.1; }
+                }
+
+                .main-header h1 {
+                    font-size: 2.5rem;
+                    font-weight: 700;
+                    margin-bottom: 0.5rem;
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .header-subtitle {
+                    font-size: 1.2rem;
+                    opacity: 0.9;
+                    margin-bottom: 1rem;
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .header-icon {
+                    font-size: 2rem;
+                    margin-top: 1rem;
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .accordion {
+                    background: white;
+                    border-radius: 15px;
+                    overflow: hidden;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                }
+
+                .accordion-item {
+                    border-bottom: 1px solid #e0e0e0;
+                }
+
+                .accordion-item:last-child {
+                    border-bottom: none;
+                }
+
+                .accordion-header {
+                    padding: 1.5rem 2rem;
+                    background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+                    color: white;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    transition: all 0.3s ease;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .accordion-header:hover {
+                    background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                }
+
+                .accordion-header::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+                    transition: left 0.5s;
+                }
+
+                .accordion-header:hover::before {
+                    left: 100%;
+                }
+
+                .accordion-header.active {
+                    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+                    box-shadow: inset 0 -3px 0 #3b82f6;
+                }
+
+                .accordion-header .icon {
+                    font-size: 1.5rem;
+                    margin-right: 1rem;
+                    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+                }
+
+                .accordion-header h2 {
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    flex-grow: 1;
+                    margin: 0;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+                }
+
+                .toggle-icon {
+                    font-size: 1.2rem;
+                    transition: transform 0.3s ease;
+                    filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.3));
+                }
+
+                .accordion-header.active .toggle-icon {
+                    transform: rotate(180deg);
+                }
+
+                .accordion-content {
+                    max-height: 0;
+                    overflow: hidden;
+                    transition: max-height 0.5s ease-out;
+                    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+                }
+
+                .accordion-content.active {
+                    max-height: none;
+                    overflow: visible;
+                    transition: max-height 0.5s ease-in;
+                }
+
+                .content-wrapper {
+                    padding: 2rem;
+                    color: #374151;
+                    line-height: 1.8;
+                }
+
+                .content-wrapper p {
+                    margin-bottom: 1.5rem;
+                    font-size: 1.05rem;
+                    color: #4b5563;
+                    text-align: justify;
+                }
+
+                .content-wrapper h3 {
+                    color: #1f2937;
+                    margin-bottom: 1rem;
+                    margin-top: 2rem;
+                    font-size: 1.4rem;
+                    font-weight: 600;
+                    border-bottom: 2px solid #e5e7eb;
+                    padding-bottom: 0.5rem;
+                }
+
+                .content-wrapper h4 {
+                    color: #374151;
+                    margin-bottom: 1rem;
+                    margin-top: 1.5rem;
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                }
+
+                .content-wrapper ul, .content-wrapper ol {
+                    margin-left: 1.5rem;
+                    margin-bottom: 1.5rem;
+                }
+
+                .content-wrapper li {
+                    margin-bottom: 0.8rem;
+                    color: #4b5563;
+                    font-size: 1.05rem;
+                }
+
+                .modern-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 1.5rem 0;
+                    background: white;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                }
+
+                .modern-table th {
+                    background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+                    color: white;
+                    padding: 1rem;
+                    text-align: left;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }
+
+                .modern-table td {
+                    padding: 1rem;
+                    border-bottom: 1px solid #e5e7eb;
+                    color: #374151;
+                    vertical-align: top;
+                    font-size: 0.95rem;
+                }
+
+                .modern-table tr:nth-child(even) td {
+                    background: #f8fafc;
+                }
+
+                .modern-table tr:hover td {
+                    background: #e0f2fe;
+                    transition: background-color 0.2s ease;
+                }
+
+                .tech-specs {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    border-left: 4px solid #0288d1;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(2, 136, 209, 0.1);
+                }
+
+                .tech-specs h4 {
+                    color: #01579b;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+
+                .tech-specs ul {
+                    list-style: none;
+                    padding-left: 0;
+                }
+
+                .tech-specs li {
+                    margin-bottom: 0.5rem;
+                    padding-left: 1.5rem;
+                    position: relative;
+                    color: #0277bd;
+                }
+
+                .tech-specs li::before {
+                    content: '⚙️';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                }
+
+                .warning-box {
+                    background: linear-gradient(135deg, #fff3cd 0%, #fdeaa7 100%);
+                    border-left: 4px solid #f39c12;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(243, 156, 18, 0.1);
+                }
+
+                .warning-box h4 {
+                    color: #d68910;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+
+                .warning-box ul {
+                    list-style: none;
+                    padding-left: 0;
+                }
+
+                .warning-box li {
+                    margin-bottom: 0.5rem;
+                    padding-left: 1.5rem;
+                    position: relative;
+                    color: #b7950b;
+                }
+
+                .warning-box li::before {
+                    content: '⚠️';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                }
+
+                .warning-box p {
+                    color: #b7950b !important;
+                }
+
+                .exercise-link {
+                    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+                    border-left: 4px solid #4caf50;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(76, 175, 80, 0.1);
+                }
+
+                .exercise-link h4 {
+                    color: #2e7d32;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+
+                .exercise-link p {
+                    color: #388e3c !important;
+                    margin-bottom: 0.5rem;
+                }
+
+                .exercise-link a {
+                    color: #1b5e20;
+                    text-decoration: none;
+                    font-weight: 600;
+                    transition: color 0.3s ease;
+                }
+
+                .exercise-link a:hover {
+                    color: #4caf50;
+                    text-decoration: underline;
+                }
+
+                .code-container {
+                    background: #f8f9fa;
+                    border: 1px solid #e9ecef;
+                    border-radius: 8px;
+                    margin: 1rem 0;
+                    overflow: hidden;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                }
+
+                .code-content {
+                    padding: 1.5rem;
+                    background: white;
+                    border-bottom: 1px solid #e9ecef;
+                }
+
+                .code-actions {
+                    padding: 1rem 1.5rem;
+                    background: #f8f9fa;
+                    display: flex;
+                    gap: 0.5rem;
+                    flex-wrap: wrap;
+                }
+
+                .explain-btn, .chat-button {
+                    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                    color: white;
+                    border: none;
+                    padding: 0.5rem 1rem;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 0.9rem;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+
+                .explain-btn:hover, .chat-button:hover {
+                    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+                }
+
+                .chat-button {
+                    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+                    font-size: 1rem;
+                    padding: 0.75rem 1.5rem;
+                    margin-top: 1rem;
+                }
+
+                .chat-button:hover {
+                    background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+                    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+                }
+
+                /* Fix for chatbot container text color */
+                .chatbot-container, .chatbot-container * {
+                    color: #333 !important;
+                }
+
+                .chatbot-window {
+                    color: #333 !important;
+                }
+
+                .chatbot-window * {
+                    color: #333 !important;
+                }
+
+                #chat-input {
+                    color: #333 !important;
+                }
+
+                .chat-message {
+                    color: #333 !important;
+                }
+
+                @media (max-width: 768px) {
+                    .container {
+                        padding: 10px;
+                    }
+
+                    .main-header h1 {
+                        font-size: 2rem;
+                    }
+
+                    .accordion-header {
+                        padding: 1rem 1.5rem;
+                    }
+
+                    .accordion-header h2 {
+                        font-size: 1.1rem;
+                    }
+
+                    .content-wrapper {
+                        padding: 1.5rem;
+                    }
+
+                    .tech-specs, .warning-box, .exercise-link {
+                        padding: 1rem;
+                        margin: 1rem 0;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .main-header {
+                        padding: 1.5rem;
+                    }
+
+                    .main-header h1 {
+                        font-size: 1.7rem;
+                    }
+
+                    .accordion-header {
+                        padding: 0.8rem 1rem;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 0.5rem;
+                    }
+
+                    .accordion-header h2 {
+                        font-size: 1rem;
+                    }
+
+                    .content-wrapper {
+                        padding: 1rem;
+                    }
+
+                    .tech-specs, .warning-box, .exercise-link {
+                        padding: 1rem;
+                    }
+                }
+            `;
+        document.head.appendChild(style);
+    })();
+
+    // Accordion-Funktionalität
+    function toggleAccordion(header) {
+        const content = header.nextElementSibling;
+        const isActive = content.classList.contains('active');
+
+        // Alle anderen Akkordeons schließen
+        document.querySelectorAll('.accordion-content.active').forEach(item => {
+            if (item !== content) {
+                item.classList.remove('active');
+                item.previousElementSibling.classList.remove('active');
+                // Smooth collapse für andere Akkordeons
+                item.style.maxHeight = '0px';
+            }
+        });
+
+        // Aktuelles Akkordeon umschalten
+        if (isActive) {
+            content.classList.remove('active');
+            header.classList.remove('active');
+            content.style.maxHeight = '0px';
+        } else {
+            content.classList.add('active');
+            header.classList.add('active');
+            // Dynamische Höhe berechnen
+            content.style.maxHeight = content.scrollHeight + 'px';
+            
+            // Nach der Animation auf 'none' setzen für unbegrenzte Höhe
+            setTimeout(() => {
+                if (content.classList.contains('active')) {
+                    content.style.maxHeight = 'none';
+                }
+            }, 500);
+        }
+    }
+
+    // Smooth Scrolling für bessere UX
+    document.addEventListener('DOMContentLoaded', function() {
+        // Erstes Accordion automatisch öffnen
+        const firstAccordion = document.querySelector('.accordion-item');
+        if (firstAccordion) {
+            const firstHeader = firstAccordion.querySelector('.accordion-header');
+            const firstContent = firstAccordion.querySelector('.accordion-content');
+            firstHeader.classList.add('active');
+            firstContent.classList.add('active');
+            // Dynamische Höhe für das erste Accordion setzen
+            firstContent.style.maxHeight = firstContent.scrollHeight + 'px';
+            setTimeout(() => {
+                firstContent.style.maxHeight = 'none';
+            }, 500);
+        }
+
+        // Window resize handler für responsive Anpassungen
+        window.addEventListener('resize', function() {
+            document.querySelectorAll('.accordion-content.active').forEach(content => {
+                if (content.style.maxHeight !== 'none') {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    setTimeout(() => {
+                        if (content.classList.contains('active')) {
+                            content.style.maxHeight = 'none';
+                        }
+                    }, 100);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

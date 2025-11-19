@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Lösung zu Aufgabe 2 – Netzwerkadressen</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+                    min-height: 100vh;
+                    padding: 20px;
+                }
+                .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+                h1 {
+                    color: #16a34a;
+                    font-size: 2.2rem;
+                    font-weight: 700;
+                    margin-bottom: 1rem;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                }
+                h2 {
+                    color: #15803d;
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                    margin-bottom: 1rem;
+                    margin-top: 2rem;
+                }
+                h3 {
+                    color: #166534;
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    margin-bottom: 0.8rem;
+                    margin-top: 1.5rem;
+                }
+                .section {
+                    background: #ffffff;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                    border: 1px solid #e5e7eb;
+                }
+                p { margin-bottom: 1.2rem; color: #444; text-align: justify; }
+                ul { padding-left: 2rem; margin-bottom: 1.2rem; }
+                li { margin-bottom: 0.4rem; }
+                .hint {
+                    background: #fef3c7;
+                    border-left: 4px solid #f59e0b;
+                    padding: 1rem;
+                    margin-top: 1rem;
+                    border-radius: 8px;
+                    color: #92400e;
+                }
+                .note {
+                    background: #eff6ff;
+                    border-left: 4px solid #3b82f6;
+                    padding: 1rem;
+                    margin-top: 1rem;
+                    border-radius: 8px;
+                    color: #1d4ed8;
+                }
+                strong { color: #166534; }
+                em { color: #374151; }
+                code {
+                    background: #e5e7eb;
+                    padding: 0.1rem 0.3rem;
+                    border-radius: 4px;
+                    font-size: 0.95rem;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <h1>Musterlösung zu Aufgabe 2: Netzwerkadressen</h1>
+            <p>Diese Musterlösung orientiert sich an typischen Fragestellungen zur Aufgabe „Netzwerkadressen“ in Kapitel 2. Sie zeigt, wie Schüler/innen ihre Antworten strukturiert und nachvollziehbar formulieren können, ohne jede einzelne Rechenoperation im Detail vorzugeben.</p>
+        </div>
+
+        <div class="section">
+            <h2>1. Aufbau einer IPv4-Adresse</h2>
+            <p><strong>Beispielantwort:</strong></p>
+            <ul>
+                <li>Eine IPv4-Adresse besteht aus <strong>32 Bit</strong>, die in der Praxis in vier Dezimalzahlen (Oktette) zu je 8 Bit dargestellt werden, z. B. <code>192.168.10.25</code>.</li>
+                <li>Jede dieser Dezimalzahlen liegt im Bereich <code>0–255</code> und entspricht intern einer 8-Bit-Binärzahl.</li>
+                <li>Eine IPv4-Adresse lässt sich in einen <strong>Netzwerkanteil</strong> (Network) und einen <strong>Hostanteil</strong> (Host) aufteilen. Die Netzmaske legt fest, wie viele Bits für das Netz und wie viele Bits für Hosts verwendet werden.</li>
+                <li>Innerhalb eines logischen Netzes gilt: Alle Geräte teilen sich denselben Netzwerkanteil, nur der Hostanteil ist unterschiedlich.</li>
+            </ul>
+
+            <div class="hint">
+                <strong>Bewertungshinweis:</strong> Positiv ist, wenn der 32-Bit-Aufbau, die Aufteilung in vier Oktette und die Trennung in Netzwerk- und Hostanteil erwähnt werden. Begriffe wie <em>Oktett</em>, <em>Netzwerkadresse</em> und <em>Hostadresse</em> können zusätzlich gewertet werden.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>2. Rolle der Subnetzmaske</h2>
+            <p><strong>Beispielantwort:</strong></p>
+            <ul>
+                <li>Die <strong>Subnetzmaske</strong> legt fest, <strong>wieviele Bits</strong> einer Adresse zum Netzwerkanteil gehören und wie viele Bits für Hosts übrig bleiben.</li>
+                <li>Sie wird häufig in der Form <code>255.255.255.0</code> oder in der <strong>CIDR-Schreibweise</strong> (z. B. <code>/24</code>) angegeben.</li>
+                <li>Im Binärbild besteht die Maske aus einer Folge von Einsen (für Netzwerkbits) gefolgt von Nullen (für Hostbits).</li>
+                <li>Geräte im gleichen IP-Netz können sich direkt erreichen. Liegen zwei Adressen in unterschiedlichen Netzen (laut Maske), muss der Verkehr über einen <strong>Router</strong> laufen.</li>
+            </ul>
+
+            <div class="hint">
+                <strong>Bewertungshinweis:</strong> Wichtig ist, dass die Funktion der Maske als „Trenner“ zwischen Netzwerk- und Hostanteil verstanden wird und dass der Zusammenhang zur Erreichbarkeit (direkt vs. über Router) hergestellt wird.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>3. Netzwerkadresse, Broadcastadresse, Hostbereich</h2>
+
+            <h3>3.1 Begriffe erklären</h3>
+            <p><strong>Beispielantwort:</strong></p>
+            <ul>
+                <li><strong>Netzwerkadresse:</strong> Gibt das <strong>Netz als Ganzes</strong> an. Sie ist die kleinste Adresse im Netz (alle Hostbits = 0). Sie wird z. B. in Routingtabellen oder Dokumentation verwendet, aber nicht einem einzelnen Gerät zugewiesen.</li>
+                <li><strong>Broadcastadresse:</strong> Die <strong>größte Adresse</strong> im Netz (alle Hostbits = 1). Pakete an diese Adresse werden an <em>alle</em> Hosts im gleichen Netz gesendet (Broadcast).</li>
+                <li><strong>Hostadressen:</strong> Alle Adressen <em>zwischen</em> Netzwerk- und Broadcastadresse. Sie können einzelnen Endgeräten (PCs, Druckern, Switches, Kameras usw.) zugewiesen werden.</li>
+            </ul>
+
+            <div class="hint">
+                <strong>Bewertungshinweis:</strong> Schüler/innen sollten klar unterscheiden, dass Netzwerk- und Broadcastadresse <em>keinen einzelnen Geräten</em> zugewiesen werden dürfen, sondern spezielle Funktionen haben.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>4. Typische Fehler und Praxisbezug</h2>
+            <p><strong>Mögliche Punkte für die Musterlösung:</strong></p>
+            <ul>
+                <li><strong>Gleiche IP-Adresse doppelt vergeben:</strong> Führt zu Adresskonflikten; Geräte sind instabil erreichbar oder verlieren die Verbindung.</li>
+                <li><strong>Falsche Subnetzmaske:</strong> Geräte „glauben“, in unterschiedlichen Netzen zu sein und schicken Daten an den Router, obwohl sie direkt kommunizieren könnten – oder umgekehrt. Das führt zu Paketverlusten und unerwartetem Routing.</li>
+                <li><strong>Gerät im falschen Netz:</strong> Ein Host, dessen Adresse außerhalb des geplanten Netzes liegt, ist aus Sicht der übrigen Geräte ein „Fremder“ und nur über Routing (oder gar nicht) erreichbar.</li>
+                <li><strong>Broadcast-Stürme:</strong> Zu viele Broadcasts in einem großen Netzsegment belasten alle Geräte. Saubere Netzstruktur und passende Netzeinteilung helfen, Broadcasts einzugrenzen.</li>
+            </ul>
+
+            <div class="note">
+                <strong>Bewertungshinweis:</strong> Besonders positiv ist, wenn Schüler/innen konkrete Auswirkungen für die Praxis der Fachinformatiker/innen beschreiben, z. B. „Ping geht nicht“, „RDP-Verbindung bricht ab“, „Drucker ist aus einem Teil des Netzes nicht erreichbar“ oder „Livestream ruckelt wegen falscher Netzeinteilung“.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

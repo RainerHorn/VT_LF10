@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Lösung zu Einheit 4.1 – Switch-Datenblattvergleich</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+                    min-height: 100vh;
+                    padding: 20px;
+                }
+                .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+                h1 {
+                    color: #16a34a;
+                    font-size: 2.2rem;
+                    font-weight: 700;
+                    margin-bottom: 1rem;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                }
+                h2 {
+                    color: #15803d;
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                    margin-bottom: 1rem;
+                    margin-top: 2rem;
+                }
+                h3 {
+                    color: #166534;
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    margin-bottom: 0.8rem;
+                    margin-top: 1.5rem;
+                }
+                .section {
+                    background: #ffffff;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                    border: 1px solid #e5e7eb;
+                }
+                p { margin-bottom: 1.2rem; color: #444; text-align: justify; }
+                ul { padding-left: 2rem; margin-bottom: 1.2rem; }
+                li { margin-bottom: 0.4rem; }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 1rem 0;
+                    font-size: 0.95rem;
+                }
+                th, td {
+                    border: 1px solid #e5e7eb;
+                    padding: 0.5rem 0.7rem;
+                    vertical-align: top;
+                }
+                th { background: #ecfdf3; font-weight: 600; }
+                .hint {
+                    background: #fef3c7;
+                    border-left: 4px solid #f59e0b;
+                    padding: 1rem;
+                    margin-top: 1rem;
+                    border-radius: 8px;
+                    color: #92400e;
+                }
+                .note {
+                    background: #eff6ff;
+                    border-left: 4px solid #3b82f6;
+                    padding: 1rem;
+                    margin-top: 1rem;
+                    border-radius: 8px;
+                    color: #1d4ed8;
+                }
+                strong { color: #166534; }
+                em { color: #374151; }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <h1>Musterlösung zu Einheit 4.1: Switch-Datenblattvergleich</h1>
+            <p>Die folgende Lösung ist ein <strong>Beispiel</strong>, wie eine gut begründete Antwort aussehen kann. Konkrete Zahlenwerte können je nach Datenblattversion leicht abweichen – entscheidend ist die <strong>strukturierte Gegenüberstellung</strong> und die <strong>nachvollziehbare Argumentation</strong>.</p>
+        </div>
+
+        <div class="section">
+            <h2>1. Teil 1 – Strukturierter Vergleich (Beispielhaft)</h2>
+            <p>Eine mögliche tabellarische Gegenüberstellung könnte so aussehen:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Merkmal</th>
+                        <th>Netgear M4300-8X8F</th>
+                        <th>Cisco Catalyst 1000-48T-4X-L</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Portausstattung</strong></td>
+                        <td>
+                            - 8 × 10GBASE-T (Kupfer, 10 Gbit/s)<br>
+                            - 8 × SFP+ (10 Gbit/s Fiber)<br>
+                            - Fokus auf 10G-Backbone-Ports
+                        </td>
+                        <td>
+                            - 48 × 1GBASE-T (Kupfer, 1 Gbit/s)<br>
+                            - 4 × SFP-Uplink-Ports (1/10 Gbit/s je nach Modell)<br>
+                            - Fokus auf viele 1G-Access-Ports
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rolle / Typ</strong></td>
+                        <td>
+                            - L2/L3-Managed-Switch<br>
+                            - Für Backbone-/Core-Einsatz konzipiert
+                        </td>
+                        <td>
+                            - L2-Managed-Switch (teilweise einfache L3-Funktionen)<br>
+                            - Für Access-/Verteil-Ebene konzipiert
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Unterstützte Features</strong></td>
+                        <td>
+                            - VLAN, QoS, IGMP Snooping<br>
+                            - Link Aggregation, Stacking<br>
+                            - umfangreichere L3-Funktionen möglich
+                        </td>
+                        <td>
+                            - VLAN, QoS, IGMP Snooping<br>
+                            - grundlegende Management-Funktionen für Verteil-Switch
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Switching-Kapazität / Durchsatz</strong></td>
+                        <td>
+                            - Sehr hohe Backplane-Kapazität (für viele 10G-Verbindungen ausgelegt)<br>
+                            - Optimiert für hohe Datenraten (Audio-/Video-Backbone)
+                        </td>
+                        <td>
+                            - Ausreichend für viele 1G-Endgeräte<br>
+                            - Begrenztere 10G-Kapazität (nur wenige Uplinks)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Kühlung / Geräusch</strong></td>
+                        <td>
+                            - Aktive Lüfter, für Rack-/Technikräume geeignet<br>
+                            - Im Zuschauerbereich/FOH potenziell hörbar
+                        </td>
+                        <td>
+                            - Ebenfalls aktive Kühlung, für Verteilerräume und Dauerbetrieb ausgelegt<br>
+                            - Je nach Einbauort Geräuschentwicklung beachten
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Redundanzmöglichkeiten</strong></td>
+                        <td>
+                            - Mehrere 10G-Uplinks möglich<br>
+                            - Stacking mit anderen M4300-Modellen<br>
+                            - Je nach Ausführung redundante Netzteile
+                        </td>
+                        <td>
+                            - Mehrere Uplink-Ports für Redundanz<br>
+                            - Kein vollwertiges Core-Stacking wie bei Enterprise-Backbone-Switchen
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="hint">
+                <strong>Hinweis für die Bewertung:</strong> Wichtig ist nicht, dass jede Zahl exakt stimmt, sondern dass die Schüler/innen <em>systematisch vergleichen</em> (Ports, Rolle, Features, Redundanz, Geräusch, Einsatzbereich).
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>2. Teil 2 – Einsatzszenarien bewerten (Beispielantwort)</h2>
+
+            <h3>2.1 Backbone-Switch für Dante-/Videonetz</h3>
+            <p>
+                Als <strong>Backbone-Switch</strong> für ein Dante-/Videonetz mit wenigen, aber sehr bandbreitenintensiven Verbindungen ist der
+                <strong>Netgear M4300-8X8F</strong> in der Regel die bessere Wahl.
+            </p>
+            <p><strong>Begründung (Beispiel):</strong></p>
+            <ul>
+                <li>Er bietet wesentlich mehr <strong>10G-fähige Ports</strong> (Kupfer und SFP+), was ideal für Uplinks zwischen Regie, FOH, Bühnenrack und Medienservern ist.</li>
+                <li>Die <strong>höhere Switching-Kapazität</strong> und der Fokus auf 10G machen ihn besser geeignet, um große Datenmengen aus Audio- und Videostreams im Kernnetz zu transportieren.</li>
+                <li>Durch <strong>Stacking- und L3-Funktionen</strong> kann der M4300 später leichter in eine größere, segmentierte Netzstruktur integriert werden (z. B. getrennte VLANs für Audio, Video, Licht und Management).</li>
+                <li>Dass er eher für Technikräume mit aktiver Belüftung gedacht ist, ist im Backbone-Bereich meist unkritisch, da dieser selten direkt im Zuschauerbereich steht.</li>
+            </ul>
+
+            <h3>2.2 Zentrales Verteil-Switch für viele Endgeräte</h3>
+            <p>
+                Als <strong>zentrales Verteil-Switch</strong> für viele langsamere Endgeräte (Stageboxen, Kameras, Controller, Lichtpulte) eignet sich
+                der <strong>Cisco Catalyst 1000-48T-4X-L</strong> sehr gut.
+            </p>
+            <p><strong>Begründung (Beispiel):</strong></p>
+            <ul>
+                <li>Er stellt <strong>48 × 1G-Kupfer-Ports</strong> zur Verfügung und ist damit ideal, um viele Endgeräte sternförmig anzuschließen.</li>
+                <li>Die <strong>4 Uplink-Ports</strong> können genutzt werden, um das Verteil-Switch redundant an den Backbone (z. B. über zwei getrennte 10G-Uplinks) anzubinden.</li>
+                <li>Die vorhandenen Funktionen wie <strong>VLAN, QoS und IGMP Snooping</strong> reichen aus, um Audio-, Video- und Steuerdaten logisch zu trennen und Broadcast-Traffic zu kontrollieren.</li>
+                <li>Der Switch ist explizit als <strong>Access-/Edge-Switch</strong> konzipiert, also genau für diese Rolle als Verteil-Switch mit vielen 1G-Anschlüssen.</li>
+            </ul>
+
+            <h3>2.3 Unterschätzte Kennzahlen und ihre Bedeutung</h3>
+            <p>Beispielhaft lassen sich folgende Kennzahlen herausgreifen:</p>
+            <ul>
+                <li>
+                    <strong>Geräuschpegel (Lautstärke der Lüfter):</strong><br>
+                    In FOH-Positionen, in Regieräumen oder auf der Bühne können laute Lüfter <em>hörbar stören</em> und sogar in Mikrofone einstreuen.
+                    Ein technisch leistungsfähiger Switch kann dadurch ungeeignet sein, wenn er im Publikums- oder Tonbereich steht.
+                </li>
+                <li>
+                    <strong>Betriebstemperatur und Kühlkonzept:</strong><br>
+                    In engen Racks, schlecht belüfteten FOH-Plätzen oder bei Außeneinsätzen kann ein Switch schnell an die Grenze seiner zulässigen
+                    Betriebstemperatur kommen. Das führt im Extremfall zu <em>Thermal Throttling, spontanen Reboots oder Ausfällen</em> mitten in der Show.
+                </li>
+                <li>
+                    <strong>PoE-Budget (falls PoE-Variante):</strong><br>
+                    Wenn das maximale PoE-Gesamtbudget nicht ausreicht, starten einzelne Stageboxen, Kameras oder Access-Points nicht oder fallen unter Last aus.
+                </li>
+                <li>
+                    <strong>Management-Zugriff (Web-GUI, SSH, SNMP):</strong><br>
+                    Eingeschränkte Management-Möglichkeiten erschweren die Fehlersuche im Live-Betrieb. Ohne gute Monitoring- und Logging-Funktionen
+                    ist es schwer, Paketverluste, fehlerhafte Ports oder Überlastungen rechtzeitig zu erkennen.
+                </li>
+            </ul>
+
+            <div class="note">
+                <strong>Bewertungshinweis:</strong> In Schülerlösungen sollten mindestens zwei solcher "weichen" Kriterien genannt und sinnvoll erklärt werden. Wichtig ist, dass der Bezug zur <em>Praxis in der Veranstaltungstechnik</em> hergestellt wird (Lautstärke im Saal, Hitze im Rack, Ausfallrisiko, Diagnosefähigkeit usw.).
+            </div>
+        </div>
+
+        
+    </div>
+</body>
+</html>

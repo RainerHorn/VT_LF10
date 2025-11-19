@@ -1,0 +1,202 @@
+{
+  "main": {
+    "id": "107b295b5b959549",
+    "type": "split",
+    "children": [
+      {
+        "id": "d92cf0acc94d25c8",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b4f2632f8b021859",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Tests/test1-3_druckversion.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "test1-3_druckversion"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "7c0d49131adf70f7",
+    "type": "split",
+    "children": [
+      {
+        "id": "d2799139e511b3fa",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "39304173c11467f0",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "16764ee0537dd95c",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "b409e54ceb2e2745",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "be4fda0268fefdc3",
+    "type": "split",
+    "children": [
+      {
+        "id": "5df4e89d10b0762b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "70261fa60a951ae6",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Tests/test1-3_druckversion.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for test1-3_druckversion"
+            }
+          },
+          {
+            "id": "e1dc45eec4ba21fc",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Tests/test1-3_druckversion.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from test1-3_druckversion"
+            }
+          },
+          {
+            "id": "2be5c629a4aeed94",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "642fbc8cb11e42a4",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "392b40573953d91e",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Tests/test1-3_druckversion.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of test1-3_druckversion"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "b4f2632f8b021859",
+  "lastOpenFiles": [
+    "HTML/Kapitel 2 Grundlagen Netzwerktechnik/Aufgabe 4 Switches_und_Router_Loesung.html",
+    "HTML/Kapitel 2 Grundlagen Netzwerktechnik/Aufgabe 3 Nutzgroesse_und_Aufbau_eines_IP_Paketes_Loesung.html",
+    "HTML/Kapitel 2 Grundlagen Netzwerktechnik/Übung 2a Netzwerke bestimmen_Loesung.html",
+    "HTML/Kapitel 2 Grundlagen Netzwerktechnik/Aufgabe 3 Nutzgroesse_und_IP_Paket_Loesung.html",
+    "HTML/Kapitel 2 Grundlagen Netzwerktechnik/Aufgabe 2 Netzwerkadressen_Loesung.html",
+    "HTML/Kapitel 2 Grundlagen Netzwerktechnik/Aufgabe 1 Zahlensysteme_Loesung.html",
+    "HTML/Kapitel 2 Grundlagen Netzwerktechnik/Aufgabe 4.1 Switch-Datenblattvergleich_Loesung.html",
+    "HTML/Kapitel 2 Grundlagen Netzwerktechnik/Aufgabe 4.1 Switch-Datenblattvergleich.html",
+    "Tests/Kurztest Block 1 und 2.pdf",
+    "Tests/msoDC39.tmp",
+    "Tests/Kurztest Block 1 und 2.docx",
+    "Tests/test1-3_druckversion.md",
+    "Tests/test1-3_sonnet.md"
+  ]
+}

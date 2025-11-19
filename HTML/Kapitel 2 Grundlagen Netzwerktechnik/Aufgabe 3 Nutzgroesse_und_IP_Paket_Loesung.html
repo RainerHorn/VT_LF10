@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Lösung zu Aufgabe 3 – Nutzgröße und Aufbau eines IP-Paketes</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+                    min-height: 100vh;
+                    padding: 20px;
+                }
+                .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+                h1 {
+                    color: #16a34a;
+                    font-size: 2.2rem;
+                    font-weight: 700;
+                    margin-bottom: 1rem;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                }
+                h2 {
+                    color: #15803d;
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                    margin-bottom: 1rem;
+                    margin-top: 2rem;
+                }
+                h3 {
+                    color: #166534;
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    margin-bottom: 0.8rem;
+                    margin-top: 1.5rem;
+                }
+                .section {
+                    background: #ffffff;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                    border: 1px solid #e5e7eb;
+                }
+                p { margin-bottom: 1.2rem; color: #444; text-align: justify; }
+                ul { padding-left: 2rem; margin-bottom: 1.2rem; }
+                li { margin-bottom: 0.4rem; }
+                .hint {
+                    background: #fef3c7;
+                    border-left: 4px solid #f59e0b;
+                    padding: 1rem;
+                    margin-top: 1rem;
+                    border-radius: 8px;
+                    color: #92400e;
+                }
+                .note {
+                    background: #eff6ff;
+                    border-left: 4px solid #3b82f6;
+                    padding: 1rem;
+                    margin-top: 1rem;
+                    border-radius: 8px;
+                    color: #1d4ed8;
+                }
+                strong { color: #166534; }
+                em { color: #374151; }
+                code {
+                    background: #e5e7eb;
+                    padding: 0.1rem 0.3rem;
+                    border-radius: 4px;
+                    font-size: 0.95rem;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <h1>Musterlösung zu Aufgabe 3: Nutzgröße und Aufbau eines IP-Paketes</h1>
+            <p>Diese Musterlösung orientiert sich an typischen Fragestellungen zur Aufgabe „Nutzgröße und Aufbau eines IP-Paketes“. Der Fokus liegt auf dem <strong>Schichtenmodell</strong>, dem <strong>Aufbau von Rahmen/Segment/Packet</strong> und den <strong>Auswirkungen von Overhead</strong> auf die nutzbare Datenrate.</p>
+        </div>
+
+        <div class="section">
+            <h2>1. Grundidee: Overhead vs. Nutzdaten</h2>
+            <p><strong>Beispielantwort:</strong></p>
+            <ul>
+                <li>Bei einer Übertragung im Netzwerk werden nicht nur die eigentlichen <strong>Nutzdaten</strong> (z. B. Audiodaten, Videodaten, Steuerbefehle) gesendet, sondern zusätzlich <strong>Steuerinformationen</strong> in Form von Headern und ggf. Trailern.</li>
+                <li>Diese zusätzlichen Informationen nennt man <strong>Overhead</strong>. Er ist notwendig, damit Pakete adressiert, geprüft, sortiert und ggf. erneut angefordert werden können.</li>
+                <li>Je mehr Overhead pro Paket anfällt, desto <strong>geringer</strong> ist – bei gleicher physikalischer Datenrate – die effektiv nutzbare Datenrate für den eigentlichen Inhalt.</li>
+                <li>In der Veranstaltungstechnik ist das besonders bei hochauflösenden Audio-/Video-Streams und vielen gleichzeitigen Verbindungen wichtig, da hier Bandbreite knapp werden kann.</li>
+            </ul>
+
+            <div class="hint">
+                <strong>Bewertungshinweis:</strong> Positiv ist, wenn klar zwischen „Nutzdaten“ und „Overhead“ unterschieden wird und der Zusammenhang zwischen Overhead und effektiver Nutzdatenrate beschrieben wird.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>2. Typischer Aufbau einer Übertragung (Beispiel: Ethernet + IPv4 + TCP/UDP)</h2>
+
+            <h3>2.1 Schichten und ihre Header</h3>
+            <p><strong>Beispielhafte Beschreibung:</strong></p>
+            <ul>
+                <li><strong>Ethernet-Rahmen (Sicherungsschicht):</strong> Enthält u. a. Quell- und Ziel-MAC-Adresse, EtherType, Frame Check Sequence (FCS) zur Fehlererkennung.</li>
+                <li><strong>IP-Paket (Vermittlungsschicht):</strong> Enthält u. a. Quell- und Ziel-IP-Adresse, TTL, Protokolltyp (TCP/UDP), Prüfsummen sowie ggf. Optionen.</li>
+                <li><strong>TCP- oder UDP-Segment (Transportschicht):</strong> Enthält Quell- und Zielport, ggf. Sequenznummern und Bestätigungen (bei TCP), Prüfsumme und weitere Felder.</li>
+                <li><strong>Nutzdaten (Application Data):</strong> Z. B. ein Audio- oder Videodatenblock, ein Steuerbefehl oder ein Teil einer Datei.</li>
+            </ul>
+
+            <p>Vereinfacht dargestellt ergibt sich folgender Aufbau:</p>
+            <p><code>[ Ethernet-Header ] [ IP-Header ] [ TCP/UDP-Header ] [ Nutzdaten ]</code></p>
+
+            <div class="hint">
+                <strong>Bewertungshinweis:</strong> Die genaue Bit- oder Byteanzahl der Header muss nicht zwingend korrekt angegeben werden, wichtig ist das Verständnis des <em>Schichtaufbaus</em> und der Abfolge Rahmen → Paket → Segment → Nutzdaten.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>3. Bedeutung der MTU (Maximum Transmission Unit)</h2>
+            <p><strong>Beispielantwort:</strong></p>
+            <ul>
+                <li>Die <strong>MTU</strong> gibt an, wie groß ein einzelner Datenblock auf einer bestimmten Übertragungsstrecke <strong>maximal</strong> sein darf, ohne fragmentiert zu werden (z. B. 1500 Byte für viele Ethernet-Verbindungen).</li>
+                <li>In diese MTU müssen sowohl <strong>Header</strong> (IP, TCP/UDP) als auch <strong>Nutzdaten</strong> passen. Wird die MTU überschritten, muss das Paket aufgeteilt (fragmentiert) werden.</li>
+                <li>Fragmentierung führt zu <strong>zusätzlichem Overhead</strong>, erhöhter Fehlerrate (wenn ein Fragment verloren geht, ist das ganze Paket unbrauchbar) und mehr Arbeit für Sender und Empfänger.</li>
+                <li>In zeitkritischen Anwendungen wie <strong>Audio-Streaming (Dante)</strong> oder <strong>Videostreaming</strong> kann eine ungünstige MTU-Einstellung zu Rucklern, Aussetzern oder erhöhter Latenz führen.</li>
+            </ul>
+
+            <div class="note">
+                <strong>Bewertungshinweis:</strong> Besonders wichtig ist hier der Zusammenhang zwischen MTU, Fragmentierung und Auswirkungen auf Stabilität/Latenz im Netz. Konkrete Praxisbeispiele (z. B. „Audio knackt bei falsch eingestellter MTU“) sind ein Plus.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>4. Praxisbezug in der Veranstaltungstechnik</h2>
+            <p><strong>Mögliche Punkte in einer guten Antwort:</strong></p>
+            <ul>
+                <li><strong>Planung von Bandbreite:</strong> Bei vielen parallelen Audio- und Videostreams muss berücksichtigt werden, dass ein Teil der Leitungskapazität immer durch Overhead belegt ist. Somit stehen nicht 100 % für Nutzdaten zur Verfügung.</li>
+                <li><strong>Größe der Pakete:</strong> Zu kleine Pakete bedeuten relativ viel Overhead pro Nutzbyte, zu große Pakete erhöhen das Risiko von Fragmentierung und Wiederholungen bei Fehlern.</li>
+                <li><strong>QoS und Priorisierung:</strong> Steuer- und Audiodaten können über QoS-Regeln priorisiert werden. Trotzdem müssen Techniker/innen wissen, wie viel Datenvolumen tatsächlich im Netz unterwegs ist.</li>
+                <li><strong>Messung und Analyse:</strong> Mit Tools (z. B. Wireshark) kann man sich Header und Nutzdaten anschauen und so besser verstehen, wie ein reales Netzwerkpaket aufgebaut ist.</li>
+            </ul>
+
+            <div class="note">
+                <strong>Bewertungshinweis:</strong> Schüler/innen sollten zeigen, dass sie den eher theoretischen Begriff „Overhead“ mit <em>konkreten Auswirkungen</em> auf ihr Arbeitsfeld (Veranstaltungstechnik, Streaming, Steuerung) verknüpfen können.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Lösung zu Aufgabe 1 – Zahlensysteme</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+                    min-height: 100vh;
+                    padding: 20px;
+                }
+                .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+                h1 {
+                    color: #16a34a;
+                    font-size: 2.2rem;
+                    font-weight: 700;
+                    margin-bottom: 1rem;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                }
+                h2 {
+                    color: #15803d;
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                    margin-bottom: 1rem;
+                    margin-top: 2rem;
+                }
+                h3 {
+                    color: #166534;
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    margin-bottom: 0.8rem;
+                    margin-top: 1.5rem;
+                }
+                .section {
+                    background: #ffffff;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                    border: 1px solid #e5e7eb;
+                }
+                p { margin-bottom: 1.2rem; color: #444; text-align: justify; }
+                ul { padding-left: 2rem; margin-bottom: 1.2rem; }
+                li { margin-bottom: 0.4rem; }
+                .hint {
+                    background: #fef3c7;
+                    border-left: 4px solid #f59e0b;
+                    padding: 1rem;
+                    margin-top: 1rem;
+                    border-radius: 8px;
+                    color: #92400e;
+                }
+                .note {
+                    background: #eff6ff;
+                    border-left: 4px solid #3b82f6;
+                    padding: 1rem;
+                    margin-top: 1rem;
+                    border-radius: 8px;
+                    color: #1d4ed8;
+                }
+                strong { color: #166534; }
+                em { color: #374151; }
+                code {
+                    background: #e5e7eb;
+                    padding: 0.1rem 0.3rem;
+                    border-radius: 4px;
+                    font-size: 0.95rem;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <h1>Musterlösung zu Aufgabe 1: Zahlensysteme</h1>
+            <p>Diese Musterlösung zeigt beispielhaft, wie ausführliche und gut begründete Antworten zu den Grundlagen der Zahlensysteme aussehen können. Je nach Aufgabenstellung in der Unterrichtseinheit können Formulierungen leicht variieren – wichtig ist das <strong>Verständnis der Zusammenhänge</strong>.</p>
+        </div>
+
+        <div class="section">
+            <h2>1. Warum arbeiten Computer mit dem Binärsystem?</h2>
+            <p><strong>Beispielantwort:</strong></p>
+            <ul>
+                <li>Computer bestehen aus elektronischen Schaltungen, die nur zwei stabile Zustände sicher unterscheiden können, z. B. <em>Spannung an / Spannung aus</em> oder <em>Strom fließt / Strom fließt nicht</em>.</li>
+                <li>Diese zwei Zustände werden als <strong>0</strong> und <strong>1</strong> codiert – genau das ist die Basis des <strong>Binärsystems</strong> (Zweiersystem).</li>
+                <li>Mit diesen einfachen Zuständen lassen sich mit Hilfe von Logikbausteinen (AND, OR, NOT usw.) alle Rechenoperationen und Verarbeitungsprozesse in einem Computer abbilden.</li>
+                <li>Das Binärsystem ist daher <strong>technisch robust, kostengünstig und zuverlässig</strong>. Komplexere Zahlensysteme wären in Hardware deutlich schwieriger umzusetzen.</li>
+            </ul>
+
+            <div class="hint">
+                <strong>Bewertungshinweis:</strong> Schüler/innen sollten erwähnen, dass es um zwei physikalisch gut unterscheidbare Zustände geht und dass diese den Ziffern 0 und 1 entsprechen. Begriffe wie <em>digitale Technik</em>, <em>Logikgatter</em> oder <em>Stabilität der Zustände</em> können positiv gewertet werden.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>2. Dezimal-, Binär- und Hexadezimalsystem im Vergleich</h2>
+
+            <h3>2.1 Eigenschaften der Zahlensysteme</h3>
+            <p><strong>Dezimalsystem (Basis 10):</strong></p>
+            <ul>
+                <li>Verwendet die Ziffern <code>0–9</code>.</li>
+                <li>Ist das <strong>gewohnte Zahlensystem</strong> im Alltag (Preise, Längen, Zeiten usw.).</li>
+                <li>Gut geeignet für Menschen, aber nicht direkt für die elektronische Verarbeitung.</li>
+            </ul>
+
+            <p><strong>Binärsystem (Basis 2):</strong></p>
+            <ul>
+                <li>Verwendet nur die Ziffern <code>0</code> und <code>1</code>.</li>
+                <li>Entspricht direkt den zwei Zuständen elektronischer Schaltungen.</li>
+                <li>Alles, was der Computer speichert oder verarbeitet (Zahlen, Texte, Bilder), liegt letztlich in Binärform vor.</li>
+            </ul>
+
+            <p><strong>Hexadezimalsystem (Basis 16):</strong></p>
+            <ul>
+                <li>Verwendet die Ziffern <code>0–9</code> und die Buchstaben <code>A–F</code> (für 10–15).</li>
+                <li>Ist eine <strong>kompakte Schreibweise</strong> für Binärzahlen, da jeweils 4 Bits genau einer Hex-Ziffer entsprechen (z. B. <code>1010₂ = A₁₆</code>).</li>
+                <li>Wird häufig in der Informatik genutzt, z. B. bei Speicheradressen, Farbcodes oder MAC-Adressen.</li>
+            </ul>
+
+            <div class="hint">
+                <strong>Bewertungshinweis:</strong> Wichtig ist, dass die Basis (2, 10, 16) genannt und der typische Einsatzbereich kurz beschrieben wird. Ein Bezug zwischen Binär- und Hexadezimalsystem ("4 Bit = 1 Hex-Zeichen") ist ein Pluspunkt.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>3. Praxisbeispiele aus der Netzwerktechnik</h2>
+            <p><strong>Beispielhafte Nennungen:</strong></p>
+            <ul>
+                <li><strong>IP-Adressen:</strong> Eine IPv4-Adresse (z. B. <code>192.168.0.10</code>) besteht intern aus 32 Bits. Für Menschen werden sie dezimal mit Punkten getrennt geschrieben, der Computer verarbeitet sie aber binär.</li>
+                <li><strong>MAC-Adressen:</strong> Werden üblicherweise in Hexadezimalform dargestellt, z. B. <code>00-1A-2B-3C-4D-5E</code>. Intern ist das eine 48-Bit-Binärzahl.</li>
+                <li><strong>Subnetzmasken:</strong> Masken wie <code>255.255.255.0</code> entsprechen im Binärsystem zusammenhängenden Folgen von Einsen und Nullen. Die <strong>Anzahl der 1-Bits</strong> gibt an, wie groß das Netz ist (z. B. <code>/24</code>).</li>
+                <li><strong>Datenraten:</strong> Angaben wie <code>100 Mbit/s</code> oder <code>1 Gbit/s</code> beziehen sich auf Binärgrößen (Faktoren von 2), auch wenn im Alltag häufig gerundet wird.</li>
+            </ul>
+
+            <div class="note">
+                <strong>Bewertungshinweis:</strong> Genannt werden sollten mindestens zwei konkrete Beispiele, in denen unterschiedliche Zahlensysteme in der Netzwerktechnik sichtbar werden (z. B. IP- vs. MAC-Adresse). Entscheidend ist der Bezug zur <em>Praxis in der Netzwerktechnik</em> und zur Arbeit der Fachinformatiker/innen.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Lösung zu Übung 2a – Netzwerke bestimmen</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+                    min-height: 100vh;
+                    padding: 20px;
+                }
+                .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+                h1 {
+                    color: #16a34a;
+                    font-size: 2.2rem;
+                    font-weight: 700;
+                    margin-bottom: 1rem;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                }
+                h2 {
+                    color: #15803d;
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                    margin-bottom: 1rem;
+                    margin-top: 2rem;
+                }
+                h3 {
+                    color: #166534;
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    margin-bottom: 0.8rem;
+                    margin-top: 1.5rem;
+                }
+                .section {
+                    background: #ffffff;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                    border: 1px solid #e5e7eb;
+                }
+                p { margin-bottom: 1.2rem; color: #444; text-align: justify; }
+                ul { padding-left: 2rem; margin-bottom: 1.2rem; }
+                li { margin-bottom: 0.4rem; }
+                .hint {
+                    background: #fef3c7;
+                    border-left: 4px solid #f59e0b;
+                    padding: 1rem;
+                    margin-top: 1rem;
+                    border-radius: 8px;
+                    color: #92400e;
+                }
+                .note {
+                    background: #eff6ff;
+                    border-left: 4px solid #3b82f6;
+                    padding: 1rem;
+                    margin-top: 1rem;
+                    border-radius: 8px;
+                    color: #1d4ed8;
+                }
+                strong { color: #166534; }
+                em { color: #374151; }
+                code {
+                    background: #e5e7eb;
+                    padding: 0.1rem 0.3rem;
+                    border-radius: 4px;
+                    font-size: 0.95rem;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <h1>Musterlösung zu Übung 2a: Netzwerke bestimmen</h1>
+            <p>Da die genaue Aufgabenstellung aus „Übung 2a Netzwerke bestimmen“ je nach Version leicht variieren kann, beschreibt diese Musterlösung vor allem das <strong>Vorgehen</strong> und typische <strong>Lösungswege</strong>. Konkrete Zahlenbeispiele sollten Sie an Ihre Arbeitsblätter anpassen.</p>
+        </div>
+
+        <div class="section">
+            <h2>1. Vorgehen beim Bestimmen von Netzwerken</h2>
+            <p><strong>Allgemeines Schema (Beispielantwort):</strong></p>
+            <ul>
+                <li>Gegebene <strong>IP-Adresse</strong> und <strong>Subnetzmaske</strong> notieren, z. B. <code>192.168.10.37 /24</code> oder <code>10.0.5.130 /20</code>.</li>
+                <li>Subnetzmaske in einer geeigneten Form darstellen (Binärform oder CIDR), um zu erkennen, wie viele Bits zum <strong>Netzwerkanteil</strong> gehören.</li>
+                <li>Aus der Kombination von Adresse und Maske die <strong>Netzwerkadresse</strong>, die <strong>Broadcastadresse</strong> und den <strong>Hostbereich</strong> bestimmen.</li>
+                <li>Prüfen, ob die gegebene IP-Adresse zu diesem Netz gehört und ob sie als Hostadresse gültig ist (nicht Netzwerk- oder Broadcastadresse).</li>
+            </ul>
+
+            <div class="hint">
+                <strong>Bewertungshinweis:</strong> Wichtig ist, dass Schüler/innen ein klares, wiederholbares Schema anwenden, anstatt „auswendig gelernte“ Ergebnisse aufzuschreiben.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>2. Beispiel 1 – Einfaches Netz (z. B. /24)</h2>
+            <p><strong>Angenommen:</strong> IP-Adresse <code>192.168.10.37</code> mit Maske <code>255.255.255.0</code> (<code>/24</code>).</p>
+            <ul>
+                <li><strong>Netzwerkadresse:</strong> <code>192.168.10.0</code> (alle Hostbits = 0).</li>
+                <li><strong>Broadcastadresse:</strong> <code>192.168.10.255</code> (alle Hostbits = 1).</li>
+                <li><strong>Gültiger Hostbereich:</strong> <code>192.168.10.1</code> bis <code>192.168.10.254</code>.</li>
+                <li><strong>Bewertung der Adresse 192.168.10.37:</strong> Liegt innerhalb des Hostbereichs → gültige Hostadresse in diesem Netz.</li>
+            </ul>
+
+            <div class="hint">
+                <strong>Bewertungshinweis:</strong> Bei /24-Netzen reicht oft ein gutes Zahlverständnis, Binärdarstellung kann (muss aber nicht) eingefordert werden. Wichtig ist, dass Netzwerk- und Broadcastadresse richtig erkannt werden.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>3. Beispiel 2 – Netz mit „ungewöhnlicher“ Maske (z. B. /20)</h2>
+            <p><strong>Angenommen:</strong> IP-Adresse <code>10.0.5.130</code> mit Maske <code>/20</code> (entspricht <code>255.255.240.0</code>).</p>
+            <ul>
+                <li><strong>Maske /20:</strong> 20 Bits für das Netz, 12 Bits für Hosts.</li>
+                <li>Die dritten Oktette werden in Blöcken von <code>16</code> zusammengefasst (0, 16, 32, 48, ...), da <code>240</code> im dritten Oktett binär <code>11110000</code> entspricht.</li>
+                <li><strong>Netzwerkadresse:</strong> In unserem Beispiel liegt <code>10.0.5.130</code> im Netz <code>10.0.0.0/20</code> bis <code>10.0.15.255</code> (abhängig vom genauen Beispiel in der Übung).</li>
+                <li><strong>Broadcastadresse:</strong> Oberstes Ende dieses Bereichs, z. B. <code>10.0.15.255</code>.</li>
+                <li><strong>Gültiger Hostbereich:</strong> Zwischen Netzwerk- und Broadcastadresse, also z. B. <code>10.0.0.1</code> bis <code>10.0.15.254</code>.</li>
+            </ul>
+
+            <div class="note">
+                <strong>Bewertungshinweis:</strong> Hier lohnt es sich, weniger auf das „richtige“ Auswendigwissen der Werte zu achten und mehr auf das <em>Verständnis der Blöcke</em> (Größe der Netze, Sprungweite im dritten/vierten Oktett).
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>4. Typische Fragestellungen und Musterantworten</h2>
+            <ul>
+                <li><strong>„Gehören diese zwei Adressen in dasselbe Netz?“</strong><br>
+                    Musterlösung: Beide Adressen werden mit derselben Maske betrachtet. Wenn die resultierende Netzwerkadresse bei beiden gleich ist, gehören sie zum selben Netz, sonst nicht.
+                </li>
+                <li><strong>„Wie viele Hosts sind in diesem Netz maximal möglich?“</strong><br>
+                    Musterlösung: Aus den Hostbits ergibt sich die Anzahl der möglichen Adressen (z. B. bei 8 Hostbits: 2⁸ = 256 Adressen, davon 2 abziehen für Netzwerk- und Broadcastadresse → 254 Hosts).
+                </li>
+                <li><strong>„Ist diese Adresse als Hostadresse gültig?“</strong><br>
+                    Musterlösung: Prüfen, ob die Adresse weder die kleinste (Netzwerkadresse) noch die größte (Broadcastadresse) Adresse des Netzes ist. Falls ja, ist sie eine gültige Hostadresse.
+                </li>
+            </ul>
+
+            <div class="note">
+                <strong>Bewertungshinweis:</strong> Schüler/innen sollen zeigen, dass sie <em>systematisch</em> vorgehen (Adresse + Maske → Netz bestimmen → Broadcast und Hostbereich ableiten) und nicht nur Ergebnisse raten. Saubere Zwischenschritte dürfen ausdrücklich positiv bewertet werden.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
