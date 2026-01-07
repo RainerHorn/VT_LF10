@@ -274,9 +274,296 @@
                 #chat-container button {
                     color: white !important;
                 }
+
+                /* Interaktive Elemente */
+                .interactive-demo {
+                    background: linear-gradient(135deg, #fffde7 0%, #fff9c4 100%);
+                    border: 2px solid #ff9800;
+                    border-radius: 12px;
+                    padding: 1.5rem;
+                    margin: 2rem 0;
+                    text-align: center;
+                }
+
+                .demo-button {
+                    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                    color: white;
+                    border: none;
+                    padding: 0.8rem 1.5rem;
+                    border-radius: 25px;
+                    cursor: pointer;
+                    font-size: 1rem;
+                    margin: 0.5rem;
+                    transition: all 0.3s ease;
+                }
+
+                .demo-button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+                }
+
+                .network-visual {
+                    background: #f8f9fa;
+                    border: 2px solid #2563eb;
+                    border-radius: 12px;
+                    padding: 2rem;
+                    margin: 2rem 0;
+                    text-align: center;
+                }
+
+                .device-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                    gap: 1.5rem;
+                    margin: 2rem 0;
+                }
+
+                .device-card {
+                    background: white;
+                    border: 2px solid #2563eb;
+                    border-radius: 12px;
+                    padding: 1.5rem;
+                    text-align: center;
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                }
+
+                .device-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+                }
+
+                .device-icon {
+                    font-size: 3rem;
+                    margin-bottom: 1rem;
+                }
+
+                .comparison-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 1.5rem 0;
+                    background: white;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                }
+
+                .comparison-table th {
+                    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                    color: white;
+                    padding: 1rem;
+                    font-weight: 600;
+                    text-align: left;
+                }
+
+                .comparison-table td {
+                    padding: 1rem;
+                    border-bottom: 1px solid #e5e7eb;
+                }
+
+                .comparison-table tr:nth-child(even) {
+                    background-color: #f8f9fa;
+                }
+
+                .comparison-table tr:hover {
+                    background-color: #e3f2fd;
+                }
+
+                .info-box {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    border-left: 4px solid #0288d1;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                }
+
+                .warning-box {
+                    background: linear-gradient(135deg, #ffe6e6 0%, #ffb3b3 100%);
+                    border-left: 4px solid #e74c3c;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    color: #c0392b;
+                }
+
+                .success-box {
+                    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+                    border-left: 4px solid #4caf50;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    color: #2e7d32;
+                }
+
+                .packet-flow {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-around;
+                    margin: 2rem 0;
+                    padding: 2rem;
+                    background: #f8f9fa;
+                    border-radius: 12px;
+                }
+
+                .packet-step {
+                    text-align: center;
+                    padding: 1rem;
+                }
+
+                .arrow {
+                    font-size: 2rem;
+                    color: #2563eb;
+                }
+
+                .quiz-container {
+                    background: white;
+                    border: 2px solid #2563eb;
+                    border-radius: 12px;
+                    padding: 2rem;
+                    margin: 2rem 0;
+                }
+
+                .quiz-option {
+                    background: #f8f9fa;
+                    border: 2px solid #e5e7eb;
+                    border-radius: 8px;
+                    padding: 1rem;
+                    margin: 0.5rem 0;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .quiz-option:hover {
+                    background: #e3f2fd;
+                    border-color: #2563eb;
+                }
+
+                .feature-comparison {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 2rem;
+                    margin: 2rem 0;
+                }
+
+                .feature-card {
+                    background: white;
+                    border-radius: 12px;
+                    padding: 2rem;
+                    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+                }
+
+                .feature-card h3 {
+                    color: #2563eb;
+                    margin-bottom: 1rem;
+                }
+
+                .osi-layer {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                    margin: 2rem 0;
+                }
+
+                .layer {
+                    background: white;
+                    border: 2px solid #2563eb;
+                    padding: 1rem;
+                    border-radius: 8px;
+                    text-align: center;
+                    transition: all 0.3s ease;
+                }
+
+                .layer:hover {
+                    background: #e3f2fd;
+                    transform: translateX(10px);
+                }
+
+                .layer.active {
+                    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                    color: white;
+                }
+
+                @media (max-width: 768px) {
+                    .feature-comparison {
+                        grid-template-columns: 1fr;
+                    }
+                    
+                    .packet-flow {
+                        flex-direction: column;
+                    }
+                    
+                    .device-grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
             `;
             document.head.appendChild(style);
         });
+
+        // Interaktive Funktionen
+        function showPacketFlow(type) {
+            const resultDiv = document.getElementById('packet-result');
+            if (type === 'switch') {
+                resultDiv.innerHTML = `
+                    <div class="success-box">
+                        <h4>📦 Paketfluss durch einen Switch:</h4>
+                        <ol>
+                            <li>Paket kommt am Port 1 an</li>
+                            <li>Switch liest die Ziel-MAC-Adresse</li>
+                            <li>Sucht in der MAC-Address-Table nach dem Zielport</li>
+                            <li>Leitet das Paket nur an Port 5 weiter (nicht an alle!)</li>
+                            <li>Andere Ports werden nicht belastet</li>
+                        </ol>
+                        <p><strong>Ergebnis:</strong> Effiziente Nutzung der Bandbreite! ✅</p>
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="success-box">
+                        <h4>🌐 Paketfluss durch einen Router:</h4>
+                        <ol>
+                            <li>Paket kommt aus Netzwerk A (192.168.1.0/24)</li>
+                            <li>Router prüft die Ziel-IP-Adresse (10.0.0.50)</li>
+                            <li>Routing-Tabelle wird konsultiert</li>
+                            <li>Router ändert MAC-Adresse und leitet zu Netzwerk B weiter</li>
+                            <li>Paket erreicht Netzwerk B (10.0.0.0/24)</li>
+                        </ol>
+                        <p><strong>Ergebnis:</strong> Verbindung verschiedener Netzwerke! ✅</p>
+                    </div>
+                `;
+            }
+        }
+
+        function toggleOSILayer(layer) {
+            const layers = document.querySelectorAll('.layer');
+            layers.forEach(l => l.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const infoDiv = document.getElementById('osi-info');
+            const info = {
+                'layer2': '<strong>Schicht 2 - Sicherungsschicht:</strong><br>Arbeitet mit MAC-Adressen. Switches operieren hier und verteilen Pakete innerhalb eines lokalen Netzwerks.',
+                'layer3': '<strong>Schicht 3 - Netzwerkschicht:</strong><br>Arbeitet mit IP-Adressen. Router operieren hier und verbinden verschiedene Netzwerke miteinander.'
+            };
+            infoDiv.innerHTML = `<div class="info-box">${info[layer]}</div>`;
+        }
+
+        function checkQuiz(answer) {
+            const resultDiv = document.getElementById('quiz-result');
+            if (answer === 'correct') {
+                resultDiv.innerHTML = `
+                    <div class="success-box">
+                        <strong>✅ Richtig!</strong> Ein Switch arbeitet auf OSI-Schicht 2 (Sicherungsschicht) mit MAC-Adressen,
+                        während ein Router auf Schicht 3 (Netzwerkschicht) mit IP-Adressen arbeitet.
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="warning-box">
+                        <strong>❌ Nicht ganz!</strong> Versuchen Sie es noch einmal. Tipp: Denken Sie an die OSI-Schichten!
+                    </div>
+                `;
+            }
+        }
 
         // Funktion zum Initialisieren des Chatbots
         document.addEventListener('DOMContentLoaded', async function() {

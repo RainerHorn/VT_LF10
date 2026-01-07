@@ -18,21 +18,21 @@
                 }
                 .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
                 h1 {
-                    color: #16a34a;
+                    color: #2563eb;
                     font-size: 2.2rem;
                     font-weight: 700;
                     margin-bottom: 1rem;
                     text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
                 }
                 h2 {
-                    color: #15803d;
+                    color: #1d4ed8;
                     font-size: 1.6rem;
                     font-weight: 600;
                     margin-bottom: 1rem;
                     margin-top: 2rem;
                 }
                 h3 {
-                    color: #166534;
+                    color: #1e40af;
                     font-size: 1.3rem;
                     font-weight: 600;
                     margin-bottom: 0.8rem;
@@ -77,7 +77,7 @@
                     border-radius: 8px;
                     color: #1d4ed8;
                 }
-                strong { color: #166534; }
+                strong { color: #1e40af; }
                 em { color: #374151; }
             `;
             document.head.appendChild(style);
@@ -109,56 +109,75 @@
                         <td>
                             - 8 × 10GBASE-T (Kupfer, 10 Gbit/s)<br>
                             - 8 × SFP+ (10 Gbit/s Fiber)<br>
-                            - Fokus auf 10G-Backbone-Ports
+                            - Fokus auf 10G-Backbone-Ports<br>
+                            - Insgesamt 16 Ports
                         </td>
                         <td>
                             - 48 × 1GBASE-T (Kupfer, 1 Gbit/s)<br>
-                            - 4 × SFP-Uplink-Ports (1/10 Gbit/s je nach Modell)<br>
-                            - Fokus auf viele 1G-Access-Ports
+                            - 4 × SFP+ Uplink-Ports (1/10 Gbit/s)<br>
+                            - Fokus auf viele 1G-Access-Ports<br>
+                            - Insgesamt 52 Ports
                         </td>
                     </tr>
                     <tr>
                         <td><strong>Rolle / Typ</strong></td>
                         <td>
                             - L2/L3-Managed-Switch<br>
-                            - Für Backbone-/Core-Einsatz konzipiert
+                            - Für Backbone-/Core-Einsatz konzipiert<br>
+                            - AV-optimiert (Dante-zertifiziert)
                         </td>
                         <td>
-                            - L2-Managed-Switch (teilweise einfache L3-Funktionen)<br>
-                            - Für Access-/Verteil-Ebene konzipiert
+                            - L2-Managed-Switch (grundlegende L3-Funktionen)<br>
+                            - Für Access-/Verteil-Ebene konzipiert<br>
+                            - Enterprise-Einsatz
                         </td>
                     </tr>
                     <tr>
                         <td><strong>Unterstützte Features</strong></td>
                         <td>
-                            - VLAN, QoS, IGMP Snooping<br>
-                            - Link Aggregation, Stacking<br>
-                            - umfangreichere L3-Funktionen möglich
+                            - QoS (Quality of Service)<br>
+                            - IGMP Snooping (Multicast-Optimierung)<br>
+                            - Link Aggregation (LACP)<br>
+                            - Stacking-fähig<br>
+                            - Port-Monitoring / Mirroring<br>
+                            - Umfangreiche L3-Routing-Funktionen
                         </td>
                         <td>
-                            - VLAN, QoS, IGMP Snooping<br>
-                            - grundlegende Management-Funktionen für Verteil-Switch
+                            - QoS (Quality of Service)<br>
+                            - IGMP Snooping<br>
+                            - Link Aggregation<br>
+                            - Port-Monitoring<br>
+                            - Grundlegende Management-Funktionen<br>
+                            - Eingeschränkte L3-Features
                         </td>
                     </tr>
                     <tr>
                         <td><strong>Switching-Kapazität / Durchsatz</strong></td>
                         <td>
-                            - Sehr hohe Backplane-Kapazität (für viele 10G-Verbindungen ausgelegt)<br>
-                            - Optimiert für hohe Datenraten (Audio-/Video-Backbone)
+                            - Backplane: ~320 Gbit/s<br>
+                            - Optimiert für 10G-Verbindungen<br>
+                            - Non-blocking Architecture<br>
+                            - Ideal für Audio-/Video-Backbone mit hohen Datenraten
                         </td>
                         <td>
+                            - Backplane: ~104 Gbit/s<br>
                             - Ausreichend für viele 1G-Endgeräte<br>
-                            - Begrenztere 10G-Kapazität (nur wenige Uplinks)
+                            - Non-blocking für 1G-Ports<br>
+                            - Begrenzte 10G-Kapazität (4 Uplinks)
                         </td>
                     </tr>
                     <tr>
                         <td><strong>Kühlung / Geräusch</strong></td>
                         <td>
-                            - Aktive Lüfter, für Rack-/Technikräume geeignet<br>
+                            - Aktive Lüfter (temperaturgesteuert)<br>
+                            - Geräuschpegel: ca. 45-55 dBA<br>
+                            - Für Rack-/Technikräume geeignet<br>
                             - Im Zuschauerbereich/FOH potenziell hörbar
                         </td>
                         <td>
-                            - Ebenfalls aktive Kühlung, für Verteilerräume und Dauerbetrieb ausgelegt<br>
+                            - Aktive Kühlung (Fan-basiert)<br>
+                            - Geräuschpegel: ca. 40-50 dBA<br>
+                            - Für Verteilerräume und Dauerbetrieb ausgelegt<br>
                             - Je nach Einbauort Geräuschentwicklung beachten
                         </td>
                     </tr>
@@ -167,18 +186,41 @@
                         <td>
                             - Mehrere 10G-Uplinks möglich<br>
                             - Stacking mit anderen M4300-Modellen<br>
-                            - Je nach Ausführung redundante Netzteile
+                            - Redundante Netzteile (je nach Modellvariante)<br>
+                            - Dual-Boot-Image für Failover
                         </td>
                         <td>
                             - Mehrere Uplink-Ports für Redundanz<br>
-                            - Kein vollwertiges Core-Stacking wie bei Enterprise-Backbone-Switchen
+                            - Kein vollwertiges Stacking<br>
+                            - Einzelnes Netzteil (Standard-Modell)<br>
+                            - Uplink-Redundanz über LAG
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Einsatzempfehlung</strong></td>
+                        <td>
+                            <strong>Backbone-Switch</strong><br>
+                            Zentrale Kern-Switches für:<br>
+                            - Dante-Audio-Netzwerke<br>
+                            - NDI-Video-Backbone<br>
+                            - 10G-Uplinks zwischen FOH, Regie, Bühne<br>
+                            - Medienserver-Verbindungen
+                        </td>
+                        <td>
+                            <strong>Verteil-Switch</strong><br>
+                            Für viele Endgeräte:<br>
+                            - Stageboxen<br>
+                            - IP-Kameras<br>
+                            - Lichtcontroller<br>
+                            - Management-Computer<br>
+                            - Access Points
                         </td>
                     </tr>
                 </tbody>
             </table>
 
             <div class="hint">
-                <strong>Hinweis für die Bewertung:</strong> Wichtig ist nicht, dass jede Zahl exakt stimmt, sondern dass die Schüler/innen <em>systematisch vergleichen</em> (Ports, Rolle, Features, Redundanz, Geräusch, Einsatzbereich).
+                <strong>Hinweis für die Bewertung:</strong> Wichtig ist nicht, dass jede Zahl exakt stimmt, sondern dass die Schüler/innen <em>systematisch vergleichen</em> (Ports, Rolle, Features, Redundanz, Geräusch, Einsatzbereich). Die Werte können je nach Datenblattversion leicht variieren.
             </div>
         </div>
 
@@ -192,11 +234,12 @@
             </p>
             <p><strong>Begründung (Beispiel):</strong></p>
             <ul>
-                <li>Er bietet wesentlich mehr <strong>10G-fähige Ports</strong> (Kupfer und SFP+), was ideal für Uplinks zwischen Regie, FOH, Bühnenrack und Medienservern ist.</li>
-                <li>Die <strong>höhere Switching-Kapazität</strong> und der Fokus auf 10G machen ihn besser geeignet, um große Datenmengen aus Audio- und Videostreams im Kernnetz zu transportieren.</li>
-                <li>Durch <strong>Stacking- und L3-Funktionen</strong> kann der M4300 später leichter in eine größere, segmentierte Netzstruktur integriert werden (z. B. getrennte VLANs für Audio, Video, Licht und Management).</li>
-                <li>Dass er eher für Technikräume mit aktiver Belüftung gedacht ist, ist im Backbone-Bereich meist unkritisch, da dieser selten direkt im Zuschauerbereich steht.</li>
+                <li><strong>Portausstattung:</strong> Er bietet wesentlich mehr <strong>10G-fähige Ports</strong> (8× 10GBASE-T Kupfer + 8× SFP+ Fiber), was ideal für Uplinks zwischen Regie, FOH, Bühnenrack und Medienservern ist. Im Vergleich dazu hat der Cisco Catalyst nur 4× 10G-Uplinks.</li>
+                <li><strong>Switching-Kapazität:</strong> Die <strong>höhere Backplane-Kapazität (~320 Gbit/s)</strong> und der Fokus auf 10G machen ihn besser geeignet, um große Datenmengen aus Audio- und Videostreams im Kernnetz zu transportieren. Die Non-Blocking-Architektur sorgt dafür, dass alle Ports gleichzeitig mit voller Geschwindigkeit arbeiten können.</li>
+                <li><strong>AV-Optimierung:</strong> Der M4300 ist speziell für Audio/Video-Anwendungen konzipiert und <strong>Dante-zertifiziert</strong>. Er bietet erweiterte Features wie priorisierte QoS-Profile für Medienströme und ist durch Stacking-Funktionen leichter in eine größere, segmentierte Netzstruktur integrierbar.</li>
+                <li><strong>Redundanz:</strong> Durch <strong>Stacking mit anderen M4300-Modellen</strong> und redundante Netzteile (bei entsprechenden Varianten) bietet er höhere Ausfallsicherheit im kritischen Backbone-Bereich.</li>
             </ul>
+            <p><em>Nachteil:</em> Die aktive Lüftung kann im FOH-Bereich hörbar sein, daher sollte der Switch in einem separaten Technikraum platziert werden.</p>
 
             <h3>2.2 Zentrales Verteil-Switch für viele Endgeräte</h3>
             <p>
@@ -205,38 +248,64 @@
             </p>
             <p><strong>Begründung (Beispiel):</strong></p>
             <ul>
-                <li>Er stellt <strong>48 × 1G-Kupfer-Ports</strong> zur Verfügung und ist damit ideal, um viele Endgeräte sternförmig anzuschließen.</li>
-                <li>Die <strong>4 Uplink-Ports</strong> können genutzt werden, um das Verteil-Switch redundant an den Backbone (z. B. über zwei getrennte 10G-Uplinks) anzubinden.</li>
-                <li>Die vorhandenen Funktionen wie <strong>VLAN, QoS und IGMP Snooping</strong> reichen aus, um Audio-, Video- und Steuerdaten logisch zu trennen und Broadcast-Traffic zu kontrollieren.</li>
-                <li>Der Switch ist explizit als <strong>Access-/Edge-Switch</strong> konzipiert, also genau für diese Rolle als Verteil-Switch mit vielen 1G-Anschlüssen.</li>
+                <li><strong>Hohe Port-Anzahl:</strong> Er stellt <strong>48 × 1G-Kupfer-Ports</strong> zur Verfügung und ist damit ideal, um viele Endgeräte sternförmig anzuschließen. Die meisten Event-Geräte (Stageboxen, IP-Kameras, Lichtcontroller) benötigen nur 1 Gbit/s.</li>
+                <li><strong>Uplink-Kapazität:</strong> Die <strong>4 × 10G-Uplink-Ports</strong> können genutzt werden, um das Verteil-Switch redundant an den Backbone (z.B. über zwei getrennte 10G-Uplinks zum M4300) anzubinden. Das reicht völlig aus für die Aggregation von 48 × 1G-Ports.</li>
+                <li><strong>Ausreichende Features:</strong> Die vorhandenen Funktionen wie <strong>QoS, IGMP Snooping und Port-Monitoring</strong> reichen aus, um Audio-, Video- und Steuerdaten logisch zu priorisieren und Broadcast-Traffic zu kontrollieren, ohne dass VLANs zwingend erforderlich sind.</li>
+                <li><strong>Rolle als Access-Switch:</strong> Der Switch ist explizit als <strong>Access-/Edge-Switch</strong> konzipiert, also genau für diese Rolle als Verteil-Switch mit vielen 1G-Anschlüssen für Endgeräte.</li>
+                <li><strong>Kosteneffizienz:</strong> Für Endgeräte-Anbindung ist die 10G-Backbone-Kapazität des M4300 überdimensioniert und teurer. Der Catalyst bietet das bessere Preis-/Leistungsverhältnis für diese Aufgabe.</li>
             </ul>
 
             <h3>2.3 Unterschätzte Kennzahlen und ihre Bedeutung</h3>
             <p>Beispielhaft lassen sich folgende Kennzahlen herausgreifen:</p>
-            <ul>
-                <li>
-                    <strong>Geräuschpegel (Lautstärke der Lüfter):</strong><br>
-                    In FOH-Positionen, in Regieräumen oder auf der Bühne können laute Lüfter <em>hörbar stören</em> und sogar in Mikrofone einstreuen.
-                    Ein technisch leistungsfähiger Switch kann dadurch ungeeignet sein, wenn er im Publikums- oder Tonbereich steht.
-                </li>
-                <li>
-                    <strong>Betriebstemperatur und Kühlkonzept:</strong><br>
-                    In engen Racks, schlecht belüfteten FOH-Plätzen oder bei Außeneinsätzen kann ein Switch schnell an die Grenze seiner zulässigen
-                    Betriebstemperatur kommen. Das führt im Extremfall zu <em>Thermal Throttling, spontanen Reboots oder Ausfällen</em> mitten in der Show.
-                </li>
-                <li>
-                    <strong>PoE-Budget (falls PoE-Variante):</strong><br>
-                    Wenn das maximale PoE-Gesamtbudget nicht ausreicht, starten einzelne Stageboxen, Kameras oder Access-Points nicht oder fallen unter Last aus.
-                </li>
-                <li>
-                    <strong>Management-Zugriff (Web-GUI, SSH, SNMP):</strong><br>
-                    Eingeschränkte Management-Möglichkeiten erschweren die Fehlersuche im Live-Betrieb. Ohne gute Monitoring- und Logging-Funktionen
-                    ist es schwer, Paketverluste, fehlerhafte Ports oder Überlastungen rechtzeitig zu erkennen.
-                </li>
-            </ul>
+            
+            <div class="note">
+                <h4>1. Geräuschpegel (Lautstärke der Lüfter)</h4>
+                <p><strong>Warum kritisch:</strong></p>
+                <ul>
+                    <li>In FOH-Positionen, in Regieräumen oder auf der Bühne können laute Lüfter (45-55 dBA) <em>hörbar stören</em> und sogar in Mikrofone einstreuen</li>
+                    <li>Bei Akustik-Konzerten oder klassischen Aufführungen kann selbst leises Lüftergeräusch zum Problem werden</li>
+                    <li>Ein technisch leistungsfähiger Switch kann dadurch für bestimmte Positionen ungeeignet sein</li>
+                </ul>
+                <p><strong>Praxis-Tipp:</strong> Switches sollten wenn möglich in schallgedämmten Racks oder separaten Technikräumen untergebracht werden.</p>
+            </div>
 
             <div class="note">
-                <strong>Bewertungshinweis:</strong> In Schülerlösungen sollten mindestens zwei solcher "weichen" Kriterien genannt und sinnvoll erklärt werden. Wichtig ist, dass der Bezug zur <em>Praxis in der Veranstaltungstechnik</em> hergestellt wird (Lautstärke im Saal, Hitze im Rack, Ausfallrisiko, Diagnosefähigkeit usw.).
+                <h4>2. Betriebstemperatur und Kühlkonzept</h4>
+                <p><strong>Warum kritisch:</strong></p>
+                <ul>
+                    <li>In engen Racks, schlecht belüfteten FOH-Plätzen oder bei Outdoor-Events kann ein Switch schnell an die Grenze seiner zulässigen Betriebstemperatur kommen (typisch: 0-45°C Betrieb)</li>
+                    <li>Das führt im Extremfall zu <em>Thermal Throttling, spontanen Reboots oder kompletten Ausfällen</em> mitten in der Show</li>
+                    <li>Besonders kritisch bei mehreren Switches im gleichen 19"-Rack ohne ausreichende Belüftung</li>
+                    <li>Sommer-Festivals in nicht klimatisierten Zelten sind Hochrisiko-Szenarien</li>
+                </ul>
+                <p><strong>Praxis-Tipp:</strong> Temperaturüberwachung per SNMP einrichten und ausreichend Rack-Belüftung sicherstellen.</p>
+            </div>
+
+            <div class="note">
+                <h4>3. PoE-Budget (falls PoE-Variante)</h4>
+                <p><strong>Warum kritisch:</strong></p>
+                <ul>
+                    <li>Wenn das maximale PoE-Gesamtbudget (z.B. 370W) nicht ausreicht, starten einzelne Stageboxen, Kameras oder Access-Points nicht oder fallen unter Last aus</li>
+                    <li>Viele Geräte ziehen mehr Leistung als auf dem Datenblatt angegeben (z.B. PTZ-Kameras mit Heizung)</li>
+                    <li>Beim Hochfahren ziehen Geräte kurzzeitig mehr Strom - das kann zur Überlastung führen</li>
+                </ul>
+                <p><strong>Praxis-Tipp:</strong> PoE-Budget mit 20% Reserve kalkulieren und priorisierte PoE-Ports für kritische Geräte nutzen.</p>
+            </div>
+
+            <div class="note">
+                <h4>4. Management-Zugriff (Web-GUI, SSH, SNMP)</h4>
+                <p><strong>Warum kritisch:</strong></p>
+                <ul>
+                    <li>Eingeschränkte Management-Möglichkeiten erschweren die Fehlersuche im Live-Betrieb massiv</li>
+                    <li>Ohne gute Monitoring- und Logging-Funktionen ist es schwer, Paketverluste, fehlerhafte Ports oder Überlastungen rechtzeitig zu erkennen</li>
+                    <li>Bei Unmanaged Switches ist eine Fehlerdiagnose während der Show nahezu unmöglich</li>
+                    <li>SNMP-Monitoring ermöglicht proaktive Überwachung und frühzeitiges Eingreifen</li>
+                </ul>
+                <p><strong>Praxis-Tipp:</strong> Immer Managed Switches verwenden und Monitoring-Tools (z.B. PRTG, Nagios) für kritische Events einsetzen.</p>
+            </div>
+
+            <div class="hint">
+                <strong>Bewertungshinweis:</strong> In Schülerlösungen sollten mindestens zwei solcher "weichen" Kriterien genannt und sinnvoll erklärt werden. Wichtig ist, dass der Bezug zur <em>Praxis in der Veranstaltungstechnik</em> hergestellt wird (Lautstärke im Saal, Hitze im Rack, Ausfallrisiko, Diagnosefähigkeit usw.). Die konkreten Beispiele können variieren.
             </div>
         </div>
 

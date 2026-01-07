@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Musterlösung zu Aufgabe 4 – Switches und Router in der Veranstaltungstechnik</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+                    min-height: 100vh;
+                    padding: 20px;
+                }
+                .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+                h1 {
+                    color: #16a34a;
+                    font-size: 2.2rem;
+                    font-weight: 700;
+                    margin-bottom: 1rem;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                }
+                h2 {
+                    color: #15803d;
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                    margin-bottom: 1rem;
+                    margin-top: 2rem;
+                }
+                h3 {
+                    color: #166534;
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    margin-bottom: 0.8rem;
+                    margin-top: 1.5rem;
+                }
+                h4 {
+                    color: #166534;
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    margin-bottom: 0.5rem;
+                    margin-top: 1rem;
+                }
+                .section {
+                    background: #ffffff;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                    border: 1px solid #e5e7eb;
+                }
+                p { margin-bottom: 1.2rem; color: #444; text-align: justify; }
+                ul { padding-left: 2rem; margin-bottom: 1.2rem; }
+                ol { padding-left: 2rem; margin-bottom: 1.2rem; }
+                li { margin-bottom: 0.4rem; }
+                .hint {
+                    background: #fef3c7;
+                    border-left: 4px solid #f59e0b;
+                    padding: 1rem;
+                    margin-top: 1rem;
+                    border-radius: 8px;
+                    color: #92400e;
+                }
+                .note {
+                    background: #eff6ff;
+                    border-left: 4px solid #3b82f6;
+                    padding: 1rem;
+                    margin-top: 1rem;
+                    border-radius: 8px;
+                    color: #1d4ed8;
+                }
+                .success {
+                    background: #e8f5e8;
+                    border-left: 4px solid #4caf50;
+                    padding: 1rem;
+                    margin-top: 1rem;
+                    border-radius: 8px;
+                    color: #2e7d32;
+                }
+                strong { color: #166534; }
+                em { color: #374151; }
+                code {
+                    background: #e5e7eb;
+                    padding: 0.1rem 0.3rem;
+                    border-radius: 4px;
+                    font-size: 0.95rem;
+                }
+                pre {
+                    background: #f8f9fa;
+                    padding: 1rem;
+                    border-radius: 8px;
+                    overflow-x: auto;
+                    border: 1px solid #e5e7eb;
+                    margin: 1rem 0;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 1rem 0;
+                    background: white;
+                }
+                table th {
+                    background: #166534;
+                    color: white;
+                    padding: 0.8rem;
+                    text-align: left;
+                    font-weight: 600;
+                }
+                table td {
+                    padding: 0.8rem;
+                    border-bottom: 1px solid #e5e7eb;
+                }
+                table tr:nth-child(even) {
+                    background-color: #f8f9fa;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <h1>Musterlösung zu Aufgabe 4: Switches und Router in der Veranstaltungstechnik</h1>
+            <p>Diese Musterlösung orientiert sich an den Frage- und Aufgabenstellungen der Einheit „Switches und Router in der Veranstaltungstechnik". Der Fokus liegt auf dem <strong>Verständnis der Funktionsunterschiede</strong>, dem <strong>OSI-Schichtenmodell</strong>, der <strong>Netzwerk-Segmentierung</strong> und der <strong>praktischen Anwendung in Event-Netzwerken</strong>.</p>
+        </div>
+
+        <div class="section">
+            <h2>1. Grundlegende Unterscheidung: Hub, Switch und Router</h2>
+            
+            <h3>1.1 Erklärung der Gerätetypen</h3>
+            <p><strong>Beispielantwort:</strong></p>
+            <ul>
+                <li><strong>Hub (OSI-Schicht 1 – Physikalisch):</strong> Ein Hub ist ein einfaches Netzwerkgerät, das alle eingehenden Signale an <em>alle</em> angeschlossenen Ports weiterleitet. Er arbeitet ohne Intelligenz und kennt keine MAC- oder IP-Adressen. Dadurch entstehen häufig Kollisionen, und die Bandbreite wird ineffizient genutzt. Hubs sind heute praktisch nicht mehr im Einsatz.</li>
+                
+                <li><strong>Switch (OSI-Schicht 2 – Sicherungsschicht):</strong> Ein Switch arbeitet mit <strong>MAC-Adressen</strong> und lernt automatisch, welches Gerät an welchem Port angeschlossen ist. Er speichert diese Informationen in einer <strong>MAC-Address-Table</strong> und leitet Datenpakete gezielt nur an den Port weiter, an dem sich das Zielgerät befindet (<strong>Unicast</strong>). Dadurch werden Kollisionen minimiert und die Bandbreite optimal genutzt.</li>
+                
+                <li><strong>Router (OSI-Schicht 3 – Netzwerkschicht):</strong> Ein Router verbindet <em>verschiedene Netzwerke</em> miteinander und arbeitet mit <strong>IP-Adressen</strong>. Er trifft Routing-Entscheidungen basierend auf seiner Routing-Tabelle und kann Pakete zwischen unterschiedlichen Subnetzen oder zum Internet weiterleiten. Zusätzlich bietet er Funktionen wie <strong>NAT (Network Address Translation)</strong>, <strong>Firewall</strong> und <strong>DHCP</strong>.</li>
+            </ul>
+
+            <div class="hint">
+                <strong>Bewertungshinweis:</strong> Eine gute Antwort unterscheidet klar zwischen den OSI-Schichten und erklärt, <em>womit</em> (MAC vs. IP) und <em>wie</em> (Broadcast vs. Unicast vs. Routing) die Geräte arbeiten.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>2. OSI-Schichtenmodell und Funktionen</h2>
+            
+            <h3>2.1 Switch – Schicht 2</h3>
+            <p><strong>Beispielhafte Beschreibung:</strong></p>
+            <ul>
+                <li>Ein Switch arbeitet auf der <strong>Sicherungsschicht (Layer 2)</strong> des OSI-Modells.</li>
+                <li>Er nutzt <strong>MAC-Adressen</strong> (Hardware-Adressen), um Geräte innerhalb eines lokalen Netzwerks (LAN) zu identifizieren.</li>
+                <li>Switches bauen eine <strong>MAC-Address-Table</strong> auf, indem sie bei jedem empfangenen Paket die Quell-MAC-Adresse und den Port speichern.</li>
+                <li>Wenn ein Paket mit einer bekannten Ziel-MAC-Adresse ankommt, wird es nur an den entsprechenden Port weitergeleitet (effiziente Bandbreitennutzung).</li>
+                <li>Broadcasts (z. B. ARP-Anfragen) werden an alle Ports im selben VLAN weitergeleitet.</li>
+            </ul>
+
+            <h3>2.2 Router – Schicht 3</h3>
+            <p><strong>Beispielhafte Beschreibung:</strong></p>
+            <ul>
+                <li>Ein Router arbeitet auf der <strong>Netzwerkschicht (Layer 3)</strong> des OSI-Modells.</li>
+                <li>Er verwendet <strong>IP-Adressen</strong>, um Datenpakete zwischen verschiedenen Netzwerken (Subnetzen) weiterzuleiten.</li>
+                <li>Router treffen Entscheidungen basierend auf <strong>Routing-Tabellen</strong>, die entweder statisch konfiguriert oder dynamisch über Routing-Protokolle (z. B. OSPF, BGP) aufgebaut werden.</li>
+                <li>Router <strong>beenden Broadcast-Domänen</strong> – Broadcasts werden nicht über Router-Grenzen hinaus weitergeleitet, was die Netzwerklast reduziert.</li>
+                <li>Zusätzliche Funktionen: <strong>NAT</strong> (mehrere interne IPs teilen sich eine öffentliche IP), <strong>Firewall-Regeln</strong>, <strong>VPN-Verbindungen</strong>.</li>
+            </ul>
+
+            <div class="note">
+                <strong>Bewertungshinweis:</strong> Schüler/innen sollten klar zwischen Schicht 2 (MAC-Adressen, lokale Weiterleitung) und Schicht 3 (IP-Adressen, Netzwerk-übergreifend) unterscheiden können.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>3. Netzwerk-Segmentierung bei großen Veranstaltungen</h2>
+            
+            <h3>3.1 Warum ist Netzwerk-Segmentierung wichtig?</h3>
+            <p><strong>Mögliche Gründe mit Beispielen:</strong></p>
+            
+            <h4>Grund 1: Sicherheit</h4>
+            <ul>
+                <li>Durch die Trennung von <strong>Produktionsnetz</strong> und <strong>Publikums-WLAN</strong> wird verhindert, dass Besucher auf kritische Technik (z. B. Lichtpulte, Kameras, Medienserver) zugreifen können.</li>
+                <li><strong>Beispiel:</strong> Ein Besucher könnte versehentlich oder absichtlich Dante-Audio-Streams stören oder auf Videomischer zugreifen, wenn beide Netze nicht getrennt sind.</li>
+            </ul>
+
+            <h4>Grund 2: Performance und Bandbreite</h4>
+            <ul>
+                <li>Zeitkritische Datenströme wie <strong>Dante-Audio</strong> oder <strong>NDI-Video</strong> benötigen garantierte Bandbreite und niedrige Latenz.</li>
+                <li>Durch separate Subnetze kann man mit <strong>Quality of Service (QoS)</strong> sicherstellen, dass Audio/Video-Traffic priorisiert wird.</li>
+                <li><strong>Beispiel:</strong> Wenn Gäste im selben Netz große Dateien herunterladen, könnte dies Audio-Streams verzögern oder unterbrechen. Mit getrennten Netzen bleibt die Audio-Performance stabil.</li>
+            </ul>
+
+            <h4>Grund 3: Broadcast-Reduktion</h4>
+            <ul>
+                <li>In einem großen, ungeteilten Netzwerk erzeugen viele Geräte <strong>Broadcast-Traffic</strong> (z. B. ARP-Anfragen, DHCP-Requests), der alle Teilnehmer belastet.</li>
+                <li>Durch Segmentierung in mehrere Subnetze oder VLANs werden Broadcasts auf kleinere Bereiche begrenzt.</li>
+                <li><strong>Beispiel:</strong> 200 Geräte im selben Netz erzeugen ständig Broadcasts, die Switches und Endgeräte belasten. Mit 4 Subnetzen à 50 Geräten sinkt die Last deutlich.</li>
+            </ul>
+
+            <h4>Grund 4: Vereinfachtes Troubleshooting</h4>
+            <ul>
+                <li>Wenn ein Problem auftritt (z. B. Netzwerkschleife, IP-Konflikt), ist es einfacher, die Fehlerquelle in einem klar abgegrenzten Subnetz zu finden.</li>
+                <li><strong>Beispiel:</strong> Audio-Aussetzer lassen sich schneller diagnostizieren, wenn nur Audio-Geräte im betroffenen Subnetz sind, statt alle Event-Geräte gleichzeitig prüfen zu müssen.</li>
+            </ul>
+
+            <div class="hint">
+                <strong>Bewertungshinweis:</strong> Gute Antworten nennen mindestens drei konkrete Gründe mit Praxisbezug zur Veranstaltungstechnik und zeigen Verständnis für die Auswirkungen auf Stabilität, Sicherheit und Performance.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>4. Troubleshooting: Dante-Audio-Aussetzer</h2>
+            
+            <h3>4.1 Welche Netzwerkeinstellungen würden Sie prüfen?</h3>
+            <p><strong>Beispielhafte Checkliste:</strong></p>
+            
+            <h4>1. Switch-Typ und Konfiguration</h4>
+            <ul>
+                <li><strong>Prüfen:</strong> Ist ein <strong>Managed Gigabit-Switch</strong> im Einsatz? Unmanaged Switches oder Fast-Ethernet (100 Mbit/s) sind für Dante NICHT geeignet!</li>
+                <li><strong>IGMP Snooping:</strong> Muss aktiviert sein, damit Multicast-Traffic (Dante) nur an interessierte Ports weitergeleitet wird. Ohne IGMP Snooping wird Audio-Traffic an alle Ports geflutet → Überlastung.</li>
+                <li><strong>QoS / DSCP-Markierung:</strong> Dante-Pakete sollten priorisiert werden (DSCP EF für Audio).</li>
+            </ul>
+
+            <h4>2. Bandbreite und Auslastung</h4>
+            <ul>
+                <li><strong>Prüfen:</strong> Ist die verfügbare Bandbreite ausreichend? Dante benötigt ca. 6-7 Mbit/s pro Audio-Kanal bei 48 kHz/24 Bit.</li>
+                <li><strong>Port-Monitoring:</strong> Gibt es Engpässe an bestimmten Switch-Ports? Uplinks sollten mindestens 1 Gbit/s bieten.</li>
+                <li>Sind andere Geräte (z. B. Video-Streaming) im selben Netz und verbrauchen Bandbreite?</li>
+            </ul>
+
+            <h4>3. Netzwerkverkabelung und Latenz</h4>
+            <ul>
+                <li><strong>Kabelqualität:</strong> Cat5e oder besser (Cat6/Cat6a) für Gigabit-Verbindungen verwenden.</li>
+                <li><strong>Latenz-Messung:</strong> Dante Controller zeigt Latenz an – sollte unter 1-2 ms liegen. Höhere Werte deuten auf Netzwerkprobleme hin.</li>
+                <li><strong>Duplex-Einstellungen:</strong> Alle Verbindungen müssen auf <strong>Full-Duplex</strong> stehen, kein Half-Duplex!</li>
+            </ul>
+
+            <h4>4. Netzwerkschleifen und Spanning Tree</h4>
+            <ul>
+                <li><strong>Prüfen auf Schleifen:</strong> Sind versehentlich zwei Switch-Ports miteinander verbunden? → Broadcast-Storm!</li>
+                <li><strong>Spanning Tree Protocol (STP):</strong> Sollte aktiviert sein, um Schleifen automatisch zu erkennen und zu verhindern.</li>
+                <li><strong>Redundanz:</strong> Bei redundanten Verbindungen (z. B. für Dante Primary/Secondary) muss STP korrekt konfiguriert sein.</li>
+            </ul>
+
+            <h4>5. IP-Konfiguration und Broadcasts</h4>
+            <ul>
+                <li><strong>IP-Konflikte:</strong> Gibt es doppelte IP-Adressen im Netz? → Dante Controller prüfen.</li>
+                <li><strong>DHCP vs. statische IPs:</strong> Für Dante wird empfohlen, <strong>statische IP-Adressen</strong> zu verwenden oder feste DHCP-Reservierungen einzurichten.</li>
+                <li><strong>Broadcast-Last:</strong> Zu viele Geräte in einem großen Subnetz erzeugen Broadcast-Traffic → Netzwerk segmentieren!</li>
+            </ul>
+
+            <h4>6. Firmware und Software-Updates</h4>
+            <ul>
+                <li><strong>Dante-Firmware:</strong> Sind alle Dante-Geräte auf dem neuesten Stand?</li>
+                <li><strong>Switch-Firmware:</strong> Managed Switches sollten aktuelle Firmware haben, um bekannte Bugs zu vermeiden.</li>
+            </ul>
+
+            <div class="success">
+                <strong>Best Practice:</strong> Nutzen Sie den <strong>Dante Controller</strong> zur Überwachung. Er zeigt Latenz, Paketverluste und Netzwerkstatus in Echtzeit an. Zusätzlich können Tools wie <strong>Wireshark</strong> oder Switch-Port-Monitoring helfen, Engpässe zu identifizieren.
+            </div>
+
+            <div class="hint">
+                <strong>Bewertungshinweis:</strong> Eine gute Antwort nennt mindestens 4-5 konkrete Prüfpunkte und zeigt Verständnis für die besonderen Anforderungen von Dante-Audio (Gigabit, Managed Switch, IGMP Snooping, QoS).
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>5. Praxisaufgabe: Netzwerkplanung für ein Event</h2>
+            
+            <h3>Teil 1: Netzwerkdiagramm – Musterlösung (60 Punkte)</h3>
+            
+            <h4>Beispiel-Netzwerkaufbau:</h4>
+            <pre style="font-size: 0.9em; line-height: 1.4;">
+                            ┌─────────────────┐
+                            │    INTERNET     │
+                            │  (ISP-Router)   │
+                            └────────┬────────┘
+                                     │ (WAN)
+                            ┌────────▼────────┐
+                            │  EDGE ROUTER    │ ← Firewall, NAT, DHCP
+                            │  192.168.0.1    │   (Managed)
+                            └────────┬────────┘
+                                     │ (10G Uplink)
+                    ┌────────────────┼────────────────┬──────────────┐
+                    │                │                │              │
+            ┌───────▼────────┐ ┌────▼──────┐ ┌──────▼─────┐ ┌─────▼──────┐
+            │ CORE SWITCH 1  │ │  SWITCH 2 │ │  SWITCH 3  │ │  SWITCH 4  │
+            │ Managed, 10G   │ │  Managed  │ │  Managed   │ │ Unmanaged  │
+            │ VLAN-fähig     │ │  Bühne    │ │   FOH      │ │  Gäste-LAN │
+            └───────┬────────┘ └────┬──────┘ └─────┬──────┘ └─────┬──────┘
+                    │               │              │              │
+        ┌───────────┼───────┐   ┌───┴─────┐  ┌────┴────┐    ┌────┴────┐
+        │           │       │   │         │  │         │    │         │
+    Video-Srv  Medien  Licht  Dante  Dante  Licht  Monitor  WLAN-AP  WLAN-AP
+    (.10.10)   (.10.20) (.20.5) Stage  Stage (.30.5)  (.30.10) (.40.100) (.40.101)
+                                 (.20.10)(.20.11)
+
+    ══════════════════════════════════════════════════════════════════
+    SUBNETZE:
+    ══════════════════════════════════════════════════════════════════
+    
+    1. Produktion (Video/Medien):  192.168.10.0/24
+       Gateway: 192.168.10.1
+       Geräte: Video-Server (.10), Medienserver (.20), Kameras (.30-.50)
+    
+    2. Audio (Dante):  192.168.20.0/24
+       Gateway: 192.168.20.1
+       Geräte: Dante-Stageboxen (.10-.20), Audio-Mischpulte (.30-.40)
+    
+    3. Steuerung (Licht/FOH):  192.168.30.0/24
+       Gateway: 192.168.30.1
+       Geräte: Lichtpulte (.5-.15), Monitor-Systeme (.20-.30)
+    
+    4. Publikums-WLAN:  10.0.0.0/16
+       Gateway: 10.0.0.1
+       Geräte: Access Points, Gäste-Endgeräte (DHCP-Range: 10.0.10.1 - 10.0.20.254)
+    
+    ══════════════════════════════════════════════════════════════════
+    VERBINDUNGSLEITUNGEN:
+    ══════════════════════════════════════════════════════════════════
+    
+    - Router ↔ Core Switch 1:  10 Gbit/s (Glasfaser)
+    - Core Switch ↔ Switches 2-4:  1 Gbit/s (Cat6)
+    - Switches ↔ Endgeräte:  1 Gbit/s (Cat6/Cat6a)
+    </pre>
+
+            <div class="success">
+                <strong>Erklärung der Designentscheidungen:</strong>
+                <ul>
+                    <li><strong>Core Switch:</strong> Managed, 10G, VLAN-fähig → zentrale Verteilung mit hoher Bandbreite</li>
+                    <li><strong>Switches 2-3:</strong> Managed → QoS, IGMP Snooping für Audio/Video-Traffic</li>
+                    <li><strong>Switch 4:</strong> Unmanaged reicht für Gäste-WLAN (keine kritischen Dienste)</li>
+                    <li><strong>Separate Subnetze:</strong> Isolation von Produktionsnetz und Gästen, optimierte Broadcast-Domänen</li>
+                    <li><strong>Router mit Firewall:</strong> Nur Streaming-Server darf ins Internet, Rest blockiert</li>
+                </ul>
+            </div>
+
+            <h3>Teil 2: Sicherheit und Netzwerktrennung – Musterlösung (40 Punkte)</h3>
+
+            <h4>Frage 1: Warum sollte das Publikums-WLAN vom Produktionsnetz getrennt sein?</h4>
+            <p><strong>Beispielantwort:</strong></p>
+            <ol>
+                <li><strong>Sicherheitsrisiko:</strong> Wenn Besucher im gleichen Netz wie Produktionstechnik sind, könnten sie (absichtlich oder versehentlich) auf Geräte zugreifen, die keine Authentifizierung haben (z. B. ältere Lichtpulte, Kameras). Ein Angreifer könnte z. B. ARP-Spoofing betreiben oder DoS-Angriffe starten.<br>
+                <em>Beispiel:</em> Besucher scannt Netz und findet offene Webinterfaces von Dante-Geräten → könnte Audio-Routing manipulieren.</li>
+                
+                <li><strong>Performance und Bandbreite:</strong> Gäste-WLAN erzeugt oft hohen, unkontrollierten Traffic (Streaming, Downloads, Social Media). Dieser Traffic würde zeitkritische Datenströme wie Dante-Audio oder NDI-Video stören.<br>
+                <em>Beispiel:</em> 200 Gäste streamen gleichzeitig Videos → Netzwerk überlastet, Audio knackt, Video stockt.</li>
+                
+                <li><strong>Broadcast-Isolation:</strong> Gäste-Geräte erzeugen viele Broadcasts (DHCP, mDNS, Bonjour etc.). In einem ungeteilten Netz würden diese Broadcasts auch die Produktionsgeräte belasten.<br>
+                <em>Beispiel:</em> 300 Smartphones senden ständig Discovery-Broadcasts → Switch und Endgeräte werden belastet, Latenz steigt.</li>
+            </ol>
+
+            <h4>Frage 2: Welche Funktion hat der Router in Ihrem Design?</h4>
+            <p><strong>Beispielantwort:</strong></p>
+            <ul>
+                <li>Der Router verbindet die <strong>vier Subnetze</strong> (Produktion, Audio, Steuerung, Gäste-WLAN) miteinander und ermöglicht bei Bedarf die Kommunikation zwischen ihnen.</li>
+                <li>Er führt <strong>NAT</strong> durch, sodass alle internen Geräte über eine gemeinsame öffentliche IP-Adresse ins Internet können (wichtig für Streaming-Encoder).</li>
+                <li>Die <strong>Firewall-Funktion</strong> des Routers schützt das Produktionsnetz:
+                    <ul>
+                        <li>Gäste-WLAN (10.0.0.0/16) darf NICHT auf Produktions-, Audio- oder Steuerungsnetze zugreifen (Firewall-Regel: DENY)</li>
+                        <li>Nur der Streaming-Encoder (z. B. 192.168.10.50) darf ins Internet (Port 80, 443, RTMP)</li>
+                        <li>Alle anderen Produktionsgeräte sind vom Internet isoliert</li>
+                    </ul>
+                </li>
+                <li>Der Router vergibt über <strong>DHCP</strong> IP-Adressen an Gäste-Geräte (Pool: 10.0.10.1 - 10.0.20.254), während Produktionsgeräte statische IPs haben.</li>
+            </ul>
+
+            <h4>Frage 3: Troubleshooting bei Dante-Audio-Aussetzern – Was prüfen?</h4>
+            <p><strong>Beispielantwort (mind. 4 Prüfpunkte):</strong></p>
+            <ol>
+                <li><strong>Switch-Typ und IGMP Snooping:</strong> Prüfen, ob der Switch Managed und IGMP Snooping aktiviert ist. Ohne IGMP wird Dante-Multicast an alle Ports geflutet → Überlastung.</li>
+                
+                <li><strong>Bandbreite und Port-Auslastung:</strong> Mit Switch-Monitoring prüfen, ob Uplink-Ports überlastet sind. Dante benötigt garantierte Bandbreite (ca. 6-7 Mbit/s pro Kanal). Andere Geräte (z. B. Video-Streams) könnten die Bandbreite verbrauchen.</li>
+                
+                <li><strong>QoS und Priorisierung:</strong> Prüfen, ob Dante-Traffic priorisiert wird (DSCP EF). Ohne QoS können andere Datenströme Dante-Pakete verzögern → Aussetzer.</li>
+                
+                <li><strong>Netzwerkschleifen und STP:</strong> Prüfen auf versehentliche Kabelschleifen (zwei Ports verbunden). Spanning Tree sollte aktiviert sein. Schleifen führen zu Broadcast-Storms → kompletter Netzwerkausfall.</li>
+                
+                <li><strong>Latenz und Duplex-Einstellung:</strong> Dante Controller zeigt Latenz an – sollte unter 1-2 ms liegen. Alle Ports müssen auf Full-Duplex stehen (kein Auto-Negotiation bei kritischen Verbindungen).</li>
+                
+                <li><strong>IP-Konflikte und DHCP:</strong> Prüfen, ob es doppelte IP-Adressen gibt oder ob DHCP-Leases abgelaufen sind. Für Dante statische IPs verwenden!</li>
+            </ol>
+
+            <div class="note">
+                <strong>Bewertungshinweis:</strong> Sehr gute Antworten zeigen systematisches Troubleshooting-Denken: Von Hardware (Switch-Typ, Kabel) über Konfiguration (IGMP, QoS) bis zu Monitoring (Latenz, Port-Auslastung).
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>6. Interaktive Spiele – Lösungen</h2>
+            
+            <h3>6.1 Memory-Spiel – Richtige Paare</h3>
+            <ul>
+                <li>Switch ↔ MAC-Adresse</li>
+                <li>Router ↔ IP-Adresse</li>
+                <li>OSI Layer 2 ↔ Sicherungsschicht</li>
+                <li>OSI Layer 3 ↔ Netzwerkschicht</li>
+                <li>Broadcast ↔ An alle Ports</li>
+                <li>Unicast ↔ An einen Port</li>
+            </ul>
+
+            <h3>6.2 Drag & Drop – Richtige Zuordnung</h3>
+            <p><strong>SWITCH:</strong></p>
+            <ul>
+                <li>Arbeitet mit MAC-Adressen</li>
+                <li>OSI Schicht 2</li>
+                <li>Verbindet Geräte im gleichen Netzwerk</li>
+            </ul>
+            
+            <p><strong>ROUTER:</strong></p>
+            <ul>
+                <li>Arbeitet mit IP-Adressen</li>
+                <li>OSI Schicht 3</li>
+                <li>Verbindet verschiedene Netzwerke</li>
+            </ul>
+
+            <h3>6.3 Multiple-Choice Quiz – Richtige Antworten</h3>
+            <ul>
+                <li><strong>Frage 1:</strong> C) Ein Switch lernt automatisch, an welchem Port sich welches Gerät befindet</li>
+                <li><strong>Frage 2:</strong> B) Sie ermöglichen erweiterte Konfigurationen wie VLANs und QoS</li>
+                <li><strong>Frage 3:</strong> B) Um Multicast-Traffic nur an interessierte Ports weiterzuleiten</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>7. Vergleichstabelle Switch vs. Router – Zusammenfassung</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Kriterium</th>
+                        <th>Switch</th>
+                        <th>Router</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>OSI-Schicht</strong></td>
+                        <td>Schicht 2 (Sicherungsschicht)</td>
+                        <td>Schicht 3 (Netzwerkschicht)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Arbeitet mit</strong></td>
+                        <td>MAC-Adressen (Hardware-Adressen)</td>
+                        <td>IP-Adressen (Logische Adressen)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hauptaufgabe</strong></td>
+                        <td>Geräte im gleichen Netzwerk verbinden</td>
+                        <td>Verschiedene Netzwerke verbinden</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tabelle</strong></td>
+                        <td>MAC-Address-Table</td>
+                        <td>Routing-Table</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Broadcast-Verhalten</strong></td>
+                        <td>Leitet Broadcasts innerhalb des VLANs weiter</td>
+                        <td>Stoppt Broadcasts (trennt Broadcast-Domänen)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Typische Funktionen</strong></td>
+                        <td>VLANs, QoS, IGMP Snooping, Port-Monitoring</td>
+                        <td>NAT, Firewall, DHCP, VPN, Routing-Protokolle</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Einsatzgebiet</strong></td>
+                        <td>Viele Geräte im selben Netz effizient verbinden</td>
+                        <td>Netze trennen, Internetzugang, Sicherheit</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Beispiel VT</strong></td>
+                        <td>Dante-Audio-Netz, Kamera-Netz, Licht-Netz</td>
+                        <td>Produktionsnetz ↔ Gäste-WLAN ↔ Internet</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>8. Praxisbezug in der Veranstaltungstechnik – Zusammenfassung</h2>
+            
+            <h3>Wichtige Erkenntnisse für die Event-Praxis:</h3>
+            <ul>
+                <li><strong>Dante-Audio:</strong> Benötigt zwingend Managed Gigabit-Switches mit IGMP Snooping und QoS. Unmanaged Switches oder Fast-Ethernet führen zu Aussetzern!</li>
+                
+                <li><strong>Netzwerk-Segmentierung:</strong> Produktionsnetze (Audio, Video, Licht) sollten immer von Gäste-Netzen getrennt sein. Dies erhöht Sicherheit, Performance und vereinfacht Troubleshooting.</li>
+                
+                <li><strong>Router als Gateway:</strong> Router verbinden die Subnetze und schützen durch Firewall-Regeln kritische Produktionstechnik. NAT ermöglicht Internet-Zugang für Streaming, ohne alle Geräte zu exponieren.</li>
+                
+                <li><strong>Redundanz:</strong> Bei kritischen Live-Events sollten wichtige Komponenten redundant ausgelegt sein (z. B. redundante Switch-Uplinks, Dante Primary/Secondary).</li>
+                
+                <li><strong>Monitoring:</strong> Tools wie Dante Controller, Switch-Port-Monitoring und Wireshark helfen, Probleme frühzeitig zu erkennen und schnell zu reagieren.</li>
+                
+                <li><strong>Planung ist entscheidend:</strong> Ein gut geplantes Netzwerk mit klarer Struktur, sinnvoller IP-Adressierung und dokumentierten VLANs spart während der Show enorm viel Zeit und Nerven!</li>
+            </ul>
+
+            <div class="success">
+                <strong>🎯 Kernbotschaft für Schüler/innen:</strong> Das Verständnis der Unterschiede zwischen Switches und Routern sowie der Einsatz von Netzwerk-Segmentierung sind <em>Grundvoraussetzungen</em> für den Aufbau stabiler, sicherer und performanter Event-Netzwerke. Nur wer diese Konzepte beherrscht, kann auch bei komplexen Live-Events souverän agieren!
+            </div>
+        </div>
+    </div>
+</body>
+</html>

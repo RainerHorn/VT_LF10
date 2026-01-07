@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Einheit 4 – Switches und Router in der Veranstaltungstechnik</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Funktion zum Kopieren von Code in die Zwischenablage
+            window.copyToClipboard = function(code) {
+                navigator.clipboard.writeText(code).then(() => {
+                    const tooltip = document.createElement('div');
+                    tooltip.textContent = 'Code kopiert!';
+                    tooltip.style.position = 'fixed';
+                    tooltip.style.top = '50%';
+                    tooltip.style.left = '50%';
+                    tooltip.style.transform = 'translate(-50%, -50%)';
+                    tooltip.style.backgroundColor = '#333';
+                    tooltip.style.color = '#fff';
+                    tooltip.style.padding = '10px';
+                    tooltip.style.borderRadius = '5px';
+                    tooltip.style.zIndex = '1000';
+                    document.body.appendChild(tooltip);
+                    setTimeout(() => {
+                        document.body.removeChild(tooltip);
+                    }, 1000);
+                }).catch(err => {
+                    console.error('Fehler beim Kopieren:', err);
+                });
+            };
+
+            // Funktion zum Erklären des Codes mithilfe des Chatbots
+            window.explainCode = function(code) {
+                console.log('Erkläre Code:', code); // Debugging
+                sendToChatbot(code);
+            };
+
+            // Funktion zum Simulieren eines Klicks auf den Chatbot-Button
+            window.simulateChatbotClick = function() {
+                // Der Chatbot-Button hat die ID 'chat-icon' in mmbbs-bot.js
+                const chatButton = document.getElementById('chat-icon');
+                if (chatButton) {
+                    console.log('Chatbot-Button gefunden. Simuliere Klick.'); // Debugging
+                    chatButton.click();
+                } else {
+                    console.error('Chatbot-Button nicht gefunden.');
+                }
+            };
+
+            // Funktion zum Senden von Nachrichten an den Chatbot
+            window.sendToChatbot = function(message) {
+                // Öffne den Chatbot-Chatfenster durch Klick auf das Chat-Icon
+                simulateChatbotClick();
+
+                // Warte kurz, bis das Chatfenster geöffnet ist
+                setTimeout(() => {
+                    const chatInput = document.getElementById('chat-input');
+                    const sendButton = document.getElementById('send-button');
+
+                    if (chatInput && sendButton) {
+                        chatInput.value = message;
+                        sendButton.click();
+                        console.log('Nachricht an Chatbot gesendet:', message); // Debugging
+                    } else {
+                        console.error('Chat-Eingabefeld oder Senden-Button nicht gefunden.');
+                    }
+                }, 500); // Verzögerung von 500 ms
+            };
+            
+            const style = document.createElement('style');
+            style.innerHTML = `
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+                    min-height: 100vh;
+                    padding: 20px;
+                }
+
+                .container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }
+
+                h1 {
+                    color: #2563eb;
+                    font-size: 2.2rem;
+                    font-weight: 700;
+                    margin-bottom: 1rem;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                }
+
+                h2 {
+                    color: #1d4ed8;
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                    margin-bottom: 1rem;
+                    margin-top: 2rem;
+                }
+
+                h3 {
+                    color: #1e40af;
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    margin-bottom: 0.8rem;
+                    margin-top: 1.5rem;
+                }
+
+                h4 {
+                    color: #1e40af;
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    margin-bottom: 0.5rem;
+                    margin-top: 1rem;
+                }
+
+                .section {
+                    background: white;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                    border: 1px solid #e5e7eb;
+                }
+
+                p {
+                    margin-bottom: 1.2rem;
+                    text-align: justify;
+                    color: #444;
+                    line-height: 1.7;
+                }
+
+                code {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    color: #01579b;
+                    padding: 3px 6px;
+                    border-radius: 6px;
+                    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+                    font-size: 0.9em;
+                    font-weight: 600;
+                    border: 1px solid #81d4fa;
+                }
+
+                ul {
+                    padding-left: 2rem;
+                    margin-bottom: 1.2rem;
+                }
+
+                ol {
+                    padding-left: 2rem;
+                    margin-bottom: 1.2rem;
+                }
+
+                li {
+                    margin-bottom: 0.5rem;
+                    color: #555;
+                }
+
+                .task {
+                    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+                    border-left: 4px solid #4caf50;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(76, 175, 80, 0.1);
+                }
+
+                .task strong {
+                    color: #2e7d32;
+                    font-size: 1.1rem;
+                    display: block;
+                    margin-bottom: 0.8rem;
+                }
+
+                .question {
+                    background: linear-gradient(135deg, #fff3cd 0%, #fdeaa7 100%);
+                    border-left: 4px solid #f39c12;
+                    padding: 1.2rem;
+                    margin: 1rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(243, 156, 18, 0.1);
+                    color: #b7950b;
+                    font-weight: 500;
+                }
+
+                .tech-specs {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    border-left: 4px solid #0288d1;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(2, 136, 209, 0.1);
+                }
+
+                .tech-specs h4 {
+                    color: #01579b;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+
+                .interactive-demo {
+                    background: linear-gradient(135deg, #fffde7 0%, #fff9c4 100%);
+                    border: 2px solid #ff9800;
+                    border-radius: 12px;
+                    padding: 1.5rem;
+                    margin: 2rem 0;
+                    text-align: center;
+                }
+
+                .demo-button {
+                    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                    color: white;
+                    border: none;
+                    padding: 0.8rem 1.5rem;
+                    border-radius: 25px;
+                    cursor: pointer;
+                    font-size: 1rem;
+                    margin: 0.5rem;
+                    transition: all 0.3s ease;
+                }
+
+                .demo-button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+                }
+
+                .network-visual {
+                    background: #f8f9fa;
+                    border: 2px solid #2563eb;
+                    border-radius: 12px;
+                    padding: 2rem;
+                    margin: 2rem 0;
+                    text-align: center;
+                }
+
+                .device-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                    gap: 1.5rem;
+                    margin: 2rem 0;
+                }
+
+                .device-card {
+                    background: white;
+                    border: 2px solid #2563eb;
+                    border-radius: 12px;
+                    padding: 1.5rem;
+                    text-align: center;
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                }
+
+                .device-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+                }
+
+                .device-icon {
+                    font-size: 3rem;
+                    margin-bottom: 1rem;
+                }
+
+                .comparison-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 1.5rem 0;
+                    background: white;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                }
+
+                .comparison-table th {
+                    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                    color: white;
+                    padding: 1rem;
+                    font-weight: 600;
+                    text-align: left;
+                }
+
+                .comparison-table td {
+                    padding: 1rem;
+                    border-bottom: 1px solid #e5e7eb;
+                }
+
+                .comparison-table tr:nth-child(even) {
+                    background-color: #f8f9fa;
+                }
+
+                .comparison-table tr:hover {
+                    background-color: #e3f2fd;
+                }
+
+                .info-box {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    border-left: 4px solid #0288d1;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                }
+
+                .warning-box {
+                    background: linear-gradient(135deg, #ffe6e6 0%, #ffb3b3 100%);
+                    border-left: 4px solid #e74c3c;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    color: #c0392b;
+                }
+
+                .success-box {
+                    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+                    border-left: 4px solid #4caf50;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    color: #2e7d32;
+                }
+
+                .feature-comparison {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 2rem;
+                    margin: 2rem 0;
+                }
+
+                .feature-card {
+                    background: white;
+                    border-radius: 12px;
+                    padding: 2rem;
+                    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+                }
+
+                .feature-card h3 {
+                    color: #2563eb;
+                    margin-bottom: 1rem;
+                }
+
+                .osi-layer {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                    margin: 2rem 0;
+                }
+
+                .layer {
+                    background: white;
+                    border: 2px solid #2563eb;
+                    padding: 1rem;
+                    border-radius: 8px;
+                    text-align: center;
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                }
+
+                .layer:hover {
+                    background: #e3f2fd;
+                    transform: translateX(10px);
+                }
+
+                .layer.active {
+                    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                    color: white;
+                }
+
+                .quiz-container {
+                    background: white;
+                    border: 2px solid #2563eb;
+                    border-radius: 12px;
+                    padding: 2rem;
+                    margin: 2rem 0;
+                }
+
+                .quiz-option {
+                    background: #f8f9fa;
+                    border: 2px solid #e5e7eb;
+                    border-radius: 8px;
+                    padding: 1rem;
+                    margin: 0.5rem 0;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.8rem;
+                }
+
+                .quiz-option:hover {
+                    background: #e3f2fd;
+                    border-color: #2563eb;
+                }
+
+                .quiz-option input[type="radio"] {
+                    cursor: pointer;
+                    width: 20px;
+                    height: 20px;
+                    flex-shrink: 0;
+                }
+
+                .quiz-option span {
+                    flex: 1;
+                    line-height: 1.5;
+                }
+
+                strong {
+                    color: #1e40af;
+                }
+
+                /* Interaktive Spiele Styles */
+                .game-container {
+                    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+                    border: 3px solid #2563eb;
+                    border-radius: 15px;
+                    padding: 2rem;
+                    margin: 2rem 0;
+                }
+
+                .game-title {
+                    color: #2563eb;
+                    font-size: 1.5rem;
+                    margin-bottom: 1rem;
+                    text-align: center;
+                }
+
+                .memory-grid {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 1rem;
+                    max-width: 600px;
+                    margin: 2rem auto;
+                }
+
+                .memory-card {
+                    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                    color: white;
+                    border: none;
+                    border-radius: 10px;
+                    padding: 2rem 1rem;
+                    font-size: 1rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    min-height: 100px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                }
+
+                .memory-card:hover {
+                    transform: scale(1.05);
+                    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+                }
+
+                .memory-card.flipped {
+                    background: white;
+                    color: #2563eb;
+                    border: 2px solid #2563eb;
+                }
+
+                .memory-card.matched {
+                    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+                    color: white;
+                    cursor: default;
+                }
+
+                .drag-drop-container {
+                    display: flex;
+                    gap: 2rem;
+                    margin: 2rem 0;
+                    flex-wrap: wrap;
+                }
+
+                .drag-items, .drop-zones {
+                    flex: 1;
+                    min-width: 250px;
+                }
+
+                .drag-item {
+                    background: white;
+                    border: 2px solid #2563eb;
+                    border-radius: 8px;
+                    padding: 1rem;
+                    margin: 0.5rem 0;
+                    cursor: move;
+                    transition: all 0.3s ease;
+                }
+
+                .drag-item:hover {
+                    transform: translateX(5px);
+                    box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3);
+                }
+
+                .drop-zone {
+                    background: #f8f9fa;
+                    border: 2px dashed #ccc;
+                    border-radius: 8px;
+                    padding: 1.5rem;
+                    margin: 0.5rem 0;
+                    min-height: 60px;
+                    transition: all 0.3s ease;
+                }
+
+                .drop-zone.drag-over {
+                    background: #e3f2fd;
+                    border-color: #2563eb;
+                    border-style: solid;
+                }
+
+                .drop-zone.filled {
+                    background: #e8f5e8;
+                    border-color: #4caf50;
+                    border-style: solid;
+                }
+
+                .answer-input {
+                    width: 100%;
+                    min-height: 120px;
+                    padding: 1rem;
+                    border: 2px solid #e5e7eb;
+                    border-radius: 8px;
+                    font-family: inherit;
+                    font-size: 1rem;
+                    margin: 1rem 0;
+                    resize: vertical;
+                }
+
+                .answer-input:focus {
+                    outline: none;
+                    border-color: #2563eb;
+                    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+                }
+
+                .submit-button {
+                    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+                    color: white;
+                    border: none;
+                    padding: 0.8rem 2rem;
+                    border-radius: 25px;
+                    font-size: 1rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .submit-button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+                }
+
+                .chatbot-button {
+                    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+                    color: white;
+                    border: none;
+                    padding: 0.8rem 2rem;
+                    border-radius: 25px;
+                    font-size: 1rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    margin-left: 1rem;
+                }
+
+                .chatbot-button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
+                }
+
+                .score-display {
+                    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                    color: white;
+                    padding: 1rem;
+                    border-radius: 10px;
+                    text-align: center;
+                    font-size: 1.2rem;
+                    margin: 1rem 0;
+                }
+
+                @media (max-width: 768px) {
+                    body {
+                        padding: 10px;
+                    }
+
+                    .container {
+                        padding: 10px;
+                    }
+
+                    h1 {
+                        font-size: 1.8rem;
+                    }
+
+                    h2 {
+                        font-size: 1.4rem;
+                    }
+
+                    h3 {
+                        font-size: 1.2rem;
+                    }
+
+                    .section {
+                        padding: 1.5rem;
+                        margin-bottom: 1.5rem;
+                    }
+
+                    .task, .question {
+                        padding: 1rem;
+                        margin: 1rem 0;
+                    }
+
+                    .feature-comparison {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .device-grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .section {
+                        padding: 1rem;
+                    }
+
+                    h1 {
+                        font-size: 1.6rem;
+                    }
+
+                    .task, .question {
+                        padding: 0.8rem;
+                    }
+                }
+
+                /* Chatbot-spezifische Styles */
+                #chat-container {
+                    color: white !important;
+                }
+
+                #chat-container * {
+                    color: white !important;
+                }
+
+                #chat-container .chat-message {
+                    color: white !important;
+                }
+
+                #chat-container .bot-message {
+                    color: white !important;
+                    background-color: rgba(59, 130, 246, 0.8) !important;
+                }
+
+                #chat-container .user-message {
+                    color: white !important;
+                    background-color: rgba(107, 114, 128, 0.8) !important;
+                }
+
+                #chat-container input, #chat-container textarea {
+                    color: white !important;
+                    background-color: rgba(55, 65, 81, 0.9) !important;
+                }
+
+                #chat-container button {
+                    color: white !important;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+
+        // Interaktive Funktionen
+        function showPacketFlow(type) {
+            const resultDiv = document.getElementById('packet-result');
+            if (type === 'switch') {
+                resultDiv.innerHTML = `
+                    <div class="success-box">
+                        <h4>📦 Paketfluss durch einen Switch:</h4>
+                        <ol>
+                            <li>Paket kommt am Port 1 an</li>
+                            <li>Switch liest die Ziel-MAC-Adresse</li>
+                            <li>Sucht in der MAC-Address-Table nach dem Zielport</li>
+                            <li>Leitet das Paket nur an Port 5 weiter (nicht an alle!)</li>
+                            <li>Andere Ports werden nicht belastet</li>
+                        </ol>
+                        <p><strong>Ergebnis:</strong> Effiziente Nutzung der Bandbreite! ✅</p>
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="success-box">
+                        <h4>🌐 Paketfluss durch einen Router:</h4>
+                        <ol>
+                            <li>Paket kommt aus Netzwerk A (192.168.1.0/24)</li>
+                            <li>Router prüft die Ziel-IP-Adresse (10.0.0.50)</li>
+                            <li>Routing-Tabelle wird konsultiert</li>
+                            <li>Router ändert MAC-Adresse und leitet zu Netzwerk B weiter</li>
+                            <li>Paket erreicht Netzwerk B (10.0.0.0/24)</li>
+                        </ol>
+                        <p><strong>Ergebnis:</strong> Verbindung verschiedener Netzwerke! ✅</p>
+                    </div>
+                `;
+            }
+        }
+
+        function toggleOSILayer(layer) {
+            const layers = document.querySelectorAll('.layer');
+            layers.forEach(l => l.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const infoDiv = document.getElementById('osi-info');
+            const info = {
+                'layer1': '<strong>Schicht 1 - Physikalische Schicht:</strong><br>Überträgt rohe Bits über physikalische Medien (Kabel, Funkwellen). Hubs arbeiten hier.',
+                'layer2': '<strong>Schicht 2 - Sicherungsschicht:</strong><br>Arbeitet mit MAC-Adressen. Switches operieren hier und verteilen Pakete innerhalb eines lokalen Netzwerks.',
+                'layer3': '<strong>Schicht 3 - Netzwerkschicht:</strong><br>Arbeitet mit IP-Adressen. Router operieren hier und verbinden verschiedene Netzwerke miteinander.',
+                'layer4': '<strong>Schicht 4 - Transportschicht:</strong><br>Stellt Ende-zu-Ende Verbindungen bereit. TCP und UDP arbeiten auf dieser Schicht.',
+                'layer5': '<strong>Schicht 5 - Sitzungsschicht:</strong><br>Verwaltet Kommunikationssitzungen zwischen Anwendungen.',
+                'layer6': '<strong>Schicht 6 - Darstellungsschicht:</strong><br>Kümmert sich um Datenkodierung, Verschlüsselung und Kompression.',
+                'layer7': '<strong>Schicht 7 - Anwendungsschicht:</strong><br>Hier laufen Anwendungsprotokolle wie HTTP, FTP, DNS.'
+            };
+            infoDiv.innerHTML = `<div class="info-box">${info[layer]}</div>`;
+        }
+
+        function checkQuiz(answer) {
+            const resultDiv = document.getElementById('quiz-result');
+            if (answer === 'correct') {
+                resultDiv.innerHTML = `
+                    <div class="success-box">
+                        <strong>✅ Richtig!</strong> Ein Switch arbeitet auf OSI-Schicht 2 (Sicherungsschicht) mit MAC-Adressen,
+                        während ein Router auf Schicht 3 (Netzwerkschicht) mit IP-Adressen arbeitet.
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="warning-box">
+                        <strong>❌ Nicht ganz!</strong> Versuchen Sie es noch einmal. Tipp: Denken Sie an die OSI-Schichten!
+                    </div>
+                `;
+            }
+        }
+
+        // Memory-Spiel Funktionen
+        let memoryCards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+
+        function initMemoryGame() {
+            const terms = [
+                { id: 1, term: 'Switch', match: 'MAC-Adresse' },
+                { id: 2, term: 'Router', match: 'IP-Adresse' },
+                { id: 3, term: 'OSI Layer 2', match: 'Sicherungsschicht' },
+                { id: 4, term: 'OSI Layer 3', match: 'Netzwerkschicht' },
+                { id: 5, term: 'Broadcast', match: 'An alle Ports' },
+                { id: 6, term: 'Unicast', match: 'An einen Port' }
+            ];
+
+            memoryCards = [];
+            terms.forEach((item, index) => {
+                memoryCards.push({ id: `${index}-a`, value: item.term, pairId: item.id });
+                memoryCards.push({ id: `${index}-b`, value: item.match, pairId: item.id });
+            });
+
+            memoryCards = memoryCards.sort(() => Math.random() - 0.5);
+
+            const grid = document.getElementById('memory-grid');
+            grid.innerHTML = '';
+            memoryCards.forEach(card => {
+                const cardEl = document.createElement('button');
+                cardEl.className = 'memory-card';
+                cardEl.textContent = '?';
+                cardEl.dataset.id = card.id;
+                cardEl.dataset.pairId = card.pairId;
+                cardEl.dataset.value = card.value;
+                cardEl.onclick = () => flipMemoryCard(cardEl);
+                grid.appendChild(cardEl);
+            });
+
+            flippedCards = [];
+            matchedPairs = 0;
+            updateMemoryScore();
+        }
+
+        function flipMemoryCard(card) {
+            if (card.classList.contains('flipped') || card.classList.contains('matched') || flippedCards.length >= 2) {
+                return;
+            }
+
+            card.classList.add('flipped');
+            card.textContent = card.dataset.value;
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                setTimeout(checkMemoryMatch, 800);
+            }
+        }
+
+        function checkMemoryMatch() {
+            const [card1, card2] = flippedCards;
+
+            if (card1.dataset.pairId === card2.dataset.pairId) {
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                matchedPairs++;
+                updateMemoryScore();
+
+                if (matchedPairs === 6) {
+                    setTimeout(() => {
+                        alert('🎉 Glückwunsch! Sie haben alle Paare gefunden!');
+                    }, 300);
+                }
+            } else {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+                card1.textContent = '?';
+                card2.textContent = '?';
+            }
+
+            flippedCards = [];
+        }
+
+        function updateMemoryScore() {
+            document.getElementById('memory-score').textContent = `Gefundene Paare: ${matchedPairs} / 6`;
+        }
+
+        // Drag & Drop Spiel
+        let draggedElement = null;
+
+        function initDragDrop() {
+            const items = document.querySelectorAll('.drag-item');
+            items.forEach(item => {
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragend', handleDragEnd);
+            });
+
+            const zones = document.querySelectorAll('.drop-zone');
+            zones.forEach(zone => {
+                zone.addEventListener('dragover', handleDragOver);
+                zone.addEventListener('dragleave', handleDragLeave);
+                zone.addEventListener('drop', handleDrop);
+            });
+        }
+
+        function handleDragStart(e) {
+            draggedElement = this;
+            this.style.opacity = '0.5';
+        }
+
+        function handleDragEnd(e) {
+            this.style.opacity = '1';
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            this.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+
+            const correctAnswer = this.dataset.answer;
+            const droppedValue = draggedElement.dataset.value;
+
+            if (correctAnswer === droppedValue) {
+                this.innerHTML = `<strong>${draggedElement.textContent}</strong>`;
+                this.classList.add('filled');
+                draggedElement.style.display = 'none';
+                checkDragDropComplete();
+            } else {
+                const feedback = document.getElementById('drag-feedback');
+                feedback.innerHTML = '<div class="warning-box">❌ Das passt nicht! Versuchen Sie es erneut.</div>';
+                setTimeout(() => { feedback.innerHTML = ''; }, 2000);
+            }
+        }
+
+        function checkDragDropComplete() {
+            const zones = document.querySelectorAll('.drop-zone');
+            const allFilled = Array.from(zones).every(zone => zone.classList.contains('filled'));
+
+            if (allFilled) {
+                const feedback = document.getElementById('drag-feedback');
+                feedback.innerHTML = '<div class="success-box">🎉 Perfekt! Alle Zuordnungen sind korrekt!</div>';
+            }
+        }
+
+        function resetDragDrop() {
+            const zones = document.querySelectorAll('.drop-zone');
+            zones.forEach(zone => {
+                zone.innerHTML = '';
+                zone.classList.remove('filled');
+            });
+
+            const items = document.querySelectorAll('.drag-item');
+            items.forEach(item => {
+                item.style.display = 'block';
+            });
+
+            document.getElementById('drag-feedback').innerHTML = '';
+        }
+
+        // Fragen an Chatbot senden
+        function sendAnswerToChatbot(questionId) {
+            const answer = document.getElementById(questionId).value;
+            if (!answer.trim()) {
+                alert('Bitte geben Sie zuerst eine Antwort ein!');
+                return;
+            }
+
+            const questionTexts = {
+                'answer1': 'Frage 1: Erklären Sie den Unterschied zwischen Hub, Switch und Router',
+                'answer2': 'Frage 2: Warum ist Netzwerk-Segmentierung in der Veranstaltungstechnik wichtig?',
+                'answer3': 'Frage 3: Welche Maßnahmen würden Sie bei Dante-Audio-Aussetzern prüfen?'
+            };
+
+            const message = `${questionTexts[questionId]}\n\nMeine Antwort:\n${answer}\n\nBitte bewerten Sie meine Antwort und geben Sie Feedback.`;
+            
+            if (window.sendToChatbot) {
+                window.sendToChatbot(message);
+            } else {
+                alert('Chatbot wird geladen... Bitte versuchen Sie es in ein paar Sekunden erneut.');
+            }
+        }
+
+        function checkMultipleChoice(questionId, correctAnswer) {
+            const selected = document.querySelector(`input[name="${questionId}"]:checked`);
+            const feedbackDiv = document.getElementById(`${questionId}-feedback`);
+
+            if (!selected) {
+                feedbackDiv.innerHTML = '<div class="warning-box">⚠️ Bitte wählen Sie eine Antwort aus!</div>';
+                return;
+            }
+
+            if (selected.value === correctAnswer) {
+                feedbackDiv.innerHTML = '<div class="success-box">✅ Richtig! Sehr gut!</div>';
+            } else {
+                feedbackDiv.innerHTML = '<div class="warning-box">❌ Leider falsch. Versuchen Sie es noch einmal oder fragen Sie den Chatbot um Hilfe!</div>';
+            }
+        }
+
+        // Funktion zum Initialisieren des Chatbots
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const { MMBBSBOT } = await import('https://dev.mm-bbs.de:8085/mmbbs-bot.js');
+
+                // Wählt das erste Element mit der Klasse "activity-description" aus (falls vorhanden)
+                var element = document.querySelector('.activity-description');
+
+                // Prüft, ob das Element existiert und Inhalt hat
+                var htmlContent = element ? element.innerHTML : '';
+
+                const settings = {
+                    "host": "dev.mm-bbs.de",
+                    "protocol": "https",
+                    "port": 8085,
+                    "opener": "Hallo, wie kann ich Ihnen bei der Aufgabe helfen?",
+                    "chat_icon": "",
+                    "chat_icon_style": "border-radius: 50%; width: 40px; height: 40px;",
+                    "title": "VT GPT",
+                    "task": htmlContent,
+                    "hints": "Sie sind Netzwerkexperte im Bereich Veranstaltungstechnik. Sie erstellen keine fertigen Lösungen, sondern geben Erklärungen zu den Fragen. Ihre Schüler sind Fachinformatiker Systemintegration im ersten Ausbildungsjahr.",
+                    "cookie": document.cookie
+                };
+
+                const bot = new MMBBSBOT(settings);
+                console.log('Chatbot initialisiert:', bot); // Debugging
+
+                // Make toggleChat, sendMessage, and handleKeyDown available globally
+                window.toggleChat = bot.toggleChat.bind(bot);
+                window.sendMessage = bot.sendMessage.bind(bot);
+                window.handleKeyDown = bot.handleKeyDown.bind(bot);
+            } catch (error) {
+                console.error('Fehler beim Laden des Chatbots:', error);
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+    <div class="section">
+        <h1>🌐 Einheit 4: Switches und Router in der Veranstaltungstechnik</h1>
+        <p><strong>Lernziel:</strong> Sie verstehen den funktionalen Unterschied zwischen Switches und Routern und können deren Einsatz im Veranstaltungsbereich bewerten. Sie lernen, wie durch den gezielten Einsatz dieser Komponenten Stabilität, Sicherheit und Performance verbessert werden.</p>
+    </div>
+
+    <div class="section">
+        <h2>1. Einleitung</h2>
+        <p>Veranstaltungen werden immer komplexer: Kameras, Lichtpulte, Streaming-Encoder, Audiomischpulte, Medienserver und viele weitere Geräte müssen miteinander kommunizieren – meist über ein zentrales Netzwerk. Dabei stoßen einfache Netzwerke schnell an ihre Grenzen. Um größere Netzwerke stabil und sicher zu betreiben, kommen Switches und Router zum Einsatz.</p>
+        <p>Ein gutes Verständnis dieser Technologien ist entscheidend für die Planung und den Betrieb professioneller Veranstaltungssysteme. Mit ihnen lassen sich z. B. Störungen durch Broadcast-Traffic vermeiden, Netzwerklasten trennen oder gezielt externe Geräte (z. B. für Streaming) absichern.</p>
+
+        <div class="info-box">
+            <strong>💡 Wussten Sie?</strong> Bei großen Konzerten können über 500 Netzwerkgeräte gleichzeitig kommunizieren - von Mikrofon-Stageboxen über Lichter bis hin zu LED-Wänden!
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>2. Netzwerkgeräte in der Veranstaltungstechnik</h2>
+        
+        <h3>Typische Geräte im Event-Netzwerk</h3>
+        <div class="device-grid">
+            <div class="device-card">
+                <div class="device-icon">🎤</div>
+                <h4>Audio-Stagebox</h4>
+                <p>Dante-fähige Geräte für digitale Audiosignale</p>
+            </div>
+            <div class="device-card">
+                <div class="device-icon">💡</div>
+                <h4>Lichtpult</h4>
+                <p>DMX/ArtNet Steuerung</p>
+            </div>
+            <div class="device-card">
+                <div class="device-icon">📹</div>
+                <h4>Videokamera</h4>
+                <p>NDI oder SDI-over-IP</p>
+            </div>
+            <div class="device-card">
+                <div class="device-icon">🖥️</div>
+                <h4>Medienserver</h4>
+                <p>4K/8K Videocontent</p>
+            </div>
+            <div class="device-card">
+                <div class="device-icon">📡</div>
+                <h4>Streaming-Encoder</h4>
+                <p>Live-Übertragung ins Internet</p>
+            </div>
+            <div class="device-card">
+                <div class="device-icon">🎛️</div>
+                <h4>Steuercomputer</h4>
+                <p>Show-Control & Automation</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>3. Switches – das Rückgrat der Netzverteilung</h2>
+        
+        <div class="network-visual">
+            <h3>🔀 Funktionsweise eines Switches</h3>
+            <pre style="background: white; padding: 1rem; border-radius: 8px; text-align: left;">
+    Gerät A (MAC: AA:BB:CC:DD:EE:01)
+         │
+         │ Paket an: AA:BB:CC:DD:EE:05
+         ▼
+    ┌────────────┐
+    │   SWITCH   │ ← Lernt MAC-Adressen
+    │  Port 1-8  │   und leitet gezielt weiter
+    └────────────┘
+         │
+         │ Nur an Port 5!
+         ▼
+    Gerät B (MAC: AA:BB:CC:DD:EE:05)
+            </pre>
+        </div>
+
+        <p>Ein Switch arbeitet auf <strong>Schicht 2 des OSI-Modells</strong> – der Sicherungsschicht. Er verteilt Datenpakete basierend auf <strong>MAC-Adressen</strong>. Sobald ein Switch ein Paket erhält, lernt er automatisch, an welchem Port sich welche Geräte befinden. Diese Informationen speichert er in einer sogenannten <strong>MAC-Address-Table</strong>.</p>
+        
+        <h3>Vorteile eines Switches gegenüber einem Hub</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Kriterium</th>
+                    <th>Hub</th>
+                    <th>Switch</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Datenweiterleitung</strong></td>
+                    <td>An alle Ports (Broadcast)</td>
+                    <td>Nur an Zielport (Unicast)</td>
+                </tr>
+                <tr>
+                    <td><strong>Kollisionen</strong></td>
+                    <td>Häufig - alle teilen sich Bandbreite</td>
+                    <td>Selten - jeder Port eigene Bandbreite</td>
+                </tr>
+                <tr>
+                    <td><strong>Performance</strong></td>
+                    <td>Sinkt mit mehr Geräten</td>
+                    <td>Bleibt konstant</td>
+                </tr>
+                <tr>
+                    <td><strong>Sicherheit</strong></td>
+                    <td>Niedrig - alle sehen alles</td>
+                    <td>Höher - isolierte Verbindungen</td>
+                </tr>
+                <tr>
+                    <td><strong>OSI-Schicht</strong></td>
+                    <td>Schicht 1 (Physikalisch)</td>
+                    <td>Schicht 2 (Sicherung)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="interactive-demo">
+            <h3>🎯 Interaktive Demo: Paketfluss simulieren</h3>
+            <p>Klicken Sie auf einen Button, um zu sehen, wie Datenpakete weitergeleitet werden:</p>
+            <button class="demo-button" onclick="showPacketFlow('switch')">📦 Switch-Weiterleitung</button>
+            <button class="demo-button" onclick="showPacketFlow('router')">🌐 Router-Weiterleitung</button>
+            <div id="packet-result" style="margin-top: 1rem;"></div>
+        </div>
+
+        <h3>Switch-Typen in der Veranstaltungstechnik</h3>
+        <ul>
+            <li><strong>Unmanaged Switch:</strong> Einfache Plug-and-Play Lösung für kleine Setups</li>
+            <li><strong>Managed Switch:</strong> Erweiterte Konfiguration mit VLANs, QoS, Port-Monitoring</li>
+            <li><strong>PoE-Switch:</strong> Stromversorgung über Ethernet (z.B. für IP-Kameras, Access Points)</li>
+            <li><strong>Layer-3-Switch:</strong> Switch mit Routing-Funktionen (Hybrid)</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>⚠️ Praxis-Tipp:</strong> Bei Dante-Audio-Netzwerken sind Managed Switches mit Gigabit-Ports und IGMP Snooping PFLICHT! Unmanaged Switches können zu Audiostörungen führen.
+        </div>
+
+        <!-- Memory-Spiel -->
+        <div class="game-container">
+            <h3 class="game-title">🎮 Spiel 1: Memory - Finde die Paare!</h3>
+            <p style="text-align: center;">Finden Sie die zusammengehörenden Begriffe. Klicken Sie auf die Karten, um sie umzudrehen.</p>
+            <div class="score-display" id="memory-score">Gefundene Paare: 0 / 6</div>
+            <div class="memory-grid" id="memory-grid"></div>
+            <button class="demo-button" onclick="initMemoryGame()">🔄 Spiel neu starten</button>
+        </div>
+
+        <script>
+            // Memory-Spiel beim Laden initialisieren
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(initMemoryGame, 500);
+            });
+        </script>
+    </div>
+
+    <div class="section">
+        <h2>3.1 Interaktive Übung: Begriffe zuordnen</h2>
+        
+        <!-- Drag & Drop Spiel -->
+        <div class="game-container">
+            <h3 class="game-title">🎯 Spiel 2: Drag & Drop - Ordnen Sie die Merkmale zu</h3>
+            <p style="text-align: center;">Ziehen Sie die Merkmale auf die richtige Kategorie (Switch oder Router).</p>
+            
+            <div class="drag-drop-container">
+                <div class="drag-items">
+                    <h4>Merkmale:</h4>
+                    <div class="drag-item" draggable="true" data-value="switch">
+                        <strong>Arbeitet mit MAC-Adressen</strong>
+                    </div>
+                    <div class="drag-item" draggable="true" data-value="router">
+                        <strong>Arbeitet mit IP-Adressen</strong>
+                    </div>
+                    <div class="drag-item" draggable="true" data-value="switch">
+                        <strong>OSI Schicht 2</strong>
+                    </div>
+                    <div class="drag-item" draggable="true" data-value="router">
+                        <strong>OSI Schicht 3</strong>
+                    </div>
+                    <div class="drag-item" draggable="true" data-value="switch">
+                        <strong>Verbindet Geräte im gleichen Netzwerk</strong>
+                    </div>
+                    <div class="drag-item" draggable="true" data-value="router">
+                        <strong>Verbindet verschiedene Netzwerke</strong>
+                    </div>
+                </div>
+
+                <div class="drop-zones">
+                    <h4>Kategorien:</h4>
+                    <div class="drop-zone" data-answer="switch">
+                        <strong>SWITCH</strong>
+                    </div>
+                    <div class="drop-zone" data-answer="router" style="margin-top: 2rem;">
+                        <strong>ROUTER</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div id="drag-feedback" style="margin-top: 1rem;"></div>
+            <button class="demo-button" onclick="resetDragDrop()">🔄 Zurücksetzen</button>
+        </div>
+
+        <script>
+            // Drag & Drop beim Laden initialisieren
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(initDragDrop, 500);
+            });
+        </script>
+    </div>
+
+    <div class="section">
+        <h2>3.2 Reflexionsfragen mit Chatbot-Unterstützung</h2>
+        
+        <div class="info-box">
+            <strong>💡 So funktioniert's:</strong> Beantworten Sie die Fragen in den Textfeldern. 
+            Klicken Sie dann auf "An Chatbot senden", um Ihre Antwort automatisch prüfen zu lassen 
+            und Feedback zu erhalten!
+        </div>
+
+        <!-- Frage 1 -->
+        <div class="game-container">
+            <h4>📝 Frage 1: Hub, Switch und Router</h4>
+            <p>Erklären Sie in eigenen Worten den Unterschied zwischen Hub, Switch und Router. 
+            Gehen Sie dabei auf die OSI-Schichten und die jeweiligen Einsatzgebiete ein.</p>
+            <textarea class="answer-input" id="answer1" placeholder="Ihre Antwort hier eingeben..."></textarea>
+            <button class="chatbot-button" onclick="sendAnswerToChatbot('answer1')">
+                🤖 An Chatbot senden & prüfen lassen
+            </button>
+        </div>
+
+        <!-- Frage 2 -->
+        <div class="game-container">
+            <h4>📝 Frage 2: Netzwerk-Segmentierung</h4>
+            <p>Warum ist Netzwerk-Segmentierung bei großen Veranstaltungen wichtig? 
+            Nennen Sie mindestens drei Gründe und geben Sie praktische Beispiele.</p>
+            <textarea class="answer-input" id="answer2" placeholder="Ihre Antwort hier eingeben..."></textarea>
+            <button class="chatbot-button" onclick="sendAnswerToChatbot('answer2')">
+                🤖 An Chatbot senden & prüfen lassen
+            </button>
+        </div>
+
+        <!-- Frage 3 -->
+        <div class="game-container">
+            <h4>📝 Frage 3: Troubleshooting</h4>
+            <p>Ihr Dante-Audio-Netzwerk hat plötzlich Aussetzer und Knacksen. 
+            Welche Netzwerkeinstellungen würden Sie als erstes prüfen? Begründen Sie Ihre Antwort.</p>
+            <textarea class="answer-input" id="answer3" placeholder="Ihre Antwort hier eingeben..."></textarea>
+            <button class="chatbot-button" onclick="sendAnswerToChatbot('answer3')">
+                🤖 An Chatbot senden & prüfen lassen
+            </button>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>3.3 Multiple-Choice Quiz</h2>
+        
+        <!-- Quiz 1 -->
+        <div class="quiz-container">
+            <h4>❓ Frage 1: Welche Aussage über Switches ist korrekt?</h4>
+            <label class="quiz-option">
+                <input type="radio" name="quiz1" value="a">
+                <span>Ein Switch sendet Datenpakete an alle angeschlossenen Geräte</span>
+            </label>
+            <label class="quiz-option">
+                <input type="radio" name="quiz1" value="b">
+                <span>Ein Switch arbeitet auf OSI-Schicht 3 mit IP-Adressen</span>
+            </label>
+            <label class="quiz-option">
+                <input type="radio" name="quiz1" value="c">
+                <span>Ein Switch lernt automatisch, an welchem Port sich welches Gerät befindet</span>
+            </label>
+            <label class="quiz-option">
+                <input type="radio" name="quiz1" value="d">
+                <span>Ein Switch kann verschiedene Netzwerke miteinander verbinden</span>
+            </label>
+            <button class="submit-button" onclick="checkMultipleChoice('quiz1', 'c')">✓ Antwort prüfen</button>
+            <div id="quiz1-feedback" style="margin-top: 1rem;"></div>
+        </div>
+
+        <!-- Quiz 2 -->
+        <div class="quiz-container">
+            <h4>❓ Frage 2: Was ist der Hauptvorteil von Managed Switches?</h4>
+            <label class="quiz-option">
+                <input type="radio" name="quiz2" value="a">
+                <span>Sie sind günstiger als Unmanaged Switches</span>
+            </label>
+            <label class="quiz-option">
+                <input type="radio" name="quiz2" value="b">
+                <span>Sie ermöglichen erweiterte Konfigurationen wie VLANs und QoS</span>
+            </label>
+            <label class="quiz-option">
+                <input type="radio" name="quiz2" value="c">
+                <span>Sie brauchen keinen Strom</span>
+            </label>
+            <label class="quiz-option">
+                <input type="radio" name="quiz2" value="d">
+                <span>Sie funktionieren ohne Konfiguration</span>
+            </label>
+            <button class="submit-button" onclick="checkMultipleChoice('quiz2', 'b')">✓ Antwort prüfen</button>
+            <div id="quiz2-feedback" style="margin-top: 1rem;"></div>
+        </div>
+
+        <!-- Quiz 3 -->
+        <div class="quiz-container">
+            <h4>❓ Frage 3: Wofür wird IGMP Snooping bei Dante-Audio verwendet?</h4>
+            <label class="quiz-option">
+                <input type="radio" name="quiz3" value="a">
+                <span>Um die Audioqualität zu verbessern</span>
+            </label>
+            <label class="quiz-option">
+                <input type="radio" name="quiz3" value="b">
+                <span>Um Multicast-Traffic nur an interessierte Ports weiterzuleiten</span>
+            </label>
+            <label class="quiz-option">
+                <input type="radio" name="quiz3" value="c">
+                <span>Um die Lautstärke zu regeln</span>
+            </label>
+            <label class="quiz-option">
+                <input type="radio" name="quiz3" value="d">
+                <span>Um Kabel zu sparen</span>
+            </label>
+            <button class="submit-button" onclick="checkMultipleChoice('quiz3', 'b')">✓ Antwort prüfen</button>
+            <div id="quiz3-feedback" style="margin-top: 1rem;"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>4. Router – Verbindungen zwischen Netzwerken</h2>
+        
+        <div class="network-visual">
+            <h3>🌐 Funktionsweise eines Routers</h3>
+            <pre style="background: white; padding: 1rem; border-radius: 8px; text-align: left;">
+    Netzwerk A                    Netzwerk B
+    192.168.1.0/24                10.0.0.0/24
+         │                             │
+    [PC 192.168.1.10]            [Server 10.0.0.50]
+         │                             │
+         └──► ┌──────────┐ ◄──────────┘
+              │  ROUTER  │
+              │ Routes + │ ← Verbindet verschiedene
+              │   NAT    │   Netzwerke
+              └──────────┘
+                   │
+                   └──► Internet
+            </pre>
+        </div>
+
+        <p>Ein Router arbeitet auf <strong>Schicht 3 des OSI-Modells</strong> – der Netzwerkschicht. Er verbindet unterschiedliche Netzwerke miteinander und entscheidet anhand von <strong>IP-Adressen</strong>, wie und wohin Daten weitergeleitet werden.</p>
+        
+        <h3>Hauptfunktionen eines Routers</h3>
+        <div class="feature-comparison">
+            <div class="feature-card">
+                <h3>🔀 Routing</h3>
+                <p>Weiterleitung zwischen verschiedenen IP-Subnetzen basierend auf Routing-Tabellen</p>
+                <p><strong>Beispiel:</strong> Technik-Netz (192.168.1.0/24) ↔ Publikums-WLAN (10.0.0.0/24)</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔒 NAT</h3>
+                <p>Network Address Translation - mehrere Geräte teilen sich eine öffentliche IP-Adresse</p>
+                <p><strong>Beispiel:</strong> 50 interne Geräte → 1 öffentliche IP fürs Internet</p>
+            </div>
+            <div class="feature-card">
+                <h3>🛡️ Firewall</h3>
+                <p>Schutz durch Filterregeln - nur erlaubter Traffic darf passieren</p>
+                <p><strong>Beispiel:</strong> Streaming-Server darf ins Internet, Lichtpult nicht</p>
+            </div>
+            <div class="feature-card">
+                <h3>📊 DHCP</h3>
+                <p>Automatische IP-Adressvergabe an angeschlossene Geräte</p>
+                <p><strong>Beispiel:</strong> Kameras bekommen automatisch IPs aus festem Pool</p>
+            </div>
+        </div>
+
+        <h3>Router in der Event-Praxis</h3>
+        <div class="success-box">
+            <h4>📡 Typisches Setup: Festival mit Live-Streaming</h4>
+            <ul>
+                <li><strong>Netz 1 (Produktion):</strong> 192.168.10.0/24 - Kameras, Mischer, Ton</li>
+                <li><strong>Netz 2 (Steuerung):</strong> 192.168.20.0/24 - Licht, Medienserver</li>
+                <li><strong>Netz 3 (Publikum):</strong> 10.0.0.0/16 - Besucher-WLAN</li>
+                <li><strong>Internet:</strong> Nur Streaming-Encoder hat Zugang</li>
+            </ul>
+            <p>Der Router trennt diese Netze sauber und verhindert, dass Besucher auf Produktionstechnik zugreifen können!</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>5. Switch vs. Router - Der direkte Vergleich</h2>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Eigenschaft</th>
+                    <th>Switch</th>
+                    <th>Router</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>OSI-Schicht</strong></td>
+                    <td>Schicht 2 (Sicherung)</td>
+                    <td>Schicht 3 (Netzwerk)</td>
+                </tr>
+                <tr>
+                    <td><strong>Arbeitet mit</strong></td>
+                    <td>MAC-Adressen</td>
+                    <td>IP-Adressen</td>
+                </tr>
+                <tr>
+                    <td><strong>Hauptaufgabe</strong></td>
+                    <td>Geräte innerhalb eines Netzwerks verbinden</td>
+                    <td>Verschiedene Netzwerke verbinden</td>
+                </tr>
+                <tr>
+                    <td><strong>Datenweiterleitung</strong></td>
+                    <td>Innerhalb eines LANs</td>
+                    <td>Zwischen verschiedenen Netzen/Internet</td>
+                </tr>
+                <tr>
+                    <td><strong>MAC-Table/Routing-Table</strong></td>
+                    <td>MAC-Address-Table</td>
+                    <td>Routing-Table</td>
+                </tr>
+                <tr>
+                    <td><strong>Broadcast-Domain</strong></td>
+                    <td>Leitet Broadcasts weiter</td>
+                    <td>Stoppt Broadcasts</td>
+                </tr>
+                <tr>
+                    <td><strong>Sicherheit</strong></td>
+                    <td>VLAN-Segmentierung</td>
+                    <td>Firewall, NAT, ACLs</td>
+                </tr>
+                <tr>
+                    <td><strong>Typischer Einsatz</strong></td>
+                    <td>Viele Geräte im gleichen Netz verbinden</td>
+                    <td>Netze trennen, Internetzugang</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>OSI-Modell Visualisierung</h3>
+        <div class="osi-layer">
+            <div class="layer" onclick="toggleOSILayer('layer7')">Schicht 7 - Anwendung (HTTP, FTP)</div>
+            <div class="layer" onclick="toggleOSILayer('layer6')">Schicht 6 - Darstellung (Encryption)</div>
+            <div class="layer" onclick="toggleOSILayer('layer5')">Schicht 5 - Sitzung (Session Management)</div>
+            <div class="layer" onclick="toggleOSILayer('layer4')">Schicht 4 - Transport (TCP, UDP)</div>
+            <div class="layer active" onclick="toggleOSILayer('layer3')">Schicht 3 - Netzwerk (IP) 👉 ROUTER</div>
+            <div class="layer active" onclick="toggleOSILayer('layer2')">Schicht 2 - Sicherung (MAC) 👉 SWITCH</div>
+            <div class="layer" onclick="toggleOSILayer('layer1')">Schicht 1 - Physikalisch (Kabel, Signale)</div>
+        </div>
+        <div id="osi-info">
+            <div class="info-box">
+                Klicken Sie auf eine Schicht, um mehr zu erfahren!
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>6. Interaktives Quiz</h2>
+        
+        <div class="quiz-container">
+            <h3>❓ Wissensüberprüfung</h3>
+            <p><strong>Frage:</strong> Auf welcher OSI-Schicht arbeitet ein Switch, und womit arbeitet er?</p>
+            <div class="quiz-option" onclick="checkQuiz('wrong')">
+                A) Schicht 3 - IP-Adressen
+            </div>
+            <div class="quiz-option" onclick="checkQuiz('correct')">
+                B) Schicht 2 - MAC-Adressen
+            </div>
+            <div class="quiz-option" onclick="checkQuiz('wrong')">
+                C) Schicht 1 - Elektrische Signale
+            </div>
+            <div class="quiz-option" onclick="checkQuiz('wrong')">
+                D) Schicht 4 - Port-Nummern
+            </div>
+            <div id="quiz-result" style="margin-top: 1rem;"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>7. Praxisbeispiel: Festival-Netzwerk</h2>
+        
+        <div class="network-visual">
+            <h3>🎪 Netzwerkaufbau eines typischen Festivals</h3>
+            <pre style="background: white; padding: 1.5rem; border-radius: 8px; text-align: left; font-size: 0.85em;">
+                        ┌─────────────┐
+                        │  INTERNET   │
+                        └──────┬──────┘
+                               │
+                        ┌──────▼──────┐
+                        │   ROUTER    │ ← Firewall, NAT, DHCP
+                        │  (Gateway)  │
+                        └──────┬──────┘
+                               │
+                ┌──────────────┼──────────────┬──────────────┐
+                │              │              │              │
+         ┌──────▼──────┐┌─────▼──────┐┌─────▼──────┐┌─────▼──────┐
+         │ CORE-SWITCH ││  SWITCH 2  ││  SWITCH 3  ││  SWITCH 4  │
+         │   Managed   ││  Bühne     ││   FOH      ││  Backstage │
+         └──────┬──────┘└─────┬──────┘└─────┬──────┘└─────┬──────┘
+                │             │              │              │
+        ┌───────┴────┐   ┌───┴────┐    ┌───┴────┐    ┌───┴────┐
+        │Video-Server│   │Dante   │    │Licht-  │    │Kameras │
+        │Medienserver│   │Stagebox│    │Pult    │    │Monitor │
+        └────────────┘   └────────┘    └────────┘    └────────┘
+            </pre>
+        </div>
+
+        <div class="info-box">
+            <h4>💼 Dieses Setup ermöglicht:</h4>
+            <ul>
+                <li>✅ Getrennte Subnetze für Audio, Video, Licht und Management</li>
+                <li>✅ Redundante Verbindungen zwischen Core-Switches</li>
+                <li>✅ QoS für zeitkritische Datenströme (Audio/Video)</li>
+                <li>✅ Firewall-Schutz vor externen Zugriffen</li>
+                <li>✅ Monitoring aller Komponenten vom FOH</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>8. Praxisaufgabe</h2>
+        
+        <div class="task">
+            <strong>🎯 Abschlussaufgabe: Netzwerkplanung für ein Event</strong>
+            
+            <p style="margin-top: 1rem;"><strong>Szenario:</strong></p>
+            <p>Sie planen die Netzwerkinfrastruktur für ein Live-Konzert mit Streaming. 
+            Zu vernetzen sind: Hauptbühne (Audio, Video, Licht), FOH-Bereich, Streaming und Publikums-WLAN.</p>
+            
+            <h4 style="margin-top: 1.5rem;">📝 Ihre Aufgaben:</h4>
+            
+            <div style="background: white; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                <h4 style="color: #2563eb;">Teil 1: Netzwerkdiagramm (60 Punkte)</h4>
+                <p>Erstellen Sie ein <strong>Netzwerkdiagramm</strong> mit:</p>
+                <ul>
+                    <li>Router und mindestens 3 Switches (Managed/Unmanaged angeben)</li>
+                    <li>Mindestens 3 separate Subnetze (z.B. Produktion, Streaming, Gäste)</li>
+                    <li>Wichtigste Endgeräte (Audio, Video, Streaming-Encoder)</li>
+                    <li>IP-Bereiche für die Subnetze mit Gateway-Adressen</li>
+                    <li>Beschriftung der Verbindungsleitungen (z.B. 10G, 1G)</li>
+                </ul>
+            </div>
+
+            <div style="background: white; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                <h4 style="color: #2563eb;">Teil 2: Sicherheit und Netzwerktrennung (40 Punkte)</h4>
+                <p>Beantworten Sie ausführlich:</p>
+                <ol>
+                    <li><strong>Netzwerktrennung:</strong> Warum sollte das Publikums-WLAN vom Produktionsnetz getrennt sein? 
+                    Nennen Sie mindestens 3 konkrete Gründe mit Beispielen.</li>
+                    <li><strong>Router-Funktion:</strong> Welche Funktion hat der Router in Ihrem Design? 
+                    Erklären Sie, welche Netzwerke er verbindet und warum.</li>
+                    <li><strong>Troubleshooting:</strong> Was würden Sie prüfen, wenn das Dante-Audio plötzlich Aussetzer hat? 
+                    Nennen Sie mindestens 4 Prüfpunkte.</li>
+                </ol>
+            </div>
+
+            <div class="warning-box" style="margin: 1.5rem 0;">
+                <h4>📋 Abgabe:</h4>
+                <ul>
+                    <li>Netzwerkdiagramm (digital oder sauber handgezeichnet)</li>
+                    <li>Schriftliche Ausarbeitung zu Teil 2 (1-2 Seiten)</li>
+                </ul>
+            </div>
+
+            <div class="success-box" style="margin: 1.5rem 0;">
+                <h4>💡 Bewertung:</h4>
+                <ul>
+                    <li><strong>Vollständigkeit:</strong> Alle geforderten Elemente vorhanden</li>
+                    <li><strong>Technische Korrektheit:</strong> Sinnvolle Netzwerkplanung mit korrekten IP-Bereichen</li>
+                    <li><strong>Begründung:</strong> Entscheidungen nachvollziehbar erklärt</li>
+                    <li><strong>Praxisbezug:</strong> Realistische Lösungen für Veranstaltungstechnik</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>9. Zusammenfassung</h2>
+        <p>In dieser Einheit haben Sie die Unterschiede und Aufgaben von Switches und Routern kennengelernt. Sie wissen nun:</p>
+        <ul>
+            <li>✅ Wie Switches auf <strong>Schicht 2</strong> mit MAC-Adressen arbeiten</li>
+            <li>✅ Wie Router auf <strong>Schicht 3</strong> verschiedene Netzwerke verbinden</li>
+            <li>✅ Wie <strong>Netzwerk-Segmentierung</strong> durch separate Subnetze die Stabilität erhöht</li>
+            <li>✅ Wie man <strong>Managed Switches</strong> für professionelle Event-Netzwerke auswählt</li>
+            <li>✅ Warum <strong>Redundanz</strong> in kritischen Live-Umgebungen essentiell ist</li>
+            <li>✅ Wie <strong>Firewall-Regeln</strong> Produktionsnetze vor Zugriffen schützen</li>
+        </ul>
+        
+        <div class="success-box">
+            <strong>🎯 Kernbotschaft:</strong> Das Wissen über Switches und Router ist die Grundlage für die Planung stabiler, sicherer und performanter Netzwerke in der Veranstaltungstechnik. Mit der richtigen Kombination und Konfiguration meistern Sie selbst komplexeste Live-Events!
+        </div>
+    </div>
+    </div>
+</body>
+</html>
