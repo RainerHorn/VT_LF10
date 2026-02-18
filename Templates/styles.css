@@ -51,34 +51,25 @@ body {
     margin-bottom: 2.5rem !important;
 }
 
-/* KLEINE ABSTÄNDE NACH ÜBERSCHRIFTEN - FORCE OVERRIDE */
-.container .section h2,
-.container h2 {
+/* Überschriften (DS05-Layout) */
+.section h2 {
     color: #1e3c72 !important;
+    font-size: 2rem !important;
+    margin-bottom: 1rem !important;
     border-bottom: 3px solid #667eea !important;
     padding-bottom: 0.5rem !important;
-    margin: 2rem 0 0.1rem 0 !important;
-    font-size: 2rem !important;
 }
 
-.container .section h3,
-.container h3 {
+.section h3 {
     color: #2a5298 !important;
-    margin: 1.8rem 0 0.1rem 0 !important;
     font-size: 1.5rem !important;
+    margin: 1.5rem 0 1rem 0 !important;
 }
 
-.container .section h4,
-.container h4 {
-    color: #4a6cf7 !important;
-    margin: 1.5rem 0 0.1rem 0 !important;
-    font-size: 1.2rem !important;
-}
-
-/* Erste h2 ohne oberen Abstand */
-.section:first-child h2,
-.section h2:first-child {
-    margin-top: 0 !important;
+.section h4 {
+    color: #1e3c72 !important;
+    font-size: 1.3rem !important;
+    margin: 0 0 1rem 0 !important;
 }
 
 /* ÜBERSCHRIFTEN IN BOXEN */
@@ -89,8 +80,8 @@ body {
 
 .phase h4 {
     color: #1e3c72 !important;
-    margin: 0 0 0.5rem 0 !important;
-    padding-top: 0.5rem !important;
+    margin-bottom: 1rem !important;
+    font-size: 1.3rem !important;
 }
 
 .intro {
@@ -128,12 +119,10 @@ body {
 .question {
     background: linear-gradient(135deg, #fff3cd 0%, #fdeaa7 100%) !important;
     border-left: 4px solid #f39c12 !important;
-    padding: 1.2rem !important;
-    margin: 1rem 0 !important;
+    padding: 1.5rem !important;
+    margin: 1.5rem 0 !important;
     border-radius: 8px !important;
     box-shadow: 0 3px 10px rgba(243, 156, 18, 0.1) !important;
-    color: #b7950b !important;
-    font-weight: 500 !important;
 }
 
 .tech-specs {
@@ -146,13 +135,12 @@ body {
 }
 
 .warning {
-    background: linear-gradient(135deg, #ffe6e6 0%, #ffb3b3 100%) !important;
+    background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%) !important;
     border-left: 4px solid #e74c3c !important;
     padding: 1.5rem !important;
-    margin: 1.2rem 0 !important;
+    margin: 1.5rem 0 !important;
     border-radius: 8px !important;
     box-shadow: 0 3px 10px rgba(231, 76, 60, 0.1) !important;
-    color: #c0392b !important;
 }
 
 .phases {
@@ -163,18 +151,17 @@ body {
 }
 
 .phase {
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%) !important;
+    border: 2px solid #667eea !important;
     border-radius: 12px !important;
     padding: 1.5rem !important;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
-    border: 1px solid #e9ecef !important;
     position: relative !important;
-    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    transition: all 0.3s ease !important;
 }
 
 .phase:hover {
     transform: translateY(-5px) !important;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.15) !important;
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2) !important;
 }
 
 .phase-number {
@@ -196,32 +183,234 @@ body {
 .comparison-table {
     width: 100% !important;
     border-collapse: collapse !important;
-    margin: 1.2rem 0 !important;
-    background: white !important;
-    border-radius: 8px !important;
-    overflow: hidden !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+    margin: 1.5rem 0 !important;
 }
 
-.comparison-table th {
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;
-    color: white !important;
-    padding: 1rem !important;
-    font-weight: 600 !important;
-    text-align: left !important;
-}
-
+.comparison-table th,
 .comparison-table td {
     padding: 1rem !important;
+    text-align: left !important;
     border-bottom: 1px solid #e9ecef !important;
 }
 
-.comparison-table tr:nth-child(even) {
-    background-color: #f8f9fa !important;
+.comparison-table th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    font-weight: 600 !important;
 }
 
 .comparison-table tr:hover {
-    background-color: #e3f2fd !important;
+    background: #f8f9fa !important;
+}
+
+/* Akkordeon (DS05) */
+.accordion {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+    border: 2px solid #667eea !important;
+    border-radius: 12px !important;
+    margin: 1.5rem 0 !important;
+    overflow: hidden !important;
+}
+
+.accordion-header {
+    padding: 1.5rem !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    font-weight: 600 !important;
+    font-size: 1.2rem !important;
+    color: #1e3c72 !important;
+    transition: all 0.3s ease !important;
+}
+
+.accordion-header:hover {
+    background: rgba(102, 126, 234, 0.1) !important;
+}
+
+.accordion-icon {
+    transition: transform 0.3s ease !important;
+    font-size: 1rem !important;
+}
+
+.accordion-icon.open {
+    transform: rotate(90deg) !important;
+}
+
+.accordion-content {
+    max-height: 0 !important;
+    overflow: hidden !important;
+    transition: max-height 0.3s ease !important;
+}
+
+.accordion-content.open {
+    max-height: 5000px !important;
+    padding: 1.5rem !important;
+}
+
+/* Eingabefelder / Medien (DS05) */
+textarea {
+    width: 100% !important;
+    padding: 1rem !important;
+    border: 2px solid #667eea !important;
+    border-radius: 8px !important;
+    font-family: inherit !important;
+    font-size: 1rem !important;
+    margin: 1rem 0 !important;
+    resize: vertical !important;
+    min-height: 100px !important;
+}
+
+.image-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+    gap: 2rem !important;
+    margin: 2rem 0 !important;
+}
+
+.image-placeholder {
+    background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%) !important;
+    border: 2px dashed #999 !important;
+    border-radius: 12px !important;
+    padding: 3rem !important;
+    text-align: center !important;
+    color: #666 !important;
+    font-style: italic !important;
+    min-height: 250px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Schwebendes Navigationsmenü (DS05) */
+.nav-menu {
+    position: fixed !important;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: white !important;
+    border-radius: 12px !important;
+    padding: 0.5rem !important;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2) !important;
+    z-index: 99999 !important;
+    border: 2px solid #667eea !important;
+    user-select: none !important;
+    width: fit-content !important;
+    height: fit-content !important;
+}
+
+.nav-menu:active {
+    cursor: grabbing !important;
+}
+
+.nav-menu-header {
+    cursor: move !important;
+    padding: 0.4rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 0.3rem !important;
+    color: #667eea !important;
+    font-size: 1rem !important;
+    border-bottom: 1px solid #e9ecef !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.nav-menu-title {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 1.5rem !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+}
+
+.nav-menu-control {
+    appearance: none !important;
+    border: 1px solid #667eea !important;
+    background: white !important;
+    color: #667eea !important;
+    border-radius: 999px !important;
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+    cursor: pointer !important;
+    font-size: 0.9rem !important;
+    line-height: 1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.nav-menu-control:hover {
+    background: rgba(102, 126, 234, 0.08) !important;
+}
+
+.nav-menu.is-hidden {
+    display: none !important;
+}
+
+.nav-menu-launcher {
+    position: fixed !important;
+    right: 2rem !important;
+    bottom: 2rem !important;
+    z-index: 99999 !important;
+    border: 2px solid #667eea !important;
+    background: white !important;
+    color: #667eea !important;
+    border-radius: 999px !important;
+    width: 54px !important;
+    height: 54px !important;
+    min-width: 54px !important;
+    min-height: 54px !important;
+    cursor: pointer !important;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2) !important;
+    display: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.4rem !important;
+    user-select: none !important;
+}
+
+.nav-menu-launcher.is-visible {
+    display: inline-flex !important;
+}
+
+.nav-buttons {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.4rem !important;
+    align-items: center !important;
+}
+
+.nav-divider {
+    height: 1px !important;
+    background: linear-gradient(90deg, transparent, #667eea, transparent) !important;
+    margin: 0.2rem 0 !important;
+    width: 100% !important;
+}
+
+.nav-btn {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;
+    color: white !important;
+    border: none !important;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    font-size: 1.1rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 3px 12px rgba(30, 60, 114, 0.4) !important;
+    transition: box-shadow 0.3s ease, background 0.3s ease !important;
+}
+
+.nav-btn:hover {
+    box-shadow: 0 6px 20px rgba(30, 60, 114, 0.6) !important;
+    background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%) !important;
 }
 
 .container ul, .container ol {
@@ -258,6 +447,80 @@ body {
     letter-spacing: 2px !important;
 }
 
+/* ASCII-Diagramme (Router/Switch-Pläne etc.) */
+.ascii-diagram {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace !important;
+    font-variant-ligatures: none !important;
+    letter-spacing: 0 !important;
+    line-height: 1.0 !important;
+    font-size: clamp(0.95rem, 0.6vw + 0.85rem, 1.15rem) !important;
+    white-space: pre !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    display: inline-block !important;
+    text-align: left !important;
+    margin: 1rem 0 !important;
+    padding: 1.25rem 1.5rem !important;
+    background: #2c3e50 !important;
+    color: #00ff00 !important;
+    border-radius: 8px !important;
+}
+
+/* SVG-Diagramme (sauber skalierbar, kein ASCII-Drift) */
+.diagram {
+    margin: 1rem 0 !important;
+    text-align: center !important;
+}
+
+.diagram-svg {
+    width: 100% !important;
+    max-width: 1000px !important;
+    height: auto !important;
+    display: inline-block !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+.diagram-svg .bg {
+    fill: #2c3e50 !important;
+}
+
+.diagram-svg .stroke {
+    stroke: #00ff00 !important;
+    stroke-width: 3 !important;
+    fill: none !important;
+}
+
+.diagram-svg .box {
+    stroke: #00ff00 !important;
+    stroke-width: 3 !important;
+    fill: transparent !important;
+    rx: 10 !important;
+    ry: 10 !important;
+}
+
+.diagram-svg text {
+    fill: #00ff00 !important;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace !important;
+    font-variant-ligatures: none !important;
+    letter-spacing: 0 !important;
+}
+
+.diagram-svg .title {
+    font-size: 22px !important;
+    font-weight: 700 !important;
+}
+
+.diagram-svg .label {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+}
+
+.diagram-svg .small {
+    font-size: 16px !important;
+    font-weight: 500 !important;
+}
+
 .connector-grid {
     display: grid !important;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
@@ -286,42 +549,43 @@ body {
 }
 
 .interactive-demo {
-    background: linear-gradient(135deg, #fffde7 0%, #fff9c4 100%) !important;
-    border: 2px solid #ff9800 !important;
+    background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%) !important;
+    border: 2px solid #fbc02d !important;
     border-radius: 12px !important;
-    padding: 1.5rem !important;
+    padding: 2rem !important;
     margin: 2rem 0 !important;
     text-align: center !important;
 }
 
 .demo-button {
-    background: linear-gradient(135deg, #ff9800 0%, #f57f17 100%) !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
     color: white !important;
     border: none !important;
-    padding: 0.8rem 1.5rem !important;
+    padding: 1rem 2rem !important;
     border-radius: 25px !important;
     cursor: pointer !important;
-    font-size: 1rem !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
     margin: 0.5rem !important;
     transition: all 0.3s ease !important;
 }
 
 .demo-button:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4) !important;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4) !important;
 }
 
 .praxis-box {
-    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%) !important;
-    border-left: 4px solid #4caf50 !important;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
+    border-left: 4px solid #2196f3 !important;
     padding: 1.5rem !important;
     margin: 1.5rem 0 !important;
     border-radius: 8px !important;
-    box-shadow: 0 3px 10px rgba(76, 175, 80, 0.1) !important;
+    box-shadow: 0 3px 10px rgba(33, 150, 243, 0.1) !important;
 }
 
 .praxis-box h4 {
-    color: #2e7d32 !important;
+    color: #1e3c72 !important;
     margin: 0 0 1rem 0 !important;
 }
 
@@ -346,9 +610,32 @@ body {
     .phases {
         grid-template-columns: 1fr !important;
     }
+
+    .image-grid {
+        grid-template-columns: 1fr !important;
+    }
     
     .connector-grid {
         grid-template-columns: 1fr !important;
+    }
+
+    .nav-menu {
+        left: 1rem !important;
+        bottom: 1rem !important;
+    }
+
+    .nav-btn {
+        width: 45px !important;
+        height: 45px !important;
+        font-size: 1.1rem !important;
+    }
+
+    .nav-menu-launcher {
+        right: 1rem !important;
+        bottom: 1rem !important;
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 1.25rem !important;
     }
 }
 

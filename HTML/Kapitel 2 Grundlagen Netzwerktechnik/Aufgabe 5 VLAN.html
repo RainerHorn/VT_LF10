@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Einheit 5 – VLANs in der Veranstaltungstechnik</title>
+    <title>VLANs in der Veranstaltungstechnik</title>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Funktion zum Kopieren von Code in die Zwischenablage
@@ -93,7 +93,7 @@
                     color: #2563eb;
                     font-size: 2.2rem;
                     font-weight: 700;
-                    margin-bottom: 1rem;
+                    margin-bottom: 0.1rem !important;
                     text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
                 }
 
@@ -101,7 +101,7 @@
                     color: #1d4ed8;
                     font-size: 1.6rem;
                     font-weight: 600;
-                    margin-bottom: 1rem;
+                    margin-bottom: 0.1rem !important;
                     margin-top: 2rem;
                 }
 
@@ -109,8 +109,25 @@
                     color: #1e40af;
                     font-size: 1.3rem;
                     font-weight: 600;
-                    margin-bottom: 0.8rem;
+                    margin-bottom: 0.1rem !important;
                     margin-top: 1.5rem;
+                }
+
+                h4 {
+                    color: #1e40af;
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    margin-bottom: 0.1rem !important;
+                    margin-top: 1rem;
+                }
+
+                .intro {
+                    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+                    border-left: 4px solid #6b7280;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(107, 114, 128, 0.1);
                 }
 
                 .section {
@@ -140,7 +157,7 @@
                     border: 1px solid #81d4fa;
                 }
 
-                ul {
+                ul, ol {
                     padding-left: 2rem;
                     margin-bottom: 1.2rem;
                 }
@@ -173,8 +190,11 @@
                     margin: 1rem 0;
                     border-radius: 8px;
                     box-shadow: 0 3px 10px rgba(243, 156, 18, 0.1);
+                }
+
+                .question strong {
                     color: #b7950b;
-                    font-weight: 500;
+                    font-weight: 600;
                 }
 
                 .tech-specs {
@@ -276,6 +296,13 @@
                 }
             `;
             document.head.appendChild(style);
+
+            // DOM-Manipulation für zuverlässige Darstellung in Moodle
+            setTimeout(() => {
+                document.querySelectorAll('h2, h3, h4').forEach(el => {
+                    el.style.marginBottom = '0.1rem';
+                });
+            }, 100);
         });
 
         // Funktion zum Initialisieren des Chatbots
@@ -293,12 +320,12 @@
                     "host": "dev.mm-bbs.de",
                     "protocol": "https",
                     "port": 8085,
-                    "opener": "Hallo, wie kann ich Ihnen bei der Aufgabe helfen?",
+                    "opener": "Hallo, wie kann ich Ihnen bei VLANs in der Veranstaltungstechnik helfen?",
                     "chat_icon": "",
                     "chat_icon_style": "border-radius: 50%; width: 40px; height: 40px;",
                     "title": "VT GPT",
                     "task": htmlContent,
-                    "hints": "Sie sind Netzwerkexperte im Bereich Veranstaltungstechnik. Sie erstellen keine fertigen Lösungen, sondern geben Erklärungen zu den Fragen. Ihre Schüler sind Fachinformatiker Systemintegration im ersten Ausbildungsjahr.",
+                    "hints": "Sie sind ein Experte für Netzwerktechnik in der Veranstaltungstechnik. Sie helfen Auszubildenden zur Fachkraft für Veranstaltungstechnik im 3. Ausbildungsjahr. Geben Sie keine fertigen Lösungen, sondern regen Sie zum Nachdenken an und erklären Sie Zusammenhänge. Beziehen Sie sich auf praxisrelevante Szenarien wie Konzerte, Festivals, Messen und Konferenzen.",
                     "cookie": document.cookie
                 };
 
@@ -316,79 +343,282 @@
     </script>
 </head>
 <body>
-<!-- Bisherige Inhalte -->
-<div class="container">
+    <div class="container">
+        
+        <div class="section">
+            <h1>🌐 VLANs – Virtuelle Netzwerke in der Veranstaltungstechnik</h1>
+            <p><em>Strukturierte Netzwerke für komplexe Veranstaltungen</em></p>
+        </div>
 
-<div class="section">
-    <h1>Einheit 5: VLANs – Virtuelle Netzwerke für strukturierte Veranstaltungssysteme</h1>
-    <p><strong>VLAN</strong> steht für „Virtual Local Area Network“. Ein VLAN ermöglicht es, ein einziges physisches Netzwerk in mehrere logische Teilnetze aufzuteilen. Das bedeutet, dass Sie mit derselben Hardware – z. B. einem einzigen Switch – mehrere unabhängige Netzwerke erstellen können, die sich verhalten, als wären sie physisch voneinander getrennt. Diese Technologie ist in modernen Netzwerken unverzichtbar, da sie eine bessere Kontrolle, höhere Sicherheit und optimierte Netzwerkleistung bietet.</p>
+        <div class="section">
+            <div class="intro">
+                <p><strong>📍 Berufsbezogener Kontext:</strong></p>
+                <p>Sie arbeiten als Fachkraft für Veranstaltungstechnik und sind verantwortlich für die Netzwerkinfrastrstruktur einer dreitägigen Hybridkonferenz mit 800 Teilnehmenden vor Ort und 1.500 Online-Teilnehmenden. Die Veranstaltung umfasst mehrere parallele Räume mit unterschiedlichen technischen Anforderungen:</p>
+                <ul>
+                    <li><strong>Hauptsaal:</strong> Live-Übertragung mit 4K-Kameras, Dante-Audiosystem, DMX-Lichtsteuerung</li>
+                    <li><strong>Workshop-Räume:</strong> Präsentationstechnik, interaktive Displays, Videokonferenzsysteme</li>
+                    <li><strong>Streaming-Regie:</strong> Videomischer, Encoder, Recording-Server, Live-Streaming-Plattform</li>
+                    <li><strong>Publikumsnetz:</strong> WLAN-Zugang für Teilnehmende zur Event-App und zum Internet</li>
+                </ul>
+                <p>Alle diese Systeme müssen sicher und performant über eine gemeinsame Netzwerkinfrastruktur laufen, ohne sich gegenseitig zu beeinflussen. VLANs (Virtual Local Area Networks) sind dafür die ideale Lösung.</p>
+            </div>
 
-    <p>In der Veranstaltungstechnik, wo häufig viele unterschiedliche Systeme parallel betrieben werden – z. B. Audio-, Video- und Lichtsteuerung –, bietet VLAN eine hervorragende Möglichkeit, die Datenströme zu organisieren und voneinander zu isolieren. Damit vermeiden Sie gegenseitige Beeinflussung, reduzieren unerwünschten Netzwerkverkehr und können gezielt bestimmte Geräte oder Systeme gegeneinander absichern.</p>
+            <h2>Was sind VLANs?</h2>
+            
+            <p><strong>VLAN</strong> steht für <strong>Virtual Local Area Network</strong> – ein virtuelles lokales Netzwerk. Diese Technologie ermöglicht es, ein physisches Netzwerk in mehrere logische Teilnetze aufzuteilen. Mit VLANs können Sie:</p>
+            
+            <ul>
+                <li>Mehrere unabhängige Netzwerke auf derselben Hardware betreiben</li>
+                <li>Datenverkehr zwischen verschiedenen Gerätegruppen separieren</li>
+                <li>Sicherheit durch Netzwerksegmentierung erhöhen</li>
+                <li>Broadcast-Domains begrenzen und damit die Netzwerkperformance optimieren</li>
+                <li>Flexibel Geräte verschiedenen Netzwerken zuordnen – unabhängig vom physischen Standort</li>
+            </ul>
 
-    <p>Technisch gesehen basiert VLAN auf dem IEEE 802.1Q-Standard, der sogenannte VLAN-Tags in Ethernet-Frames einfügt. Diese Tags beinhalten eine VLAN-ID (z. B. 10, 20, 30...), anhand derer Switches erkennen, zu welchem logischen Netzwerk ein Paket gehört. Nur Geräte innerhalb desselben VLANs können miteinander kommunizieren – es sei denn, es wird gezielt Routing zwischen den VLANs eingerichtet.</p>
+            <div class="tech-specs">
+                <h4>🔧 Technische Grundlagen</h4>
+                <p><strong>IEEE 802.1Q Standard:</strong> VLANs basieren auf diesem Standard, der VLAN-Tags in Ethernet-Frames einfügt. Jedes VLAN erhält eine eindeutige ID (1-4094).</p>
+                <p><strong>VLAN-ID:</strong> Eine Nummer zur Identifikation des VLANs (z.B. VLAN 10 = Lichttechnik, VLAN 20 = Audio, VLAN 30 = Video).</p>
+                <p><strong>Tagged vs. Untagged Traffic:</strong></p>
+                <ul>
+                    <li><strong>Untagged:</strong> Normaler Datenverkehr ohne VLAN-Information (für Endgeräte)</li>
+                    <li><strong>Tagged:</strong> Datenverkehr mit VLAN-Tag (zwischen Switches)</li>
+                </ul>
+            </div>
 
-    <h3>Ausführliches Beispielszenario</h3>
-    <p>Stellen Sie sich vor, Sie betreuen eine Großveranstaltung mit mehreren technischen Gewerken:</p>
-    <ul>
-        <li><strong>Lichtnetzwerk (VLAN 10):</strong> Besteht aus Lichtpulten, Art-Net-Nodes und Moving Heads. Diese Systeme senden in kurzen Abständen Steuerdaten über UDP. Würden sie sich das Netzwerk mit anderen Systemen teilen, könnte dies zu Latenzen oder Paketverlusten führen.</li>
-        <li><strong>Audionetzwerk (VLAN 20):</strong> Beinhaltet Dante-Geräte, Stageboxen, FOH-Konsole. Da Audio über IP extrem empfindlich auf Latenz reagiert, ist eine exklusive Datenleitung essenziell.</li>
-        <li><strong>Video/Streaming (VLAN 30):</strong> Kameras, NDI-Encoder, Videomischer, Livestreaming-PCs. Diese Systeme produzieren sehr große Datenmengen, die bei gleichzeitiger Nutzung desselben Netzes zu einer Überlastung führen können.</li>
-        <li><strong>Produktionsnetzwerk (VLAN 40):</strong> Geräte zur Systemüberwachung, Medienserververwaltung, Firmwareupdates – oft mit Webinterface und Fernwartung.</li>
-        <li><strong>Publikumsnetz (VLAN 50):</strong> WLAN-Zugang für Besucher. Diese sollen keinen Zugang zu internen Geräten haben, aber z. B. einen Livestream empfangen können.</li>
-    </ul>
+            <h3>Praxis-Beispiel: Festival-Netzwerk</h3>
+            
+            <p>Bei einem Musikfestival mit drei Bühnen könnten Sie folgende VLANs einrichten:</p>
+            
+            <ul>
+                <li><strong>VLAN 10 – Lichttechnik:</strong> DMX-Controller, Art-Net Nodes, Moving Heads (Broadcast-intensiv!)</li>
+                <li><strong>VLAN 20 – Audiotechnik:</strong> Dante-Netzwerk für digitales Audio mit stringenten Latenzanforderungen</li>
+                <li><strong>VLAN 30 – Videotechnik:</strong> NDI-Kameras, Videomischer, LED-Wände mit hoher Bandbreite</li>
+                <li><strong>VLAN 40 – Management:</strong> Zugang zu Konfigurations-Webinterfaces, Monitoring, Fernwartung</li>
+                <li><strong>VLAN 50 – Gäste-WLAN:</strong> Internetzugang für Publikum ohne Zugriff auf technische Systeme</li>
+            </ul>
 
-    <p>Mit VLANs können Sie all diese Bereiche vollständig voneinander trennen – und dabei dennoch nur eine gemeinsame Infrastruktur nutzen. Anstelle von fünf physischen Netzwerken benötigen Sie nur einen leistungsfähigen Switch, der die logische Trennung übernimmt.</p>
+            <p>Durch diese Trennung bleiben die kritischen Audio- und Video-Datenströme von den Broadcast-Paketen der Lichttechnik und vom Gäste-WLAN unbeeinflusst.</p>
 
-    <h3>Detaillierte Vorteile</h3>
-    <ul>
-        <li><strong>Netzwerksicherheit:</strong> Nur berechtigte Geräte kommunizieren miteinander. Ein Gerät im Publikumsnetz hat keine Sichtbarkeit gegenüber Geräten im Techniknetz.</li>
-        <li><strong>Leistungsoptimierung:</strong> VLANs begrenzen Broadcast-Domänen. Broadcasts innerhalb eines VLANs beeinflussen andere VLANs nicht – das ist gerade bei Protokollen wie Art-Net (Broadcast-basiert) entscheidend.</li>
-        <li><strong>Netzwerkdesign und Skalierung:</strong> VLANs ermöglichen strukturiertes Netzwerkdesign. Neue Geräte können flexibel einem bestehenden VLAN zugewiesen werden, ohne dass physische Änderungen nötig sind.</li>
-        <li><strong>Fehlersuche und Diagnose:</strong> VLANs erleichtern die Isolierung von Problemen. Wenn z. B. im Audionetzwerk ein Paketverlust auftritt, betrifft das nicht das Lichtnetzwerk.</li>
-    </ul>
+            <div class="question">
+                <strong>💡 Kontrollfragen:</strong>
+                <ol>
+                    <li>Erklären Sie den Unterschied zwischen einem physischen und einem logischen Netzwerk.</li>
+                    <li>Warum ist es sinnvoll, Dante-Audio in einem separaten VLAN zu betreiben?</li>
+                    <li>Was versteht man unter einer Broadcast-Domain und wie begrenzen VLANs diese?</li>
+                </ol>
+            </div>
+        </div>
 
-    <h3>Technische Umsetzung – Grundlagen</h3>
-    <ul>
-        <li><strong>Access-Port:</strong> Ein Port, der nur einem VLAN fest zugewiesen ist. Hier schließen Sie z. B. einen Lichtcontroller an, der ausschließlich im VLAN 10 kommunizieren darf.</li>
-        <li><strong>Trunk-Port:</strong> Ein Port, über den mehrere VLANs gleichzeitig übertragen werden. Er verbindet typischerweise zwei VLAN-fähige Switches miteinander oder einen Switch mit einem VLAN-fähigen Router.</li>
-        <li><strong>Layer-3-Routing:</strong> Wenn Geräte in unterschiedlichen VLANs miteinander kommunizieren sollen (z. B. Streaming-PC in VLAN 30 soll Audio aus VLAN 20 holen), muss ein Routing zwischen VLANs konfiguriert werden – typischerweise durch einen Layer-3-Switch oder einen Router.</li>
-    </ul>
+        <div class="section">
+            <h2>VLAN-Port-Typen: Access und Trunk</h2>
 
-    <h3>Visualisierung durch VLAN-Diagramm</h3>
-    <p>Erstellen Sie zur Veranschaulichung ein Diagramm mit farblich markierten VLANs, verbunden durch Trunk-Ports und VLAN-Zuordnungen an jedem Port. Nutzen Sie hierzu Netzplan-Software oder zeichnen Sie das Diagramm per Hand.</p>
+            <p>Um VLANs in der Praxis einzusetzen, müssen Sie verstehen, wie Switch-Ports konfiguriert werden. Es gibt zwei grundlegende Port-Typen:</p>
 
-    <h3>Praxisaufgaben</h3>
-    <div class="task">
-        <strong>Aufgabe 5 – VLAN-Planung (erweitert)</strong><br>
-        Entwerfen Sie ein vollständiges VLAN-Konzept für eine mehrtägige Hybridkonferenz mit Livepublikum und parallelem Stream. Beachten Sie:<br>
-        - Mindestens 4 unterschiedliche VLANs<br>
-        - Zugriffsbeschränkungen zwischen VLANs<br>
-        - Anforderungen an Bandbreite und Latenz<br>
-        - Absicherung externer WLAN-Zugänge
+            <h3>Access-Port (Zugangsport)</h3>
+            
+            <p>Ein <strong>Access-Port</strong> ist einem einzigen VLAN fest zugeordnet. Hier schließen Sie Endgeräte an, die keine VLAN-Tags verstehen (z.B. Kameras, Lichtpulte, Computer).</p>
+            
+            <p><strong>Eigenschaften:</strong></p>
+            <ul>
+                <li>Sendet und empfängt <strong>untagged</strong> Traffic</li>
+                <li>Gehört zu genau einem VLAN</li>
+                <li>Das angeschlossene Gerät "weiß" nichts von VLANs</li>
+            </ul>
+
+            <p><strong>Beispiel:</strong> Ein Lichtpult wird an Port 5 eines Switches angeschlossen. Port 5 ist als Access-Port für VLAN 10 konfiguriert. Das Lichtpult sendet normale Datenpakete, der Switch fügt automatisch den VLAN-10-Tag hinzu.</p>
+
+            <h3>Trunk-Port (Transportport)</h3>
+            
+            <p>Ein <strong>Trunk-Port</strong> transportiert Datenverkehr mehrerer VLANs gleichzeitig. Er verbindet normalerweise zwei VLAN-fähige Geräte (Switch zu Switch, Switch zu Router).</p>
+            
+            <p><strong>Eigenschaften:</strong></p>
+            <ul>
+                <li>Sendet und empfängt <strong>tagged</strong> Traffic (mit VLAN-ID)</li>
+                <li>Kann mehrere VLANs parallel übertragen</li>
+                <li>Nutzt IEEE 802.1Q Tagging</li>
+            </ul>
+
+            <p><strong>Beispiel:</strong> Zwei Switches sind über einen Trunk-Port verbunden. Dieser Port transportiert gleichzeitig VLAN 10, 20, 30, 40 und 50. Jedes Paket trägt einen Tag, sodass der empfangende Switch weiß, zu welchem VLAN es gehört.</p>
+
+            <div class="tech-specs">
+                <h4>🔧 Native VLAN</h4>
+                <p>Auf einem Trunk-Port gibt es ein sogenanntes <strong>Native VLAN</strong> (Standard: VLAN 1). Pakete dieses VLANs werden <strong>untagged</strong> übertragen. Dies dient der Abwärtskompatibilität zu Geräten ohne VLAN-Unterstützung.</p>
+                <p><strong>Sicherheitshinweis:</strong> Das Native VLAN sollte aus Sicherheitsgründen geändert und nicht für produktive Systeme genutzt werden, da untagged Pakete potenzielle Angriffspunkte bieten.</p>
+            </div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen:</strong>
+                <ol>
+                    <li>Wann verwenden Sie einen Access-Port und wann einen Trunk-Port?</li>
+                    <li>Was passiert, wenn ein Endgerät an einen Trunk-Port angeschlossen wird?</li>
+                    <li>Warum sollten Sie das Standard-Native-VLAN (VLAN 1) nicht verwenden?</li>
+                    <li>Zeichnen Sie ein einfaches Netzwerk-Diagramm mit zwei Switches, die über einen Trunk verbunden sind, und jeweils zwei Access-Ports für unterschiedliche VLANs haben.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Vorteile von VLANs in der Veranstaltungstechnik</h2>
+
+            <h3>1. Netzwerksicherheit und Zugriffskontrolle</h3>
+            
+            <p>VLANs ermöglichen die Segmentierung Ihres Netzwerks nach Sicherheitsebenen. Geräte in unterschiedlichen VLANs können ohne zusätzliche Konfiguration <strong>nicht</strong> miteinander kommunizieren.</p>
+            
+            <p><strong>Praxis-Beispiel:</strong> Das Gäste-WLAN (VLAN 50) hat keinen Zugriff auf das Management-VLAN (VLAN 40), wo Sie die Webinterfaces Ihrer Switches und Medienserver konfigurieren. Selbst wenn jemand unbefugt Zugang zum WLAN erhält, kann er Ihre technischen Geräte nicht erreichen.</p>
+
+            <h3>2. Leistungsoptimierung durch Broadcast-Kontrolle</h3>
+            
+            <p>Viele Protokolle in der Veranstaltungstechnik nutzen <strong>Broadcasts</strong> – Datenpakete, die an alle Geräte im Netzwerk gesendet werden (z.B. Art-Net für Lichtsteuerung). Ohne VLANs würden diese Broadcasts <strong>alle</strong> Geräte erreichen und unnötig Netzwerkressourcen belegen.</p>
+            
+            <p><strong>Mit VLANs:</strong> Broadcasts bleiben innerhalb des jeweiligen VLANs. Art-Net-Broadcasts (VLAN 10) stören nicht die Audio-Übertragung (VLAN 20) oder Video-Streams (VLAN 30).</p>
+
+            <h3>3. Flexibles Netzwerkdesign</h3>
+            
+            <p>VLANs erlauben es Ihnen, Geräte logisch zu gruppieren – unabhängig von ihrer physischen Position. Ein Lichtpult im FOH und Moving Heads auf der Bühne können im selben VLAN sein, auch wenn sie an unterschiedliche Switches angeschlossen sind.</p>
+
+            <h3>4. Vereinfachte Fehlersuche</h3>
+            
+            <p>Wenn in einem VLAN Probleme auftreten (z.B. Paketverluste im Video-VLAN), können Sie gezielt dieses Segment analysieren, ohne dass andere Bereiche betroffen oder involviert sind.</p>
+
+            <h3>5. Skalierbarkeit</h3>
+            
+            <p>Sie können neue Geräte einfach durch Port-Konfiguration einem bestehenden VLAN zuweisen – ohne Verkabelung zu ändern oder neue Switches hinzuzufügen.</p>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen:</strong>
+                <ol>
+                    <li>Nennen Sie drei konkrete Situationen in der Veranstaltungstechnik, in denen VLANs die Sicherheit erhöhen.</li>
+                    <li>Warum ist Broadcast-Kontrolle gerade bei Art-Net so wichtig?</li>
+                    <li>Welche Vorteile bieten VLANs bei temporären Veranstaltungen (z.B. mehrtägige Festivals)?</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Kommunikation zwischen VLANs: Inter-VLAN-Routing</h2>
+
+            <p>Standardmäßig können Geräte in unterschiedlichen VLANs <strong>nicht</strong> miteinander kommunizieren – sie sind vollständig isoliert. In der Praxis gibt es jedoch Situationen, wo kontrollierte Kommunikation zwischen VLANs notwendig ist.</p>
+
+            <p><strong>Beispiel:</strong> Ein Streaming-PC im Management-VLAN (VLAN 40) soll Video-Feeds aus dem Video-VLAN (VLAN 30) und Audio aus dem Audio-VLAN (VLAN 20) empfangen, um einen Livestream zu produzieren.</p>
+
+            <h3>Lösung: Layer-3-Routing</h3>
+            
+            <p>Um VLANs miteinander zu verbinden, benötigen Sie ein Gerät, das auf <strong>Layer 3</strong> (Netzwerkschicht) arbeitet:</p>
+            
+            <ul>
+                <li><strong>Layer-3-Switch:</strong> Ein VLAN-fähiger Switch mit Routing-Funktionen (gängig in professioneller Veranstaltungstechnik)</li>
+                <li><strong>Router:</strong> Separates Gerät, das mehrere VLANs miteinander verbindet</li>
+            </ul>
+
+            <h3>Funktionsweise</h3>
+            
+            <p>Ein Layer-3-Switch erstellt für jedes VLAN eine virtuelle Schnittstelle (VLAN-Interface) mit einer eigenen IP-Adresse. Diese Schnittstelle fungiert als <strong>Gateway</strong> für das jeweilige VLAN.</p>
+            
+            <p><strong>Beispiel-Konfiguration:</strong></p>
+            <ul>
+                <li>VLAN 10 (Licht): Netzwerk 10.10.10.0/24, Gateway: 10.10.10.1</li>
+                <li>VLAN 20 (Audio): Netzwerk 10.10.20.0/24, Gateway: 10.10.20.1</li>
+                <li>VLAN 30 (Video): Netzwerk 10.10.30.0/24, Gateway: 10.10.30.1</li>
+            </ul>
+
+            <p>Wenn ein Gerät in VLAN 10 mit einem Gerät in VLAN 20 kommunizieren möchte, sendet es die Pakete an sein Gateway (10.10.10.1). Der Layer-3-Switch routet die Pakete dann ins Ziel-VLAN.</p>
+
+            <h3>Sicherheit durch ACLs</h3>
+            
+            <p>Mit <strong>Access Control Lists (ACLs)</strong> können Sie genau steuern, welche VLANs miteinander kommunizieren dürfen und welche Dienste erlaubt sind.</p>
+            
+            <p><strong>Beispiel:</strong></p>
+            <ul>
+                <li>✅ Management-VLAN darf auf alle anderen VLANs zugreifen (für Konfiguration und Monitoring)</li>
+                <li>✅ Video-VLAN darf Audio-VLAN erreichen (für multimediale Produktion)</li>
+                <li>❌ Gäste-WLAN darf <strong>nicht</strong> auf technische VLANs zugreifen</li>
+                <li>❌ Licht-VLAN benötigt keinen Zugriff auf andere VLANs (vollständig isoliert)</li>
+            </ul>
+
+            <div class="tech-specs">
+                <h4>🔧 Routing-Methoden im Vergleich</h4>
+                <p><strong>Router-on-a-Stick:</strong> Ein externer Router wird über einen Trunk-Port mit dem Switch verbunden und routet zwischen VLANs. Einfach, aber kann zum Performance-Bottleneck werden.</p>
+                <p><strong>Layer-3-Switch:</strong> Integriertes Routing direkt im Switch – deutlich schneller und heute die empfohlene Methode für professionelle Installationen.</p>
+            </div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen:</strong>
+                <ol>
+                    <li>Warum können Geräte in unterschiedlichen VLANs standardmäßig nicht kommunizieren?</li>
+                    <li>Was ist der Unterschied zwischen einem Layer-2-Switch und einem Layer-3-Switch?</li>
+                    <li>Beschreiben Sie ein Szenario aus der Veranstaltungstechnik, bei dem Inter-VLAN-Routing sinnvoll ist.</li>
+                    <li>Welche Sicherheitsrisiken entstehen durch Inter-VLAN-Routing und wie können Sie diese minimieren?</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Arbeitsauftrag</h2>
+
+            <div class="task">
+                <strong>VLAN-Konzept für Hybridkonferenz entwickeln</strong>
+                <p><strong>Sozialform:</strong> Einzelarbeit</p>
+                <p><strong>Methode:</strong> Vollständige Handlung</p>
+                <br>
+                <p><strong>Ausgangssituation:</strong></p>
+                <p>Sie planen die Netzwerkinfrastruktur für eine dreitägige Hybridkonferenz mit folgenden Anforderungen:</p>
+                <ul>
+                    <li>Hauptsaal mit 4K-Streaming, Dante-Audio, DMX-Lichtsteuerung</li>
+                    <li>3 Workshopräume mit Videokonferenz-Systemen und Präsentationstechnik</li>
+                    <li>Streaming-Regie mit Videomischern, Encodern und Recording-Servern</li>
+                    <li>WLAN für 800 Teilnehmende (Event-App und Internet)</li>
+                    <li>Management-Zugang für technische Konfiguration und Monitoring</li>
+                </ul>
+                <br>
+                <p><strong>Arbeitsauftrag:</strong></p>
+                <p>Erstellen Sie ein vollständiges VLAN-Konzept für diese Veranstaltung. Berücksichtigen Sie dabei:</p>
+                <ol>
+                    <li><strong>Informieren:</strong> Analysieren Sie die technischen Anforderungen der einzelnen Bereiche (Bandbreite, Latenz, Sicherheit).</li>
+                    <li><strong>Planen:</strong> Entwerfen Sie eine VLAN-Struktur mit mindestens 5 VLANs. Vergeben Sie sinnvolle VLAN-IDs und IP-Adressbereiche.</li>
+                    <li><strong>Entscheiden:</strong> Legen Sie fest, welche VLANs miteinander kommunizieren dürfen und welche isoliert bleiben müssen. Begründen Sie Ihre Entscheidungen.</li>
+                    <li><strong>Ausführen:</strong> Dokumentieren Sie Ihr Konzept mit:
+                        <ul>
+                            <li>Tabellarischer Übersicht aller VLANs (ID, Name, Zweck, IP-Bereich)</li>
+                            <li>Netzwerk-Diagramm mit Switches, VLANs und Verbindungen</li>
+                            <li>Port-Zuweisungen (welche Ports sind Access/Trunk)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Kontrollieren:</strong> Prüfen Sie Ihr Konzept auf:
+                        <ul>
+                            <li>Sicherheit (Isolation des Gäste-WLANs)</li>
+                            <li>Performance (Broadcast-Trennung)</li>
+                            <li>Vollständigkeit (alle Anforderungen abgedeckt)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Bewerten:</strong> Reflektieren Sie: Welche Herausforderungen könnten bei der Umsetzung auftreten? Welche Alternativen gäbe es?</li>
+                </ol>
+            </div>
+
+        </div>
+
+        <div class="section">
+            <h2>📚 Weiterführende Ressourcen</h2>
+            
+            <div class="tech-specs">
+                <h4>🔗 Empfohlene Links und Tools</h4>
+                <ul>
+                    <li><strong>Cisco Packet Tracer:</strong> Kostenlose Netzwerksimulations-Software zum Üben von VLAN-Konfigurationen</li>
+                    <li><strong>GNS3:</strong> Erweiterte Netzwerksimulation mit Unterstützung für reale Betriebssysteme</li>
+                    <li><strong>Wireshark:</strong> Netzwerkprotokoll-Analysator zum Untersuchen von VLAN-Tags (Filter: <code>vlan</code>)</li>
+                    <li><strong>Online-VLAN-Rechner:</strong> Tools zur Berechnung von Subnetzen und IP-Bereichen</li>
+                </ul>
+                <br>
+                <h4>📖 Fachwissen vertiefen</h4>
+                <ul>
+                    <li>IEEE 802.1Q Standard (VLAN Tagging)</li>
+                    <li>Best Practices für VLAN-Design in großen Netzwerken</li>
+                    <li>VLANs in Kombination mit Quality of Service (QoS) für Audio/Video</li>
+                    <li>VLAN-Sicherheit: VLAN Hopping und Gegenmaßnahmen</li>
+                </ul>
+            </div>
+        </div>
+
     </div>
-
-    <div class="task">
-        <strong>Aufgabe 6 – VLAN-Konfiguration</strong><br>
-        Beschreiben Sie die Einrichtung von VLANs anhand eines Beispielgeräts (z. B. Netgear, Cisco, MikroTik). Dokumentieren Sie:<br>
-        - VLAN-Anlage<br>
-        - Zuweisung von Ports (Access/Trunk)<br>
-        - Erstellung eines Management-VLANs
-    </div>
-
-    <div class="task">
-        <strong>Aufgabe 7 – Fehleranalyse</strong><br>
-        Szenario: Ein Kamerasignal (NDI) funktioniert im Studio, ist aber beim Streaming-Rechner nicht sichtbar.<br>
-        a) Welche VLAN-bedingten Ursachen könnten dies erklären?<br>
-        b) Wie prüfen Sie die Trunk-Konfiguration?<br>
-        c) Welche Tools zur Paketüberwachung und VLAN-Diagnose setzen Sie ein?
-    </div>
-
-    <div class="task">
-        <strong>Aufgabe 8 – Reflexion</strong><br>
-        Wie hat VLAN-Technologie Ihre Sicht auf Netzwerksicherheit und Veranstaltungsstruktur verändert? Welche Rolle spielt VLAN in zukünftigen Projekten Ihrer Einrichtung?
-    </div>
-    </div>
-</div>
-
 </body>
 </html>

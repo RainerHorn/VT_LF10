@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>VLAN Simulator – Veranstaltungstechnik</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container { max-width: 1500px; margin: 0 auto; padding: 10px; }
+
+        /* ── Header ── */
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        h1 { color: #2563eb; font-size: 2rem; margin-bottom: 0.3rem; }
+        .subtitle { color: #666; }
+
+        /* ── Tabs ── */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 0.7rem 1.6rem;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transition: all 0.25s;
+        }
+        .tab-btn:hover { background: rgba(255,255,255,0.35); }
+        .tab-btn.active { background: white; color: #1d4ed8; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ── Section ── */
+        .section {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 0 15px 15px 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            margin-bottom: 1.5rem;
+        }
+        h2 { color: #1d4ed8; font-size: 1.5rem; margin-bottom: 1rem; }
+        h3 { color: #1e40af; font-size: 1.15rem; margin-bottom: 0.6rem; }
+
+        /* ── VLAN Legend ── */
+        .vlan-legend {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .vlan-badge {
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.6rem 1.2rem; border-radius: 8px;
+            font-weight: 600; font-size: 0.9rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .vlan-audio  { background:#fee2e2; color:#991b1b; border:2px solid #dc2626; }
+        .vlan-light  { background:#fef3c7; color:#92400e; border:2px solid #f59e0b; }
+        .vlan-intercom { background:#dbeafe; color:#1e40af; border:2px solid #3b82f6; }
+        .color-dot { width:14px; height:14px; border-radius:50%; border:2px solid rgba(0,0,0,0.2); }
+        .dot-audio { background:#dc2626; }
+        .dot-light { background:#f59e0b; }
+        .dot-intercom { background:#3b82f6; }
+
+        /* ── Network Areas ── */
+        .network-grid {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        @media(max-width:900px){ .network-grid { grid-template-columns:1fr; } }
+
+        .area {
+            border: 3px solid #64748b;
+            border-radius: 12px;
+            padding: 1.2rem;
+            background: #f8fafc;
+            position: relative;
+        }
+        .area-title {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #64748b;
+            margin-bottom: 0.8rem;
+        }
+
+        /* Switch inside area */
+        .switch-box {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 8px;
+            padding: 0.7rem 1rem;
+            margin-bottom: 0.8rem;
+            color: white;
+            position: relative;
+        }
+        .switch-label {
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.3rem;
+        }
+        .switch-ip {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-family: 'Consolas', monospace;
+        }
+        .switch-ports-row {
+            display: flex;
+            gap: 4px;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .sw-port {
+            width: 22px; height: 16px;
+            border-radius: 3px;
+            border: 1.5px solid #64748b;
+            background: #475569;
+            position: relative;
+            cursor: help;
+            transition: all 0.2s;
+        }
+        .sw-port.trunk {
+            background: repeating-linear-gradient(
+                45deg, #6366f1, #6366f1 3px, #4338ca 3px, #4338ca 6px
+            );
+            border-color: #818cf8;
+        }
+        .sw-port.port-audio  { background: #dc2626; border-color: #f87171; }
+        .sw-port.port-light  { background: #f59e0b; border-color: #fcd34d; }
+        .sw-port.port-intercom { background: #3b82f6; border-color: #93c5fd; }
+        .sw-port.unassigned  { background: #475569; border-color: #64748b; }
+
+        /* Device cards */
+        .device {
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 7px;
+            padding: 0.7rem 0.9rem;
+            margin-bottom: 0.6rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            position: relative;
+        }
+        .device:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.12); }
+        .device.selected { outline: 3px solid #7c3aed; box-shadow: 0 4px 12px rgba(124,58,237,0.3); }
+        .device.vlan-audio    { border-color: #dc2626; background: #fff5f5; }
+        .device.vlan-light    { border-color: #f59e0b; background: #fffbeb; }
+        .device.vlan-intercom { border-color: #3b82f6; background: #eff6ff; }
+
+        .device-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.3rem; }
+        .device-name { font-weight: 700; font-size: 0.9rem; color: #1e293b; }
+        .device-type { font-size: 0.75rem; color: #64748b; margin-top: 1px; }
+
+        .device-meta {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+            align-items: center;
+        }
+        .tag-pill {
+            display: inline-flex; align-items: center; gap: 0.3rem;
+            padding: 0.15rem 0.6rem;
+            border-radius: 10px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .tag-vlan-audio    { background:#fee2e2; color:#991b1b; }
+        .tag-vlan-light    { background:#fef3c7; color:#92400e; }
+        .tag-vlan-intercom { background:#dbeafe; color:#1e40af; }
+        .tag-none          { background:#e2e8f0; color:#64748b; }
+        .tag-ip            { background:#e0f2fe; color:#075985; font-family:'Consolas',monospace; }
+        .tag-port          { background:#f3e8ff; color:#6b21a8; }
+
+        /* ── Controls ── */
+        .controls {
+            background: #f1f5f9;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        .ctrl-row { display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-start; margin-bottom: 1rem; }
+        .ctrl-block { flex: 1 1 200px; }
+        .ctrl-block label { display: block; font-weight: 700; color: #1e293b; margin-bottom: 0.4rem; font-size: 0.9rem; }
+        .select-info {
+            background: white; border: 1.5px solid #cbd5e1; border-radius: 6px;
+            padding: 0.6rem 0.9rem; font-size: 0.9rem; min-height: 38px;
+            color: #475569;
+        }
+        .btn-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .btn {
+            padding: 0.65rem 1.3rem; border: none; border-radius: 7px;
+            font-weight: 600; font-size: 0.9rem; cursor: pointer;
+            transition: all 0.25s;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.18); }
+        .btn-audio     { background:#dc2626; color:white; }
+        .btn-light     { background:#f59e0b; color:white; }
+        .btn-intercom  { background:#3b82f6; color:white; }
+        .btn-test      { background:#10b981; color:white; }
+        .btn-reset     { background:#64748b; color:white; }
+        .btn-clear-sel { background:#7c3aed; color:white; }
+
+        /* ── Test Result ── */
+        .test-panel {
+            background: white;
+            border: 2px solid #10b981;
+            border-radius: 10px;
+            padding: 1.2rem;
+        }
+        .test-result { display:none; margin-top: 0.8rem; padding: 1rem; border-radius: 8px; line-height: 1.6; }
+        .test-ok   { background:#d1fae5; color:#064e3b; border:2px solid #10b981; }
+        .test-fail { background:#fee2e2; color:#7f1d1d; border:2px solid #dc2626; }
+
+        /* ── 802.1Q Frame visualization ── */
+        .frame-viz {
+            margin-top: 0.8rem;
+            overflow-x: auto;
+        }
+        .frame-row {
+            display: inline-flex;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 2px solid #334155;
+            min-width: max-content;
+        }
+        .frame-field {
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            font-family: 'Consolas', monospace;
+            text-align: center;
+            border-right: 1.5px solid rgba(255,255,255,0.3);
+        }
+        .frame-field:last-child { border-right: none; }
+        .ff-dst  { background:#334155; color:#e2e8f0; }
+        .ff-src  { background:#374151; color:#e2e8f0; }
+        .ff-tag  { background:#7c3aed; color:white; font-weight:700; }
+        .ff-vid  { background:#6d28d9; color:white; }
+        .ff-eth  { background:#1e40af; color:white; }
+        .ff-pay  { background:#0d9488; color:white; }
+        .ff-fcs  { background:#334155; color:#e2e8f0; }
+        .frame-path {
+            display: flex; align-items: center; gap: 0.3rem;
+            font-size: 0.78rem; color: #475569;
+            margin-bottom: 0.5rem; flex-wrap: wrap;
+        }
+        .path-node {
+            padding: 0.2rem 0.6rem; border-radius: 5px;
+            background: #f1f5f9; border: 1.5px solid #94a3b8;
+            font-weight: 600; white-space: nowrap;
+        }
+        .path-arrow { color: #6366f1; font-size: 1.1rem; }
+        .path-tag-add { background:#ede9fe; border-color:#7c3aed; color:#5b21b6; }
+        .path-tag-rem { background:#fce7f3; border-color:#db2777; color:#9d174d; }
+
+        /* ── Topology SVG tab ── */
+        #topology-canvas {
+            width: 100%;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+
+        /* ── Switch Port Tables ── */
+        .port-table-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
+        .port-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        .port-table th {
+            background: #1e293b; color: white;
+            padding: 0.5rem 0.8rem; text-align: left;
+        }
+        .port-table td {
+            padding: 0.45rem 0.8rem;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+        .port-table tr:nth-child(even) td { background: #f8fafc; }
+        .port-table tr.trunk-row td { background: #ede9fe; }
+        .mode-access { color:#059669; font-weight:700; }
+        .mode-trunk  { color:#7c3aed; font-weight:700; }
+        .pvid-badge {
+            display: inline-block; padding: 0.1rem 0.5rem;
+            border-radius: 5px; font-weight: 700; font-size: 0.78rem;
+            font-family: 'Consolas', monospace;
+        }
+
+        /* ── Info / Task / Question boxes ── */
+        .intro {
+            background: linear-gradient(135deg,#f0f9ff,#e0f2fe);
+            border-left: 4px solid #0ea5e9;
+            padding: 1rem 1.3rem; border-radius: 8px; margin-bottom: 1.2rem;
+        }
+        .info-box {
+            background: linear-gradient(135deg,#fef3c7,#fde68a);
+            border-left: 4px solid #f59e0b;
+            padding: 1rem 1.3rem; border-radius: 8px; margin: 0.8rem 0;
+        }
+        .task {
+            background: linear-gradient(135deg,#e8f5e8,#c8e6c9);
+            border-left: 4px solid #4caf50;
+            padding: 1.2rem 1.5rem; border-radius: 8px; margin: 1rem 0;
+        }
+        .question {
+            background: linear-gradient(135deg,#fff3cd,#fdeaa7);
+            border-left: 4px solid #f39c12;
+            padding: 1rem 1.3rem; border-radius: 8px; margin: 0.8rem 0;
+        }
+        ol { padding-left: 1.5rem; margin-top: 0.4rem; line-height: 1.8; }
+        p  { margin-bottom: 0.6rem; line-height: 1.6; }
+        strong { color: #1e293b; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>🌐 VLAN Simulator – Veranstaltungstechnik</h1>
+        <p class="subtitle">Switches · 802.1Q-Tagging · IP-Adressen · FOH / Stage / Regie</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('sim')">🖥️ Geräte konfigurieren</button>
+        <button class="tab-btn" onclick="switchTab('topo')">🗺️ Netzwerktopologie</button>
+        <button class="tab-btn" onclick="switchTab('ports')">🔌 Switch-Port-Tabellen</button>
+        <button class="tab-btn" onclick="switchTab('tasks')">📋 Aufgaben</button>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         TAB 1 – Simulator
+    ══════════════════════════════════════════ -->
+    <div id="tab-sim" class="tab-content active">
+
+        <div class="section">
+            <div class="intro">
+                <strong>📋 So funktioniert der Simulator:</strong>
+                <ol>
+                    <li>Klicken Sie auf ein oder mehrere Geräte (Mehrfachauswahl möglich)</li>
+                    <li>Weisen Sie dem/den Gerät(en) ein VLAN zu – die IP wird automatisch vergeben</li>
+                    <li>Wählen Sie genau 2 Geräte → <em>Kommunikation testen</em></li>
+                    <li>Der Simulator zeigt Ihnen den 802.1Q-Pfad und den Frame-Header</li>
+                </ol>
+            </div>
+
+            <h2>VLAN-Übersicht &amp; Subnetze</h2>
+            <div class="vlan-legend">
+                <div class="vlan-badge vlan-audio">
+                    <span class="color-dot dot-audio"></span>
+                    VLAN 10 · Audio · 10.10.10.0/24
+                </div>
+                <div class="vlan-badge vlan-light">
+                    <span class="color-dot dot-light"></span>
+                    VLAN 20 · Light · 10.10.20.0/24
+                </div>
+                <div class="vlan-badge vlan-intercom">
+                    <span class="color-dot dot-intercom"></span>
+                    VLAN 30 · Intercom · 10.10.30.0/24
+                </div>
+            </div>
+        </div>
+
+        <!-- Network areas -->
+        <div class="section" style="padding-bottom:0.5rem;">
+            <h2>Netzwerkbereiche mit Switches</h2>
+            <div class="network-grid">
+
+                <!-- FOH -->
+                <div class="area" id="area-foh">
+                    <div class="area-title">🎚️ FOH – Front of House</div>
+
+                    <div class="switch-box">
+                        <div class="switch-label">🔀 SW-FOH (Cisco SG350)</div>
+                        <div class="switch-ip">Mgmt: 10.10.1.1/24 (VLAN 1)</div>
+                        <div class="switch-ports-row" id="swports-foh">
+                            <!-- rendered by JS -->
+                        </div>
+                        <div style="font-size:0.68rem; color:#94a3b8; margin-top:4px;">
+                            Ports 1–3: Access &nbsp;|&nbsp; Port 4 (T): Trunk → Core
+                        </div>
+                    </div>
+
+                    <div class="device" id="foh1">
+                        <div class="device-header">
+                            <div><div class="device-name">FOH Mischpult</div><div class="device-type">Dante Audio Console · Port 1</div></div>
+                        </div>
+                        <div class="device-meta">
+                            <span class="tag-pill tag-none" id="foh1-vtag">Kein VLAN</span>
+                            <span class="tag-pill tag-ip" id="foh1-ip" style="display:none"></span>
+                            <span class="tag-pill tag-port">Acc. untagged</span>
+                        </div>
+                    </div>
+
+                    <div class="device" id="foh2">
+                        <div class="device-header">
+                            <div><div class="device-name">FOH Lichtpult</div><div class="device-type">GrandMA3 · Port 2</div></div>
+                        </div>
+                        <div class="device-meta">
+                            <span class="tag-pill tag-none" id="foh2-vtag">Kein VLAN</span>
+                            <span class="tag-pill tag-ip" id="foh2-ip" style="display:none"></span>
+                            <span class="tag-pill tag-port">Acc. untagged</span>
+                        </div>
+                    </div>
+
+                    <div class="device" id="foh3">
+                        <div class="device-header">
+                            <div><div class="device-name">FOH Intercom Panel</div><div class="device-type">Riedel Artist · Port 3</div></div>
+                        </div>
+                        <div class="device-meta">
+                            <span class="tag-pill tag-none" id="foh3-vtag">Kein VLAN</span>
+                            <span class="tag-pill tag-ip" id="foh3-ip" style="display:none"></span>
+                            <span class="tag-pill tag-port">Acc. untagged</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stage -->
+                <div class="area" id="area-stage">
+                    <div class="area-title">🎭 Stage – Bühne</div>
+
+                    <div class="switch-box">
+                        <div class="switch-label">🔀 SW-Stage (Yamaha SWP1)</div>
+                        <div class="switch-ip">Mgmt: 10.10.1.2/24 (VLAN 1)</div>
+                        <div class="switch-ports-row" id="swports-stage"><!-- JS --></div>
+                        <div style="font-size:0.68rem; color:#94a3b8; margin-top:4px;">
+                            Ports 1–4: Access &nbsp;|&nbsp; Port 5 (T): Trunk → Core
+                        </div>
+                    </div>
+
+                    <div class="device" id="stage1">
+                        <div class="device-header">
+                            <div><div class="device-name">Stage Box Audio</div><div class="device-type">Dante I/O · Port 1</div></div>
+                        </div>
+                        <div class="device-meta">
+                            <span class="tag-pill tag-none" id="stage1-vtag">Kein VLAN</span>
+                            <span class="tag-pill tag-ip" id="stage1-ip" style="display:none"></span>
+                            <span class="tag-pill tag-port">Acc. untagged</span>
+                        </div>
+                    </div>
+
+                    <div class="device" id="stage2">
+                        <div class="device-header">
+                            <div><div class="device-name">Moving Lights</div><div class="device-type">artNET Fixtures · Port 2</div></div>
+                        </div>
+                        <div class="device-meta">
+                            <span class="tag-pill tag-none" id="stage2-vtag">Kein VLAN</span>
+                            <span class="tag-pill tag-ip" id="stage2-ip" style="display:none"></span>
+                            <span class="tag-pill tag-port">Acc. untagged</span>
+                        </div>
+                    </div>
+
+                    <div class="device" id="stage3">
+                        <div class="device-header">
+                            <div><div class="device-name">Stage Intercom Beltpack</div><div class="device-type">Riedel BP · Port 3</div></div>
+                        </div>
+                        <div class="device-meta">
+                            <span class="tag-pill tag-none" id="stage3-vtag">Kein VLAN</span>
+                            <span class="tag-pill tag-ip" id="stage3-ip" style="display:none"></span>
+                            <span class="tag-pill tag-port">Acc. untagged</span>
+                        </div>
+                    </div>
+
+                    <div class="device" id="stage4">
+                        <div class="device-header">
+                            <div><div class="device-name">Wireless Mic Receiver</div><div class="device-type">Shure ULXD · Port 4</div></div>
+                        </div>
+                        <div class="device-meta">
+                            <span class="tag-pill tag-none" id="stage4-vtag">Kein VLAN</span>
+                            <span class="tag-pill tag-ip" id="stage4-ip" style="display:none"></span>
+                            <span class="tag-pill tag-port">Acc. untagged</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Regie -->
+                <div class="area" id="area-regie">
+                    <div class="area-title">🎬 Regie – Control Room</div>
+
+                    <div class="switch-box">
+                        <div class="switch-label">🔀 SW-Core/Regie (Cisco SG550)</div>
+                        <div class="switch-ip">Mgmt: 10.10.1.3/24 (VLAN 1)</div>
+                        <div class="switch-ports-row" id="swports-regie"><!-- JS --></div>
+                        <div style="font-size:0.68rem; color:#94a3b8; margin-top:4px;">
+                            Ports 1–3: Access · Ports 4–5 (T): Trunk → FOH / Stage
+                        </div>
+                    </div>
+
+                    <div class="device" id="regie1">
+                        <div class="device-header">
+                            <div><div class="device-name">Recording Interface</div><div class="device-type">Dante I/O · Port 1</div></div>
+                        </div>
+                        <div class="device-meta">
+                            <span class="tag-pill tag-none" id="regie1-vtag">Kein VLAN</span>
+                            <span class="tag-pill tag-ip" id="regie1-ip" style="display:none"></span>
+                            <span class="tag-pill tag-port">Acc. untagged</span>
+                        </div>
+                    </div>
+
+                    <div class="device" id="regie2">
+                        <div class="device-header">
+                            <div><div class="device-name">Lighting Backup</div><div class="device-type">DMX Controller · Port 2</div></div>
+                        </div>
+                        <div class="device-meta">
+                            <span class="tag-pill tag-none" id="regie2-vtag">Kein VLAN</span>
+                            <span class="tag-pill tag-ip" id="regie2-ip" style="display:none"></span>
+                            <span class="tag-pill tag-port">Acc. untagged</span>
+                        </div>
+                    </div>
+
+                    <div class="device" id="regie3">
+                        <div class="device-header">
+                            <div><div class="device-name">Intercom Master</div><div class="device-type">Riedel Main Station · Port 3</div></div>
+                        </div>
+                        <div class="device-meta">
+                            <span class="tag-pill tag-none" id="regie3-vtag">Kein VLAN</span>
+                            <span class="tag-pill tag-ip" id="regie3-ip" style="display:none"></span>
+                            <span class="tag-pill tag-port">Acc. untagged</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /network-grid -->
+        </div>
+
+        <!-- Controls -->
+        <div class="section">
+            <h2>Steuerung</h2>
+            <div class="controls">
+                <div class="ctrl-row">
+                    <div class="ctrl-block">
+                        <label>Ausgewählte Geräte:</label>
+                        <div class="select-info" id="selection-info">Keine Geräte ausgewählt</div>
+                    </div>
+                    <div class="ctrl-block">
+                        <label>VLAN zuweisen:</label>
+                        <div class="btn-row">
+                            <button class="btn btn-audio"    id="btn-assign-audio">🔴 Audio (VLAN 10)</button>
+                            <button class="btn btn-light"    id="btn-assign-light">🟡 Light (VLAN 20)</button>
+                            <button class="btn btn-intercom" id="btn-assign-intercom">🔵 Intercom (VLAN 30)</button>
+                        </div>
+                    </div>
+                    <div class="ctrl-block">
+                        <label>Aktionen:</label>
+                        <div class="btn-row">
+                            <button class="btn btn-clear-sel" id="btn-deselect">✖ Auswahl aufheben</button>
+                            <button class="btn btn-reset" id="btn-reset">🔄 Alles zurücksetzen</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="test-panel">
+                    <strong>📡 Kommunikationstest</strong>
+                    <span style="color:#64748b; font-size:0.85rem; margin-left:0.5rem;">(genau 2 Geräte auswählen)</span>
+                    <div style="margin-top:0.5rem;">
+                        <button class="btn btn-test" id="btn-test">✅ Kommunikation testen</button>
+                    </div>
+                    <div class="test-result" id="test-result"></div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /tab-sim -->
+
+    <!-- ══════════════════════════════════════════
+         TAB 2 – Topologie
+    ══════════════════════════════════════════ -->
+    <div id="tab-topo" class="tab-content">
+        <div class="section">
+            <h2>Netzwerktopologie (live)</h2>
+            <p style="color:#64748b; margin-bottom:1rem;">Die Grafik aktualisiert sich, wenn Sie im Reiter <em>Geräte konfigurieren</em> VLANs zuweisen.</p>
+            <canvas id="topology-canvas" height="520"></canvas>
+            <div class="info-box" style="margin-top:1rem;">
+                <strong>🔗 Trunk-Verbindungen</strong> (gestrichelte violette Linie) übertragen alle VLANs als <strong>tagged</strong> (802.1Q).
+                Die Access-Ports geben Frames <strong>untagged</strong> an die Endgeräte weiter – der VLAN-Tag wird am Port hinzugefügt oder entfernt.
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         TAB 3 – Switch-Ports
+    ══════════════════════════════════════════ -->
+    <div id="tab-ports" class="tab-content">
+        <div class="section">
+            <h2>Switch-Port-Konfiguration</h2>
+            <p style="color:#64748b; margin-bottom:1.2rem;">Zeigt die aktuelle Port-Konfiguration basierend auf Ihren VLAN-Zuweisungen. Trunk-Ports transportieren alle zugewiesenen VLANs tagged (IEEE 802.1Q).</p>
+
+            <h3>🔀 SW-FOH – Cisco SG350 (Mgmt: 10.10.1.1/24)</h3>
+            <div class="port-table-wrap">
+                <table class="port-table" id="ptable-foh">
+                    <thead><tr><th>Port</th><th>Angeschlossenes Gerät</th><th>Modus</th><th>PVID / Access-VLAN</th><th>Erlaubte VLANs</th><th>Tagging</th><th>IP-Adresse Gerät</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <h3 style="margin-top:1.5rem;">🔀 SW-Stage – Yamaha SWP1 (Mgmt: 10.10.1.2/24)</h3>
+            <div class="port-table-wrap">
+                <table class="port-table" id="ptable-stage">
+                    <thead><tr><th>Port</th><th>Angeschlossenes Gerät</th><th>Modus</th><th>PVID / Access-VLAN</th><th>Erlaubte VLANs</th><th>Tagging</th><th>IP-Adresse Gerät</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <h3 style="margin-top:1.5rem;">🔀 SW-Core/Regie – Cisco SG550 (Mgmt: 10.10.1.3/24)</h3>
+            <div class="port-table-wrap">
+                <table class="port-table" id="ptable-regie">
+                    <thead><tr><th>Port</th><th>Angeschlossenes Gerät</th><th>Modus</th><th>PVID / Access-VLAN</th><th>Erlaubte VLANs</th><th>Tagging</th><th>IP-Adresse Gerät</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="info-box" style="margin-top:1.5rem;">
+                <strong>📌 Legende:</strong><br>
+                <strong>Access-Port (untagged):</strong> Das Gerät "weiß" nichts vom VLAN. Der Switch fügt den 802.1Q-Tag hinzu / entfernt ihn.<br>
+                <strong>Trunk-Port (tagged):</strong> Frames tragen den 802.1Q-Header mit VLAN-ID. Mehrere VLANs auf einem Kabel. Verbindung zwischen Switches.<br>
+                <strong>PVID</strong> (Port VLAN ID): Standard-VLAN für eingehende ungetaggte Frames.
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         TAB 4 – Aufgaben
+    ══════════════════════════════════════════ -->
+    <div id="tab-tasks" class="tab-content">
+        <div class="section">
+            <div class="task">
+                <strong>🎯 Arbeitsauftrag 1 – Grundkonfiguration</strong>
+                <p><strong>Sozialform:</strong> Einzelarbeit &nbsp;|&nbsp; <strong>Methode:</strong> Geführte Simulation</p>
+                <p><strong>Szenario:</strong> Sie richten das Netzwerk für ein Konzert in der Zenith-Halle ein. Dante-Audio, artNET-Licht und Riedel-Intercom müssen strikt getrennt werden.</p>
+                <ol>
+                    <li>Weisen Sie alle Audio-Geräte (Mischpult, Stage Box, Wireless Mic, Recording Interface) dem VLAN Audio zu.</li>
+                    <li>Weisen Sie alle Lichtgeräte (Lichtpult, Moving Lights, Lighting Backup) dem VLAN Light zu.</li>
+                    <li>Weisen Sie alle Intercom-Geräte (FOH Panel, Beltpack, Intercom Master) dem VLAN Intercom zu.</li>
+                    <li>Notieren Sie sich alle IP-Adressen und prüfen Sie: Liegen Audio-Geräte wirklich im Subnetz 10.10.10.0/24?</li>
+                    <li>Wechseln Sie zu "Switch-Port-Tabellen" und erklären Sie: Warum ist Port 4 des SW-FOH ein Trunk-Port?</li>
+                </ol>
+            </div>
+
+            <div class="task">
+                <strong>🎯 Arbeitsauftrag 2 – Kommunikationstests</strong>
+                <p><strong>Sozialform:</strong> Tandemarbeit &nbsp;|&nbsp; <strong>Methode:</strong> Think-Pair-Share</p>
+                <ol>
+                    <li>Testen Sie: FOH Mischpult ↔ Stage Box Audio. Was zeigt der 802.1Q-Frame-Pfad?</li>
+                    <li>Testen Sie: FOH Lichtpult ↔ FOH Intercom Panel. Warum scheitert die Kommunikation?</li>
+                    <li>Testen Sie: Moving Lights ↔ Lighting Backup (Regie). Beschreiben Sie den Pfad über zwei Trunk-Links.</li>
+                    <li>Welche VLAN-IDs sieht der Trunk-Port des SW-Core, wenn alle Geräte konfiguriert sind?</li>
+                </ol>
+            </div>
+
+            <div class="task">
+                <strong>🎯 Arbeitsauftrag 3 – Topologie-Analyse</strong>
+                <p><strong>Sozialform:</strong> Gruppenarbeit (3 Personen) &nbsp;|&nbsp; <strong>Methode:</strong> Expertenmethode</p>
+                <ol>
+                    <li>Öffnen Sie die Registerkarte "Netzwerktopologie" nach vollständiger Konfiguration.</li>
+                    <li>Zeichnen Sie die Topologie ab und markieren Sie Trunk- und Access-Links farblich.</li>
+                    <li>Was wäre der Unterschied, wenn alle Geräte im gleichen VLAN wären? (Broadcasts, Latenz)</li>
+                    <li>Recherchieren Sie: Warum ist Dante-Audio besonders latenzempfindlich – und warum hilft ein VLAN dabei?</li>
+                </ol>
+            </div>
+
+            <div class="question">
+                <strong>❓ Kontrollfragen:</strong>
+                <ol>
+                    <li>Was ist der Unterschied zwischen einem Access-Port und einem Trunk-Port?</li>
+                    <li>Welchen Ethertype hat ein 802.1Q-getaggtes Frame im Ethernet-Header?</li>
+                    <li>Können Geräte in VLAN 10 und VLAN 20 direkt kommunizieren? Was bräuchte man dafür?</li>
+                    <li>Warum hat jeder Bereich (FOH/Stage/Regie) einen eigenen Switch statt alles an einen?</li>
+                    <li>Was bedeutet PVID und warum ist sie für Access-Ports wichtig?</li>
+                    <li>Welche IP-Adresse würde einem Gerät in VLAN 30 zugewiesen, und was ist sein Default-Gateway?</li>
+                </ol>
+            </div>
+
+            <div class="info-box">
+                <strong>💡 Hintergrundwissen – IEEE 802.1Q VLAN-Tag:</strong><br>
+                Ein 802.1Q-Tag wird zwischen Quell-MAC und EtherType eingefügt (4 Byte).<br>
+                <code style="background:#e2e8f0; padding:2px 6px; border-radius:4px; font-family:monospace;">
+                    [Ethertype 0x8100 (2B)] [PCP 3bit | DEI 1bit | VID 12bit (2B)]
+                </code><br>
+                Der <strong>VID</strong> (VLAN Identifier, 12 Bit) erlaubt 4094 unterschiedliche VLANs (0 und 4095 reserviert).
+            </div>
+        </div>
+    </div>
+
+</div><!-- /container -->
+
+<script>
+/* ════════════════════════════════════════════════
+   DATA MODEL
+════════════════════════════════════════════════ */
+const VLAN_CFG = {
+    audio:    { id: 10, name: 'Audio',    subnet: '10.10.10', color: '#dc2626', light: '#fee2e2', textColor: '#991b1b' },
+    light:    { id: 20, name: 'Light',    subnet: '10.10.20', color: '#f59e0b', light: '#fef3c7', textColor: '#92400e' },
+    intercom: { id: 30, name: 'Intercom', subnet: '10.10.30', color: '#3b82f6', light: '#dbeafe', textColor: '#1e40af' }
+};
+
+const devices = {
+    foh1:   { name:'FOH Mischpult',         type:'Dante Audio Console', area:'foh',   port:1, ipSuffix:11, vlan:null },
+    foh2:   { name:'FOH Lichtpult',          type:'GrandMA3',            area:'foh',   port:2, ipSuffix:12, vlan:null },
+    foh3:   { name:'FOH Intercom Panel',     type:'Riedel Artist',       area:'foh',   port:3, ipSuffix:13, vlan:null },
+    stage1: { name:'Stage Box Audio',        type:'Dante I/O',           area:'stage', port:1, ipSuffix:21, vlan:null },
+    stage2: { name:'Moving Lights',          type:'artNET Fixtures',     area:'stage', port:2, ipSuffix:22, vlan:null },
+    stage3: { name:'Stage Intercom Beltpack',type:'Riedel BP',           area:'stage', port:3, ipSuffix:23, vlan:null },
+    stage4: { name:'Wireless Mic Receiver',  type:'Shure ULXD',          area:'stage', port:4, ipSuffix:24, vlan:null },
+    regie1: { name:'Recording Interface',    type:'Dante I/O',           area:'regie', port:1, ipSuffix:31, vlan:null },
+    regie2: { name:'Lighting Backup',        type:'DMX Controller',      area:'regie', port:2, ipSuffix:32, vlan:null },
+    regie3: { name:'Intercom Master',        type:'Riedel Main Station', area:'regie', port:3, ipSuffix:33, vlan:null }
+};
+
+const SWITCH_DEF = {
+    foh:   { label:'SW-FOH',        trunkCount:1, trunkLabel:'Trunk → Core' },
+    stage: { label:'SW-Stage',      trunkCount:1, trunkLabel:'Trunk → Core' },
+    regie: { label:'SW-Core/Regie', trunkCount:2, trunkLabel:'Trunk → FOH / Stage' }
+};
+
+let selected = [];  // device IDs
+
+/* ════════════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════════════ */
+function getIP(dev) {
+    if (!dev.vlan) return null;
+    return VLAN_CFG[dev.vlan].subnet + '.' + dev.ipSuffix;
+}
+function getGW(vlan) { return VLAN_CFG[vlan].subnet + '.1'; }
+
+function devicesInArea(area) {
+    return Object.entries(devices).filter(([,d]) => d.area === area);
+}
+
+/* ════════════════════════════════════════════════
+   RENDER DEVICE CARDS
+════════════════════════════════════════════════ */
+function renderDevices() {
+    Object.entries(devices).forEach(([id, dev]) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        // border / background
+        el.className = 'device' + (selected.includes(id) ? ' selected' : '') + (dev.vlan ? ' vlan-' + dev.vlan : '');
+
+        // VLAN tag
+        const vtag = document.getElementById(id + '-vtag');
+        if (vtag) {
+            if (dev.vlan) {
+                const v = VLAN_CFG[dev.vlan];
+                vtag.textContent = `VLAN ${v.id} · ${v.name}`;
+                vtag.className = `tag-pill tag-vlan-${dev.vlan}`;
+            } else {
+                vtag.textContent = 'Kein VLAN';
+                vtag.className = 'tag-pill tag-none';
+            }
+        }
+
+        // IP tag
+        const iptag = document.getElementById(id + '-ip');
+        if (iptag) {
+            const ip = getIP(dev);
+            if (ip) {
+                iptag.textContent = ip;
+                iptag.style.display = 'inline-flex';
+            } else {
+                iptag.style.display = 'none';
+            }
+        }
+    });
+}
+
+/* ════════════════════════════════════════════════
+   RENDER SWITCH PORT INDICATORS (colorful dots)
+════════════════════════════════════════════════ */
+function renderSwitchPorts() {
+    ['foh', 'stage', 'regie'].forEach(area => {
+        const row = document.getElementById('swports-' + area);
+        if (!row) return;
+        row.innerHTML = '';
+
+        const areaDevs = devicesInArea(area);
+        const trunkCount = SWITCH_DEF[area].trunkCount;
+        const totalPorts = areaDevs.length + trunkCount;
+
+        for (let i = 1; i <= totalPorts; i++) {
+            const port = document.createElement('div');
+            const isTrunk = i > areaDevs.length;
+            if (isTrunk) {
+                port.className = 'sw-port trunk';
+                port.title = `Port ${i}: Trunk (tagged VLAN 10,20,30)`;
+            } else {
+                const [, dev] = areaDevs[i - 1];
+                const cls = dev.vlan ? 'port-' + dev.vlan : 'unassigned';
+                port.className = 'sw-port ' + cls;
+                const vName = dev.vlan ? `VLAN ${VLAN_CFG[dev.vlan].id} (${VLAN_CFG[dev.vlan].name})` : 'kein VLAN';
+                port.title = `Port ${i}: ${dev.name} · Access ${vName} untagged`;
+            }
+            row.appendChild(port);
+        }
+    });
+}
+
+/* ════════════════════════════════════════════════
+   RENDER SWITCH PORT TABLES (tab 3)
+════════════════════════════════════════════════ */
+function renderPortTables() {
+    ['foh', 'stage', 'regie'].forEach(area => {
+        const tbody = document.querySelector(`#ptable-${area} tbody`);
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        const areaDevs = devicesInArea(area);
+        const trunkCount = SWITCH_DEF[area].trunkCount;
+        const usedVlans = [...new Set(areaDevs.map(([,d]) => d.vlan).filter(Boolean))].map(v => VLAN_CFG[v].id);
+
+        areaDevs.forEach(([, dev], idx) => {
+            const ip = getIP(dev);
+            const vId = dev.vlan ? VLAN_CFG[dev.vlan].id : '–';
+            const vName = dev.vlan ? VLAN_CFG[dev.vlan].name : '–';
+            const pvColor = dev.vlan ? `background:${VLAN_CFG[dev.vlan].light};color:${VLAN_CFG[dev.vlan].textColor};border:1px solid ${VLAN_CFG[dev.vlan].color};` : 'background:#e2e8f0;color:#64748b;';
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${idx + 1}</strong></td>
+                <td>${dev.name}<br><span style="color:#94a3b8;font-size:0.78rem;">${dev.type}</span></td>
+                <td><span class="mode-access">Access</span></td>
+                <td><span class="pvid-badge" style="${pvColor}">${vId}${dev.vlan ? ' ('+vName+')' : ''}</span></td>
+                <td>${dev.vlan ? VLAN_CFG[dev.vlan].id : '–'}</td>
+                <td>Untagged (PVID)</td>
+                <td style="font-family:'Consolas',monospace; font-size:0.82rem;">${ip ? ip : '<span style="color:#94a3b8;">nicht vergeben</span>'}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // Trunk ports
+        const trunkVlans = usedVlans.length ? usedVlans.join(', ') : '(keine VLANs aktiv)';
+        const trunkDest = area === 'regie' ? 'SW-FOH &amp; SW-Stage' : 'SW-Core/Regie';
+        for (let t = 1; t <= trunkCount; t++) {
+            const tr = document.createElement('tr');
+            tr.className = 'trunk-row';
+            tr.innerHTML = `
+                <td><strong>${areaDevs.length + t}</strong> (T)</td>
+                <td>Trunk → ${trunkDest}</td>
+                <td><span class="mode-trunk">Trunk</span></td>
+                <td><span class="pvid-badge" style="background:#ede9fe;color:#5b21b6;border:1px solid #7c3aed;">1</span></td>
+                <td>${trunkVlans} <em style="color:#7c3aed;">(tagged)</em></td>
+                <td>802.1Q Tagged</td>
+                <td style="color:#94a3b8; font-size:0.8rem;">Switch-to-Switch</td>
+            `;
+            tbody.appendChild(tr);
+        }
+    });
+}
+
+/* ════════════════════════════════════════════════
+   TOPOLOGY CANVAS
+════════════════════════════════════════════════ */
+function drawTopology() {
+    const canvas = document.getElementById('topology-canvas');
+    if (!canvas) return;
+    const W = canvas.parentElement.clientWidth - 40;
+    canvas.width = W;
+    const H = 520;
+    canvas.height = H;
+    const ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, W, H);
+
+    // Background
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(0, 0, W, H);
+
+    // --- Layout positions ---
+    const swY = 130;
+    const SWW = 150, SWH = 60;
+
+    const fohX  = W * 0.15;
+    const coreX = W * 0.50;
+    const stagX = W * 0.80;
+
+    // Switches
+    function drawSwitch(x, y, label, mgmtIp) {
+        const cx = x - SWW / 2;
+        ctx.fillStyle = '#1e293b';
+        roundRect(ctx, cx, y, SWW, SWH, 8);
+        ctx.fillStyle = '#1e293b';
+        ctx.fill();
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        // Ports row
+        const portW = 14, portH = 9, gap = 4;
+        const ports = 5;
+        const startX = cx + (SWW - (ports * (portW + gap) - gap)) / 2;
+        for (let i = 0; i < ports; i++) {
+            ctx.fillStyle = i === ports - 1 ? '#6366f1' : '#475569';
+            roundRect(ctx, startX + i * (portW + gap), y + SWH - 18, portW, portH, 2);
+            ctx.fill();
+        }
+
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 11px Segoe UI';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, x, y + 20);
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '9px Consolas';
+        ctx.fillText(mgmtIp, x, y + 34);
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
+    }
+
+    // Trunk line
+    function drawTrunk(x1, y1, x2, y2) {
+        ctx.save();
+        ctx.setLineDash([10, 6]);
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        ctx.restore();
+
+        // Label
+        const mx = (x1 + x2) / 2;
+        const my = (y1 + y2) / 2 - 25;
+        ctx.fillStyle = '#4338ca';
+        ctx.font = 'bold 9px Segoe UI';
+        ctx.textAlign = 'center';
+        ctx.fillText('Trunk (802.1Q)', mx, my);
+        ctx.font = '8px Consolas';
+        ctx.fillStyle = '#6d28d9';
+        ctx.fillText('tagged: 10,20,30', mx, my + 11);
+    }
+
+    // Device box
+    function drawDevice(x, y, label, vlan) {
+        const bw = 120, bh = 38;
+        const bx = x - bw / 2;
+        const color = vlan ? VLAN_CFG[vlan].color : '#94a3b8';
+        const bg    = vlan ? VLAN_CFG[vlan].light  : '#f1f5f9';
+
+        ctx.fillStyle = bg;
+        roundRect(ctx, bx, y, bw, bh, 6);
+        ctx.fill();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = '#1e293b';
+        ctx.font = '11px Segoe UI';
+        ctx.textAlign = 'center';
+        const shortLabel = label.length > 18 ? label.substring(0, 16) + '…' : label;
+        ctx.fillText(shortLabel, x, y + 14);
+
+        if (vlan) {
+            const v = VLAN_CFG[vlan];
+            ctx.fillStyle = color;
+            ctx.font = 'bold 8.5px Consolas';
+            ctx.fillText(`VLAN ${v.id} · ${getIP(Object.values(devices).find(d => d.name.includes(label.split(' ')[0])) || {vlan, ipSuffix:0})}`, x, y + 27);
+        } else {
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '9px Segoe UI';
+            ctx.fillText('kein VLAN', x, y + 27);
+        }
+    }
+
+    // Line from switch to device
+    function lineToDevice(swX, swY, devX, devY) {
+        ctx.save();
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(swX, swY + SWH);
+        ctx.lineTo(devX, devY);
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    // --- Draw trunks ---
+    drawTrunk(fohX + SWW/2, swY + SWH/2, coreX - SWW/2, swY + SWH/2);
+    drawTrunk(coreX + SWW/2, swY + SWH/2, stagX - SWW/2, swY + SWH/2);
+
+    // --- Draw devices ---
+    const fohDevs   = devicesInArea('foh');
+    const stageDevs = devicesInArea('stage');
+    const regieDevs = devicesInArea('regie');
+
+    const devStartY = swY + SWH + 55;
+    const devGapY   = 65;
+
+    fohDevs.forEach(([id, dev], i) => {
+        const dy = devStartY + i * devGapY;
+        lineToDevice(fohX, swY, fohX, dy);
+        drawDevice(fohX, dy, dev.name, dev.vlan);
+    });
+    stageDevs.forEach(([id, dev], i) => {
+        const dy = devStartY + i * devGapY;
+        lineToDevice(stagX, swY, stagX, dy);
+        drawDevice(stagX, dy, dev.name, dev.vlan);
+    });
+    regieDevs.forEach(([id, dev], i) => {
+        const dy = devStartY + i * devGapY;
+        lineToDevice(coreX, swY, coreX, dy);
+        drawDevice(coreX, dy, dev.name, dev.vlan);
+    });
+
+    // --- Draw switches (on top) ---
+    drawSwitch(fohX,  swY - SWH/2, 'SW-FOH',        '10.10.1.1/24');
+    drawSwitch(coreX, swY - SWH/2, 'SW-Core / Regie','10.10.1.3/24');
+    drawSwitch(stagX, swY - SWH/2, 'SW-Stage',       '10.10.1.2/24');
+
+    // Legend
+    const ley = H - 55;
+    ctx.font = 'bold 11px Segoe UI'; ctx.fillStyle = '#334155'; ctx.textAlign = 'left';
+    ctx.fillText('Legende:', 20, ley);
+    const lgItems = [
+        { color: '#dc2626', label: 'VLAN 10 Audio' },
+        { color: '#f59e0b', label: 'VLAN 20 Light' },
+        { color: '#3b82f6', label: 'VLAN 30 Intercom' },
+        { color: '#94a3b8', label: 'Kein VLAN' }
+    ];
+    let lx = 100;
+    lgItems.forEach(l => {
+        ctx.fillStyle = l.color;
+        ctx.fillRect(lx, ley - 10, 14, 14);
+        ctx.fillStyle = '#334155';
+        ctx.font = '10px Segoe UI';
+        ctx.fillText(l.label, lx + 18, ley + 2);
+        lx += 110;
+    });
+
+    // Trunk legend
+    ctx.save();
+    ctx.setLineDash([6, 4]);
+    ctx.strokeStyle = '#6366f1';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(20, ley + 20);
+    ctx.lineTo(54, ley + 20);
+    ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = '#334155';
+    ctx.font = '10px Segoe UI';
+    ctx.fillText('Trunk-Link (802.1Q tagged)', 60, ley + 24);
+}
+
+/* ════════════════════════════════════════════════
+   COMMUNICATION TEST
+════════════════════════════════════════════════ */
+function testCommunication() {
+    const resultDiv = document.getElementById('test-result');
+    if (selected.length !== 2) {
+        resultDiv.className = 'test-result test-fail';
+        resultDiv.innerHTML = '⚠️ Bitte genau <strong>2 Geräte</strong> auswählen!';
+        resultDiv.style.display = 'block';
+        return;
+    }
+
+    const d1 = devices[selected[0]];
+    const d2 = devices[selected[1]];
+
+    if (!d1.vlan || !d2.vlan) {
+        resultDiv.className = 'test-result test-fail';
+        resultDiv.innerHTML =
+            `❌ <strong>Kein VLAN zugewiesen!</strong><br>` +
+            `${d1.name}: ${d1.vlan || '<em>—</em>'} &nbsp;|&nbsp; ${d2.name}: ${d2.vlan || '<em>—</em>'}<br>` +
+            `Beide Geräte müssen einem VLAN zugewiesen sein.`;
+        resultDiv.style.display = 'block';
+        return;
+    }
+
+    const ip1 = getIP(d1), ip2 = getIP(d2);
+    const v1 = VLAN_CFG[d1.vlan], v2 = VLAN_CFG[d2.vlan];
+    const sameVlan = d1.vlan === d2.vlan;
+    const sameSw   = d1.area === d2.area;
+
+    if (sameVlan) {
+        // Build path
+        let pathHTML = buildPath(d1, d2, ip1, ip2, v1);
+        let frameHTML = buildFrame802q(v1.id);
+
+        resultDiv.className = 'test-result test-ok';
+        resultDiv.innerHTML =
+            `✅ <strong>Kommunikation erfolgreich!</strong><br>` +
+            `<strong>${d1.name}</strong> (${ip1}) &nbsp;↔&nbsp; <strong>${d2.name}</strong> (${ip2})<br>` +
+            `Beide im <span style="font-weight:700;color:${v1.color}">VLAN ${v1.id} (${v1.name})</span> · Subnetz ${v1.subnet}.0/24 · Gateway ${getGW(d1.vlan)}<br><br>` +
+            `<strong>Übertragungspfad:</strong><br>` + pathHTML +
+            (sameSw ? '<br><em style="font-size:0.8rem; color:#065f46;">★ Beide Geräte am selben Switch – kein Trunk nötig</em>' : '') +
+            `<br><br><strong>802.1Q Frame (auf dem Trunk-Link):</strong>` +
+            frameHTML;
+    } else {
+        resultDiv.className = 'test-result test-fail';
+        resultDiv.innerHTML =
+            `❌ <strong>Kommunikation blockiert!</strong><br>` +
+            `<strong>${d1.name}</strong>: VLAN ${v1.id} (${v1.name}) · ${ip1}<br>` +
+            `<strong>${d2.name}</strong>: VLAN ${v2.id} (${v2.name}) · ${ip2}<br><br>` +
+            `Geräte in unterschiedlichen VLANs kommunizieren <strong>nicht direkt</strong>.<br>` +
+            `Benötigt: Layer-3-Switch oder Router mit Inter-VLAN-Routing<br>` +
+            `<em style="font-size:0.82rem;">Routing-Pfad wäre: ${ip1} → GW ${getGW(d1.vlan)} → Router → GW ${getGW(d2.vlan)} → ${ip2}</em>`;
+    }
+    resultDiv.style.display = 'block';
+}
+
+function buildPath(d1, d2, ip1, ip2, v) {
+    const sw1 = 'SW-' + { foh:'FOH', stage:'Stage', regie:'Core/Regie' }[d1.area];
+    const sw2 = 'SW-' + { foh:'FOH', stage:'Stage', regie:'Core/Regie' }[d2.area];
+
+    let html = `<div class="frame-path">`;
+    html += `<span class="path-node">${d1.name}<br><small>${ip1}</small></span>`;
+    html += `<span class="path-arrow">→</span>`;
+    html += `<span class="path-node">${sw1}<br><small>Port ${d1.port}: Access VLAN ${v.id}</small></span>`;
+
+    if (d1.area !== d2.area) {
+        html += `<span class="path-arrow">→</span>`;
+        html += `<span class="path-node path-tag-add"style="background:${v.light};border-color:${v.color};color:${v.textColor};">Tag hinzufügen<br><small>0x8100 VID=${v.id}</small></span>`;
+        html += `<span class="path-arrow">→</span>`;
+
+        if (d1.area !== 'regie' && d2.area !== 'regie') {
+            // FOH↔Stage: via core
+            html += `<span class="path-node">SW-Core/Regie<br><small>Trunk-Port tagged</small></span>`;
+            html += `<span class="path-arrow">→</span>`;
+        }
+
+        html += `<span class="path-node">${sw2}<br><small>Trunk → Access Port ${d2.port}</small></span>`;
+        html += `<span class="path-arrow">→</span>`;
+        html += `<span class="path-node path-tag-rem">Tag entfernen<br><small>Frame untagged</small></span>`;
+    } else {
+        html += `<span class="path-arrow">→</span>`;
+        html += `<span class="path-node">Port ${d2.port}<br><small>Access VLAN ${v.id}</small></span>`;
+    }
+
+    html += `<span class="path-arrow">→</span>`;
+    html += `<span class="path-node">${d2.name}<br><small>${ip2}</small></span>`;
+    html += `</div>`;
+    return html;
+}
+
+function buildFrame802q(vlanId) {
+    const hex = vlanId.toString(16).toUpperCase().padStart(3,'0');
+    return `
+    <div class="frame-viz">
+        <div class="frame-row">
+            <div class="frame-field ff-dst">Ziel-MAC<br>6 Byte</div>
+            <div class="frame-field ff-src">Quell-MAC<br>6 Byte</div>
+            <div class="frame-field ff-tag">EtherType<br>0x8100<br><small>802.1Q</small></div>
+            <div class="frame-field ff-vid">TCI<br>PCP|DEI|VID<br><small>VID=${vlanId} (0x${hex})</small></div>
+            <div class="frame-field ff-eth">EtherType<br>0x0800<br><small>IPv4</small></div>
+            <div class="frame-field ff-pay">Payload<br>≤1500 Byte<br><small>IP-Paket</small></div>
+            <div class="frame-field ff-fcs">FCS<br>4 Byte</div>
+        </div>
+        <div style="font-size:0.72rem; color:#64748b; margin-top:4px;">
+            ↑ 802.1Q-Tag (4 Byte) wird am Trunk-Port eingefügt und am Access-Port des Ziel-Switches wieder entfernt.
+        </div>
+    </div>`;
+}
+
+/* ════════════════════════════════════════════════
+   SELECTION & ASSIGNMENT
+════════════════════════════════════════════════ */
+function toggleSelect(id) {
+    if (selected.includes(id)) {
+        selected = selected.filter(x => x !== id);
+    } else {
+        selected.push(id);
+    }
+    updateSelectionInfo();
+    renderDevices();
+}
+
+function updateSelectionInfo() {
+    const el = document.getElementById('selection-info');
+    if (selected.length === 0) {
+        el.textContent = 'Keine Geräte ausgewählt';
+    } else {
+        el.textContent = selected.map(id => devices[id].name).join(', ');
+    }
+}
+
+function assignVLAN(vlan) {
+    if (selected.length === 0) { showToast('⚠️ Bitte zuerst Geräte auswählen!', '#f59e0b'); return; }
+    selected.forEach(id => { devices[id].vlan = vlan; });
+    selected = [];
+    updateAll();
+    showToast(`✅ ${VLAN_CFG[vlan].name} VLAN (${VLAN_CFG[vlan].id}) zugewiesen!`, VLAN_CFG[vlan].color);
+}
+
+function resetAll() {
+    Object.keys(devices).forEach(id => { devices[id].vlan = null; });
+    selected = [];
+    document.getElementById('test-result').style.display = 'none';
+    updateAll();
+    showToast('🔄 Simulator zurückgesetzt', '#64748b');
+}
+
+function updateAll() {
+    renderDevices();
+    renderSwitchPorts();
+    renderPortTables();
+    if (document.getElementById('tab-topo').classList.contains('active')) drawTopology();
+}
+
+/* ════════════════════════════════════════════════
+   TABS
+════════════════════════════════════════════════ */
+function switchTab(id) {
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+        b.classList.toggle('active', ['sim','topo','ports','tasks'][i] === id);
+    });
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    if (id === 'topo') drawTopology();
+    if (id === 'ports') renderPortTables();
+}
+
+/* ════════════════════════════════════════════════
+   TOAST
+════════════════════════════════════════════════ */
+function showToast(msg, color) {
+    const t = document.createElement('div');
+    t.innerHTML = msg;
+    Object.assign(t.style, {
+        position:'fixed', top:'20px', right:'20px',
+        padding:'0.8rem 1.5rem', borderRadius:'8px', fontWeight:'700',
+        background: color, color:'white', zIndex:'9999',
+        boxShadow:'0 4px 14px rgba(0,0,0,0.25)', fontSize:'0.95rem'
+    });
+    document.body.appendChild(t);
+    setTimeout(() => { t.style.transition='opacity 0.4s'; t.style.opacity='0'; setTimeout(() => t.remove(), 400); }, 2200);
+}
+
+/* ════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+    // Device click handlers
+    Object.keys(devices).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', () => toggleSelect(id));
+    });
+
+    document.getElementById('btn-assign-audio').addEventListener('click', () => assignVLAN('audio'));
+    document.getElementById('btn-assign-light').addEventListener('click', () => assignVLAN('light'));
+    document.getElementById('btn-assign-intercom').addEventListener('click', () => assignVLAN('intercom'));
+    document.getElementById('btn-test').addEventListener('click', testCommunication);
+    document.getElementById('btn-reset').addEventListener('click', resetAll);
+    document.getElementById('btn-deselect').addEventListener('click', () => {
+        selected = [];
+        updateSelectionInfo();
+        renderDevices();
+    });
+
+    // Resize topology
+    window.addEventListener('resize', () => {
+        if (document.getElementById('tab-topo').classList.contains('active')) drawTopology();
+    });
+
+    updateAll();
+});
+</script>
+</body>
+</html>
