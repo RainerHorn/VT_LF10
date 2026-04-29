@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redundanz in der Veranstaltungstechnik - Block 2 Lehrerversion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2563eb;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.1rem !important;
+        }
+
+        h2 {
+            color: #1d4ed8;
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 0.1rem !important;
+            margin-top: 2rem;
+        }
+
+        h3 {
+            color: #1e40af;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.1rem !important;
+            margin-top: 1rem;
+        }
+
+        h4 {
+            color: #c62828;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem !important;
+            margin-top: 0;
+        }
+
+        .section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .intro {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-left: 4px solid #6b7280;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(107, 114, 128, 0.1);
+        }
+
+        .teacher-solution {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-left: 4px solid #d32f2f;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(211, 47, 47, 0.1);
+        }
+
+        .tech-specs {
+            background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+            border-left: 4px solid #0288d1;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(2, 136, 209, 0.1);
+        }
+
+        .tech-specs h4 {
+            color: #01579b;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #444;
+            line-height: 1.7;
+        }
+
+        ul, ol {
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        a {
+            color: #1d4ed8;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        th {
+            background: #1d4ed8;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        code {
+            background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+            color: #01579b;
+            padding: 3px 6px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+            font-weight: 600;
+            border: 1px solid #81d4fa;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .header,
+            .section {
+                padding: 1.25rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.35rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 Redundanz in der Veranstaltungstechnik - Block 2 (LEHRERVERSION)</h1>
+            <p><strong>Lösungsübersicht zu Fehleranalyse, Link Aggregation und betrieblicher Bewertung</strong></p>
+        </div>
+
+        <div class="section">
+            <div class="intro">
+                <p><strong>Hinweis:</strong> Diese Lehrerversion beschränkt sich bewusst auf <strong>Erwartungshorizonte, Musterlösungen und Bewertungshinweise</strong>. Die vollständigen Aufgabenstellungen stehen in der Schülerversion <a href="Block2_Redundanz_Vertiefung.html" target="_blank" rel="noopener">Block2_Redundanz_Vertiefung.html</a>.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📚 Phase 1: Informieren - Lösungen</h2>
+
+            <div class="teacher-solution">
+                <h4>🎯 Lösung zu Arbeitsauftrag 1: Störungsprotokolle auswerten</h4>
+                <p><strong>Fall A:</strong> Ein einzelnes LACP-Mitglied fällt aus. Der Port-Channel bleibt aktiv, daher liegt <strong>kein Totalausfall</strong> vor. Redundanzmechanismus: <strong>Link Aggregation / LACP</strong>. Produktionsstopp: <strong>nein</strong>, aber Restkapazität beobachten.</p>
+                <p><strong>Fall B:</strong> Ein alternativer Port wechselt wegen eines Topology Change in den Forwarding-Zustand. Das spricht für ein <strong>RSTP-Failover</strong>. Produktionsstopp: <strong>nein</strong>, kurze Unterbrechung möglich, aber Dienst bleibt stabil.</p>
+                <p><strong>Fall C:</strong> Ein kompletter Access-Switch oder der letzte aktive Pfad zur Stagebox ist verloren. Da ausdrücklich <code>No active uplink</code> gemeldet wird, liegt ein <strong>kritischer Pfadverlust</strong> vor. Produktionsstopp: <strong>ja, sofortige Eskalation</strong>.</p>
+
+                <p><strong>Kernpunkte für die Bewertung:</strong></p>
+                <ul>
+                    <li>Unterscheidung zwischen Kabel-/Link-Ausfall und Geräte-Ausfall</li>
+                    <li>Korrekte Zuordnung von LACP bzw. RSTP</li>
+                    <li>Betriebliche Bewertung: weiterarbeiten oder sofort eingreifen</li>
+                </ul>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartungshorizont Phase 1</h4>
+                <ul>
+                    <li><strong>Log-Unterschied:</strong> Bei Link-Ausfall verschwindet typischerweise nur ein einzelner Port oder ein LACP-Member; bei Switch-Ausfall verschwinden mehrere Nachbarn und Dienste gleichzeitig.</li>
+                    <li><strong>Topology Change:</strong> Bedeutet zunächst eine Neuberechnung des Baums, nicht automatisch den vollständigen Dienstausfall.</li>
+                    <li><strong>Letzter aktiver Pfad:</strong> Die eindeutigste Meldung ist ein Hinweis wie <code>No active uplink</code> oder ein kompletter Verlust des Dienstpfads.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🗺️ Phase 2: Planen - Lösungen</h2>
+
+            <div class="teacher-solution">
+                <h4>🎯 Zentrale Fachaussage zu LACP</h4>
+                <p><strong>LACP</strong> erhöht Bandbreite und schützt gegen den Ausfall einzelner Leitungen innerhalb desselben Bündels. Es ersetzt jedoch <strong>keine Geräte-Redundanz</strong>, weil ein Ausfall des kompletten Switches weiterhin alle dort angeschlossenen LACP-Links gleichzeitig betrifft.</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kriterium</th>
+                            <th>LACP</th>
+                            <th>Pfad- / Geräte-Redundanz</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Schützt gegen einzelnen Kabelausfall</td>
+                            <td>Ja</td>
+                            <td>Ja</td>
+                        </tr>
+                        <tr>
+                            <td>Schützt gegen Switch-Ausfall</td>
+                            <td>Nein, nicht auf demselben Gerät</td>
+                            <td>Ja, bei getrennten Geräten</td>
+                        </tr>
+                        <tr>
+                            <td>Erhöht Bandbreite</td>
+                            <td>Ja</td>
+                            <td>Nicht zwingend</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Muster-Testmatrix zu Arbeitsauftrag 2</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Testfall</th>
+                            <th>Erwartetes Verhalten</th>
+                            <th>Nachweis</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Ein LACP-Mitglied trennen</td>
+                            <td>Port-Channel bleibt up, reduzierte Kapazität</td>
+                            <td>Log-Meldung zum Member, Dienst weiter aktiv</td>
+                        </tr>
+                        <tr>
+                            <td>Ein redundanter Uplink ausfallen lassen</td>
+                            <td>Alternativer Pfad übernimmt</td>
+                            <td>Topology Change, neuer aktiver Pfad</td>
+                        </tr>
+                        <tr>
+                            <td>Distribution-Switch ausfallen lassen</td>
+                            <td>Verkehr wird über den zweiten Distributionspfad umgeleitet</td>
+                            <td>Simulator-Log, Paketfluss bleibt erhalten</td>
+                        </tr>
+                        <tr>
+                            <td>Access-Switch ausfallen lassen</td>
+                            <td>Nur bei echter alternativer Anbindung bleibt Dienst verfügbar</td>
+                            <td>Erreichbarkeit der Stagebox prüfen</td>
+                        </tr>
+                        <tr>
+                            <td>Letzten aktiven Pfad trennen</td>
+                            <td>Dienst fällt aus</td>
+                            <td>Pakete platzen, aktiver Pfad leer, Log-Eskalation</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚖️ Phase 3: Entscheiden - Lösungen</h2>
+
+            <div class="teacher-solution">
+                <h4>🎯 Priorisierung zu Arbeitsauftrag 3</h4>
+                <p><strong>Empfohlene Reihenfolge:</strong></p>
+                <ol>
+                    <li><strong>Zweiter Distribution-Switch inkl. SFPs</strong> - größter Zugewinn an echter Geräte- und Pfad-Redundanz</li>
+                    <li><strong>Zweites Medienserver-Netzteil + separater USV-Pfad</strong> - kritischer Dienst wird gegen Hardware- und Versorgungsfehler abgesichert</li>
+                    <li><strong>Zentrales Monitoring / Syslog / Alarmierung</strong> - verkürzt Diagnose- und Reaktionszeit deutlich</li>
+                </ol>
+
+                <p><strong>Didaktisch wichtiger Punkt:</strong> Zusätzliche Glasfaserstrecken für LACP sind nützlich, aber sie lösen <strong>kein Geräteproblem</strong>. Genau das sollen die Lernenden hier erkennen.</p>
+                <p><strong>Niedriger Nutzen:</strong> Ein unmanaged Switch im Backstage-Bereich erzeugt mehr Ports, aber praktisch keine belastbare Redundanz.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚙️ Phase 4: Ausführen - Lösungen</h2>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartete Beobachtungen im Simulator (Material 7a)</h4>
+                <ul>
+                    <li><strong>Einzelner Uplink down:</strong> Dienstpfad bleibt erhalten oder wird kurz umgelegt; Log zeigt Leitungsunterbrechung und Re-Konvergenz.</li>
+                    <li><strong>Access-Switch down:</strong> Bei vorhandener alternativer Anbindung übernimmt der zweite Pfad; ohne Alternativpfad wird das Segment unerreichbar.</li>
+                    <li><strong>Vollständiger Pfadverlust:</strong> Kein aktiver Dienstpfad mehr, Pakete / Briefe platzen sichtbar, Log meldet fehlenden redundanten Pfad.</li>
+                    <li><strong>Wiederherstellung:</strong> Netz geht zurück in stabilen Zustand; bei Rückkehr von Core-A wird dieser wegen der niedrigeren Priorität wieder Root Bridge.</li>
+                </ul>
+            </div>
+
+            <div class="tech-specs">
+                <h4>🔧 Bewertungshinweis</h4>
+                <p>Wichtig ist nicht, dass jeder Lernende exakt dieselben Klickfolgen nutzt. Entscheidend ist, dass <strong>Symptom, Netzreaktion und betriebliche Bedeutung</strong> sauber beschrieben werden.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔍 Phase 5: Kontrollieren - Lösungen</h2>
+
+            <div class="teacher-solution">
+                <h4>🎯 Go / No-Go-Entscheidung</h4>
+                <p><strong>Erwartete Entscheidung:</strong> <strong>No-Go</strong></p>
+                <p><strong>Begründung:</strong> Der kritische Punkt ist der Befund, dass bei Ausfall eines Access-Switches ein Stage-Rack <strong>18 Sekunden ohne alternativen Pfad</strong> bleibt. Das ist für eine Live-Produktion nicht belastbar. Zusätzlich fehlt eine automatische Alarmweiterleitung, wodurch die Reaktionszeit unnötig steigt.</p>
+
+                <p><strong>Sofortmaßnahmen vor Einlass:</strong></p>
+                <ul>
+                    <li>Alternative Anbindung oder Ersatzpfad für das betroffene Stage-Rack herstellen</li>
+                    <li>Alarmierung an verantwortliche Techniker aktivieren oder notfalls organisatorisch absichern</li>
+                </ul>
+
+                <p><strong>Mittelfristige Maßnahme:</strong> Monitoring- und Eskalationskette standardisieren sowie die betroffene Access-Ebene strukturell redundant ausbauen.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🧾 Phase 6: Bewerten - Lösungen</h2>
+
+            <div class="teacher-solution">
+                <h4>🎯 Musterstruktur für den Kurzbericht</h4>
+                <ol>
+                    <li><strong>Fehlerbild:</strong> Ausfall eines Access-Switches bzw. Verlust des letzten aktiven Pfads</li>
+                    <li><strong>Auswirkung:</strong> Stagebox / Video-Feed kurzzeitig oder vollständig nicht erreichbar</li>
+                    <li><strong>Sofortmaßnahme:</strong> Umschalten auf alternativen Pfad oder Wiederherstellung der Verbindung</li>
+                    <li><strong>Bewertung:</strong> Vorhandene Redundanz teilweise wirksam, aber nicht für alle Segmente ausreichend</li>
+                    <li><strong>Verbesserung:</strong> Ausbau der Access-Redundanz und verbindliche Alarmierung</li>
+                </ol>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Bewertungsvorschlag für die Praxisaufgabe</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kriterium</th>
+                            <th>Punkte</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Fehlerursache fachlich korrekt benannt</td>
+                            <td>0-5</td>
+                        </tr>
+                        <tr>
+                            <td>Betriebliche Auswirkung realistisch beschrieben</td>
+                            <td>0-5</td>
+                        </tr>
+                        <tr>
+                            <td>Sofortmaßnahmen sinnvoll und priorisiert</td>
+                            <td>0-5</td>
+                        </tr>
+                        <tr>
+                            <td>Redundanz fachlich bewertet</td>
+                            <td>0-5</td>
+                        </tr>
+                        <tr>
+                            <td>Verbesserungsmaßnahme klar begründet</td>
+                            <td>0-5</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><strong>Maximal:</strong> 25 Punkte</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        try {
+            const { MMBBSBOT } = await import('https://dev.mm-bbs.de:8085/mmbbs-bot.js');
+            const htmlContent = document.querySelector('.container')?.innerHTML || '';
+
+            new MMBBSBOT({
+                host: 'dev.mm-bbs.de',
+                protocol: 'https',
+                port: 8085,
+                opener: 'Hallo! Ich unterstütze Sie bei den Lösungen zu Block 2. Wie kann ich helfen?',
+                chat_icon: '',
+                chat_icon_style: 'border-radius: 50%; width: 40px; height: 40px;',
+                title: 'VT GPT',
+                task: htmlContent,
+                hints: 'Sie unterstützen Lehrkräfte im Bereich Veranstaltungstechnik. Liefern Sie kompakte fachliche Erläuterungen zu Fehleranalyse, LACP, Redundanz und Bewertung von Netzwerkausfällen.',
+                cookie: document.cookie
+            });
+        } catch (error) {
+            console.error('Fehler beim Laden des Chatbots:', error);
+        }
+    </script>
+</body>
+</html>

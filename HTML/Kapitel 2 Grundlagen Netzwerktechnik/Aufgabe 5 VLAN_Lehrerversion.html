@@ -476,6 +476,128 @@
                     </tbody>
                 </table>
 
+                <h4>VLAN99 Management - Konfiguration für Vollzugriff</h4>
+                
+                <div class="tech-specs">
+                    <h4>🔧 Funktionsweise des Management-VLANs</h4>
+                    <p>Das <strong>VLAN99 (MANAGEMENT)</strong> ist als zentrales Administrationsnetzwerk konzipiert und benötigt <strong>lesenden und schreibenden Zugriff auf alle anderen VLANs</strong>. Dies wird durch folgende Konfiguration erreicht:</p>
+                </div>
+
+                <p><strong>1. Layer-3-Switch mit Inter-VLAN-Routing</strong></p>
+                <ul>
+                    <li>Der Core-Switch muss als <strong>Layer-3-Switch</strong> fungieren (Routing zwischen VLANs)</li>
+                    <li>Jedes VLAN erhält ein <strong>Switch Virtual Interface (SVI)</strong> am Core-Switch</li>
+                    <li>Beispiel-Konfiguration (Cisco-Syntax):</li>
+                </ul>
+                <code style="display: block; white-space: pre; background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+interface Vlan10
+ description LICHT-VLAN
+ ip address 10.10.10.1 255.255.255.0
+
+interface Vlan20
+ description AUDIO-VLAN
+ ip address 10.10.20.1 255.255.255.0
+
+interface Vlan30
+ description VIDEO-VLAN
+ ip address 10.10.30.1 255.255.255.0
+
+interface Vlan40
+ description PRODUCTION-VLAN
+ ip address 10.10.40.1 255.255.255.0
+
+interface Vlan50
+ description WORKSHOP-VLAN
+ ip address 10.10.50.1 255.255.255.0
+
+interface Vlan99
+ description MANAGEMENT-VLAN
+ ip address 10.10.99.1 255.255.255.0
+
+interface Vlan100
+ description GUEST-VLAN
+ ip address 10.10.100.1 255.255.252.0
+
+! IP-Routing aktivieren
+ip routing
+                </code>
+
+                <p><strong>2. Access Control Lists (ACLs) für VLAN99</strong></p>
+                <p>Um dem Management-VLAN Zugriff auf alle anderen VLANs zu gewähren, werden <strong>ACLs (Access Control Lists)</strong> konfiguriert:</p>
+                
+                <code style="display: block; white-space: pre; background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+! ACL für Management-VLAN: Zugriff auf ALLE VLANs erlauben
+ip access-list extended MGMT_TO_ALL
+ permit ip 10.10.99.0 0.0.0.255 any
+ 
+! ACL für andere VLANs: Zugriff NUR vom Management-VLAN erlauben
+ip access-list extended RESTRICT_TO_MGMT
+ permit ip any 10.10.99.0 0.0.0.255
+ permit ip 10.10.20.0 0.0.0.255 10.10.30.0 0.0.0.255  ! Audio -> Video
+ permit ip 10.10.30.0 0.0.0.255 10.10.20.0 0.0.0.255  ! Video -> Audio
+ permit ip 10.10.40.0 0.0.0.255 any  ! Production -> alle (außer Guest)
+ deny   ip any any
+
+! ACLs auf VLAN-Interfaces anwenden
+interface Vlan10
+ ip access-group RESTRICT_TO_MGMT in
+
+interface Vlan20
+ ip access-group RESTRICT_TO_MGMT in
+
+interface Vlan99
+ ip access-group MGMT_TO_ALL out
+                </code>
+
+                <p><strong>3. Management-Rechner Konfiguration</strong></p>
+                <p>Administratoren, die auf alle VLANs zugreifen müssen, werden ins Management-VLAN platziert:</p>
+                <ul>
+                    <li><strong>Admin-Laptop:</strong> Anschluss an Access-Port in VLAN99</li>
+                    <li><strong>IP-Adresse:</strong> z.B. 10.10.99.10/24</li>
+                    <li><strong>Gateway:</strong> 10.10.99.1 (SVI des Core-Switches)</li>
+                    <li><strong>Zugriff auf andere VLANs:</strong> Funktioniert automatisch durch Routing</li>
+                </ul>
+                
+                <p><strong>Beispiel:</strong> Admin-Laptop (10.10.99.10) möchte auf Dante-Mischpult (10.10.20.50) zugreifen:</p>
+                <ol>
+                    <li>Laptop sendet Paket an Gateway 10.10.99.1</li>
+                    <li>Core-Switch routet Paket von VLAN99 nach VLAN20</li>
+                    <li>ACL erlaubt Traffic von Management-VLAN</li>
+                    <li>Paket erreicht Mischpult, Antwort erfolgt über denselben Weg</li>
+                </ol>
+
+                <p><strong>4. Sicherheitsaspekte für VLAN99</strong></p>
+                <div class="tech-specs">
+                    <h4>⚠️ Wichtige Sicherheitsmaßnahmen</h4>
+                    <ul>
+                        <li><strong>Authentifizierung:</strong> Nur autorisierte Geräte im Management-VLAN (802.1X Port-Security)</li>
+                        <li><strong>Starke Passwörter:</strong> Switch-Management und Admin-Accounts schützen</li>
+                        <li><strong>Logging:</strong> Alle Zugriffe aus VLAN99 protokollieren (SYSLOG)</li>
+                        <li><strong>Zeitbasierte ACLs:</strong> Management-Zugriff ggf. auf Veranstaltungszeiten beschränken</li>
+                        <li><strong>Kein Internet:</strong> VLAN99 sollte KEINEN direkten Internetzugang haben (nur VPN falls remote)</li>
+                        <li><strong>Physische Sicherheit:</strong> Management-Ports an Switches mit Zugangsschutz</li>
+                    </ul>
+                </div>
+
+                <p><strong>5. Monitoring und Troubleshooting</strong></p>
+                <p>Das Management-VLAN ermöglicht zentrale Überwachung aller Netzwerksegmente:</p>
+                <ul>
+                    <li><strong>SNMP-Monitoring:</strong> Erfassung von Switch-Status, Traffic, Fehlerraten aus allen VLANs</li>
+                    <li><strong>Port-Mirroring:</strong> Traffic anderer VLANs ins Management-VLAN spiegeln für Wireshark-Analyse</li>
+                    <li><strong>SSH-Zugriff:</strong> Fernwartung aller Switches über VLAN99</li>
+                    <li><strong>NTP-Server:</strong> Zeitsynchronisation für alle Netzwerkgeräte über Management-VLAN</li>
+                </ul>
+
+                <code style="display: block; white-space: pre; background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+! Port-Mirroring-Beispiel: VLAN20 (Audio) überwachen
+monitor session 1 source interface Vlan20
+monitor session 1 destination interface GigabitEthernet0/21
+! Port 21 ist Admin-Laptop im Management-VLAN
+                </code>
+
+                <p><strong>6. Alternative: VLAN-übergreifender Switch-Management-Zugriff</strong></p>
+                <p>Falls kein Layer-3-Switch verfügbar ist, kann VLAN99 als <strong>Native VLAN auf Trunk-Ports</strong> konfiguriert werden (nicht empfohlen aus Sicherheitsgründen) oder über einen separaten <strong>Out-of-Band Management-Port</strong> am Switch.</p>
+
                 <h4>Netzwerk-Diagramm-Beschreibung</h4>
                 <p><strong>Erwartete Darstellung:</strong></p>
                 <ul>

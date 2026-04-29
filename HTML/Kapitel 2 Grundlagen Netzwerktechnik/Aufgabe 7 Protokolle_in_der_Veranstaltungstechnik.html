@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Aufgabe 7 – Protokolle in der Veranstaltungstechnik</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Funktion zum Kopieren von Code in die Zwischenablage
+            window.copyToClipboard = function(code) {
+                navigator.clipboard.writeText(code).then(() => {
+                    const tooltip = document.createElement('div');
+                    tooltip.textContent = 'Code kopiert!';
+                    tooltip.style.position = 'fixed';
+                    tooltip.style.top = '50%';
+                    tooltip.style.left = '50%';
+                    tooltip.style.transform = 'translate(-50%, -50%)';
+                    tooltip.style.backgroundColor = '#333';
+                    tooltip.style.color = '#fff';
+                    tooltip.style.padding = '10px';
+                    tooltip.style.borderRadius = '5px';
+                    tooltip.style.zIndex = '1000';
+                    document.body.appendChild(tooltip);
+                    setTimeout(() => { document.body.removeChild(tooltip); }, 1000);
+                }).catch(err => { console.error('Fehler beim Kopieren:', err); });
+            };
+
+            window.simulateChatbotClick = function() {
+                const chatButton = document.getElementById('chat-icon');
+                if (chatButton) { chatButton.click(); }
+                else { console.error('Chatbot-Button nicht gefunden.'); }
+            };
+
+            window.sendToChatbot = function(message) {
+                simulateChatbotClick();
+                setTimeout(() => {
+                    const chatInput = document.getElementById('chat-input');
+                    const sendButton = document.getElementById('send-button');
+                    if (chatInput && sendButton) {
+                        chatInput.value = message;
+                        sendButton.click();
+                    }
+                }, 500);
+            };
+
+            const style = document.createElement('style');
+            style.innerHTML = `
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+                    min-height: 100vh;
+                    padding: 20px;
+                }
+
+                .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+                h1 {
+                    color: #2563eb; font-size: 2.2rem; font-weight: 700;
+                    margin-bottom: 0.1rem !important;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                }
+                h2 {
+                    color: #1d4ed8; font-size: 1.6rem; font-weight: 600;
+                    margin-bottom: 0.1rem !important; margin-top: 2rem;
+                }
+                h3 {
+                    color: #1e40af; font-size: 1.3rem; font-weight: 600;
+                    margin-bottom: 0.1rem !important; margin-top: 1.5rem;
+                }
+                h4 {
+                    color: #1e40af; font-size: 1.1rem; font-weight: 600;
+                    margin-bottom: 0.1rem !important; margin-top: 1rem;
+                }
+
+                .section {
+                    background: white; padding: 2rem; border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem; border: 1px solid #e5e7eb;
+                }
+
+                p { margin-bottom: 1.2rem; text-align: justify; color: #444; line-height: 1.7; }
+
+                ul, ol { padding-left: 2rem; margin-bottom: 1.2rem; }
+                li { margin-bottom: 0.5rem; color: #555; }
+
+                table {
+                    width: 100%; border-collapse: collapse; margin-bottom: 1.5rem;
+                    font-size: 0.95rem;
+                }
+                th {
+                    background: #1d4ed8; color: white; padding: 0.7rem 1rem;
+                    text-align: left; font-weight: 600;
+                }
+                td { padding: 0.6rem 1rem; border-bottom: 1px solid #e5e7eb; color: #444; }
+                tr:nth-child(even) td { background: #f8fafc; }
+                tr:hover td { background: #eff6ff; }
+
+                .intro {
+                    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+                    border-left: 4px solid #6b7280; padding: 1.5rem; margin: 1.5rem 0;
+                    border-radius: 8px; box-shadow: 0 3px 10px rgba(107,114,128,0.1);
+                }
+
+                .task {
+                    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+                    border-left: 4px solid #4caf50; padding: 1.5rem; margin: 1.5rem 0;
+                    border-radius: 8px; box-shadow: 0 3px 10px rgba(76,175,80,0.1);
+                }
+                .task strong {
+                    color: #2e7d32; font-size: 1.1rem; display: block; margin-bottom: 0.8rem;
+                }
+
+                .question {
+                    background: linear-gradient(135deg, #fff3cd 0%, #fdeaa7 100%);
+                    border-left: 4px solid #f39c12; padding: 1.2rem; margin: 1rem 0;
+                    border-radius: 8px; box-shadow: 0 3px 10px rgba(243,156,18,0.1);
+                }
+                .question strong { color: #b7950b; font-weight: 600; }
+
+                .tech-specs {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    border-left: 4px solid #0288d1; padding: 1.5rem; margin: 1.5rem 0;
+                    border-radius: 8px; box-shadow: 0 3px 10px rgba(2,136,209,0.1);
+                }
+                .tech-specs h4 { color: #01579b; margin-bottom: 1rem; font-weight: 600; font-size: 1.1rem; }
+
+                .badge {
+                    display: inline-block; padding: 2px 8px; border-radius: 12px;
+                    font-size: 0.8rem; font-weight: 600; margin-left: 6px;
+                }
+                .badge-udp  { background: #fef3c7; color: #92400e; }
+                .badge-tcp  { background: #dbeafe; color: #1e3a8a; }
+                .badge-mc   { background: #d1fae5; color: #065f46; }
+                .badge-bc   { background: #fee2e2; color: #991b1b; }
+
+                strong { color: #1e40af; }
+
+                code {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    color: #01579b; padding: 3px 6px; border-radius: 6px;
+                    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+                    font-size: 0.9em; font-weight: 600; border: 1px solid #81d4fa;
+                }
+
+                /* Akkordeon */
+                .accordion-header {
+                    display: flex; align-items: center; justify-content: space-between;
+                    cursor: pointer; padding: 1.2rem 1.5rem;
+                    background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+                    color: white; border-radius: 10px; margin-bottom: 0;
+                    user-select: none; transition: background 0.2s, box-shadow 0.2s;
+                    box-shadow: 0 4px 12px rgba(37,99,235,0.25);
+                }
+                .accordion-header:hover {
+                    background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+                    box-shadow: 0 6px 16px rgba(37,99,235,0.35);
+                }
+                .accordion-header h2 {
+                    color: white !important; margin: 0 !important;
+                    font-size: 1.4rem; font-weight: 700;
+                }
+                .accordion-arrow {
+                    font-size: 1.2rem; transition: transform 0.3s ease;
+                    flex-shrink: 0; margin-left: 1rem;
+                }
+                .accordion-header.open .accordion-arrow { transform: rotate(180deg); }
+                .accordion-body {
+                    overflow: hidden; max-height: 0;
+                    transition: max-height 0.4s ease;
+                    padding: 0 2rem;
+                }
+                .accordion-body.open {
+                    max-height: 9999px;
+                    padding: 1.5rem 2rem 2rem 2rem;
+                }
+
+                @media (max-width: 768px) {
+                    body { padding: 10px; }
+                    .container { padding: 10px; }
+                    h1 { font-size: 1.8rem; } h2 { font-size: 1.4rem; } h3 { font-size: 1.2rem; }
+                    .section { padding: 1.5rem; margin-bottom: 1.5rem; }
+                    .task, .question { padding: 1rem; margin: 1rem 0; }
+                    table { font-size: 0.85rem; }
+                    th, td { padding: 0.4rem 0.6rem; }
+                    .accordion-body.open { padding: 1rem 1rem 1.5rem 1rem; }
+                }
+
+                /* Chatbot */
+                #chat-container { color: white !important; }
+                #chat-container * { color: white !important; }
+                #chat-container .bot-message { color: white !important; background-color: rgba(59,130,246,0.8) !important; }
+                #chat-container .user-message { color: white !important; background-color: rgba(107,114,128,0.8) !important; }
+                #chat-container input, #chat-container textarea { color: white !important; background-color: rgba(55,65,81,0.9) !important; }
+                #chat-container button { color: white !important; }
+            `;
+            document.head.appendChild(style);
+
+            // DOM-Manipulation für zuverlässige Darstellung in Moodle
+            setTimeout(() => {
+                document.querySelectorAll('h2, h3, h4').forEach(el => {
+                    el.style.marginBottom = '0.1rem';
+                });
+            }, 100);
+
+            // Akkordeon-Logik
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const body = header.nextElementSibling;
+                    const isOpen = header.classList.contains('open');
+                    header.classList.toggle('open', !isOpen);
+                    body.classList.toggle('open', !isOpen);
+                });
+            });
+        });
+
+        // Chatbot initialisieren
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const { MMBBSBOT } = await import('https://dev.mm-bbs.de:8085/mmbbs-bot.js');
+                var element = document.querySelector('.activity-description');
+                var htmlContent = element ? element.innerHTML : '';
+                const settings = {
+                    "host": "dev.mm-bbs.de",
+                    "protocol": "https",
+                    "port": 8085,
+                    "opener": "Hallo! Ich helfe Ihnen bei Fragen zu Netzwerkprotokollen in der Veranstaltungstechnik.",
+                    "chat_icon": "",
+                    "chat_icon_style": "border-radius: 50%; width: 40px; height: 40px;",
+                    "title": "VT GPT",
+                    "task": htmlContent,
+                    "hints": "Sie sind Experte für Netzwerkprotokolle in der Veranstaltungstechnik. Ihre Auszubildenden sind Fachkräfte für Veranstaltungstechnik im 3. Ausbildungsjahr. Geben Sie keine fertigen Lösungen, sondern regen Sie zum Nachdenken an und erklären Sie Zusammenhänge zu Protokollen wie Dante, Art-Net, NDI, sACN, DHCP, SNMP usw. Beziehen Sie sich auf praxisrelevante Szenarien wie Konzerte, Festivals, Messen.",
+                    "cookie": document.cookie
+                };
+                const bot = new MMBBSBOT(settings);
+                window.toggleChat = bot.toggleChat.bind(bot);
+                window.sendMessage = bot.sendMessage.bind(bot);
+                window.handleKeyDown = bot.handleKeyDown.bind(bot);
+            } catch (error) {
+                console.error('Fehler beim Laden des Chatbots:', error);
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+
+        <!-- Titel -->
+        <div class="section">
+            <h1>📡 Netzwerkprotokolle in der Veranstaltungstechnik</h1>
+            <p><em>Infrastruktur, Steuerung und Nutzdatentransport – Aufgabe 7</em></p>
+        </div>
+
+        <!-- Einführung / Szenario -->
+        <div class="section">
+            <div class="intro">
+                <p><strong>📍 Berufsbezogener Kontext:</strong></p>
+                <p>Sie sind als Netzwerkspezialist für die technische Infrastruktur des „Open Air Summit" verantwortlich – ein dreitägiges Hybridfestival mit zwei Hauptbühnen, vier Nebenstages, einem Messebereich mit 60 Ausstellern und einer Live-Streamingproduktion für 50.000 Online-Zuschauer. Auf dem Gelände sind rund 800 netzwerkfähige Geräte aktiv:</p>
+                <ul>
+                    <li><strong>Lichttechnik:</strong> 120 Moving Heads, 40 LED-Bars, 6 Grandma-Konsolen, Pixel-Mapping-Server</li>
+                    <li><strong>Audiotechnik:</strong> Dante-Netzwerk mit 320 Kanälen, Yamaha-Mischpulte, Shure-Funksysteme, Monitoring-Systeme</li>
+                    <li><strong>Videotechnik:</strong> 18 PTZ-Kameras, 4 Handkameras, Blackmagic ATEM-Mischer, NDI-Konverter, LED-Video-Wände</li>
+                    <li><strong>Streaming:</strong> Encoder-Racks, CDN-Anbindung, OBS-Workstations, Grafik-Insert-Systeme</li>
+                    <li><strong>IT-Management:</strong> Server-Rack, Monitoring-System, WLAN für Crew und Publikum</li>
+                </ul>
+                <p>Damit das alles reibungslos funktioniert, kommunizieren diese Systeme über eine Vielzahl von Netzwerkprotokollen. Diese lassen sich in drei Kategorien einteilen: <strong>Infrastrukturprotokolle</strong>, <strong>Steuerprotokolle</strong> und <strong>Nutzdatentransport-Protokolle</strong>.</p>
+            </div>
+        </div>
+
+        <!-- ===================== KAPITEL 1: INFRASTRUKTUR ===================== -->
+        <div class="section" style="padding: 0; overflow: hidden;">
+            <div class="accordion-header open">
+                <h2>🏗️ 1. Infrastrukturprotokolle</h2>
+                <span class="accordion-arrow">▼</span>
+            </div>
+            <div class="accordion-body open">
+            <p style="margin-top:1rem;">Infrastrukturprotokolle sorgen dafür, dass das Netzwerk selbst funktioniert. Sie arbeiten im Hintergrund und sind für alle anderen Protokollkategorien die Grundlage. Ohne eine stabile Infrastruktur können weder Dante-Audio noch NDI-Video übertragen werden.</p>
+
+            <h3>DHCP – Dynamic Host Configuration Protocol</h3>
+            <p><strong>DHCP</strong> verteilt automatisch IP-Adressen, Subnetzmasken, Gateways und DNS-Server an alle Netzwerkgeräte. Ohne DHCP müsste jede IP-Adresse manuell konfiguriert werden – bei 800 Geräten undenkbar.</p>
+            <div class="tech-specs">
+                <h4>🔧 Technische Details</h4>
+                <p><strong>Protokoll:</strong> UDP, Port 67 (Server) / Port 68 (Client)</p>
+                <p><strong>Ablauf (DORA):</strong> Discover → Offer → Request → Acknowledge</p>
+                <p><strong>Wichtig für VT:</strong> Zeitkritische Systeme wie Dante und Art-Net benötigen <strong>statische IPs</strong> oder DHCP-Reservierungen, um Adressänderungen nach einem Neustart zu verhindern. Dante-Geräte verlieren sonst ihre Routing-Konfiguration.</p>
+            </div>
+
+            <h3>DNS – Domain Name System</h3>
+            <p><strong>DNS</strong> übersetzt Hostnamen (z.B. <code>stream-encoder-01.local</code>) in IP-Adressen. Im VT-Kontext wird DNS vor allem für die Verwaltung von Management-Zugängen und Cloud-Diensten (CDN, Streaming-Plattformen) genutzt.</p>
+            <div class="tech-specs">
+                <h4>🔧 Technische Details</h4>
+                <p><strong>Protokoll:</strong> UDP/TCP, Port 53</p>
+                <p><strong>mDNS (Multicast DNS):</strong> Im lokalen Netzwerk ohne separaten DNS-Server – wird z.B. von Dante Controller und Apple Bonjour genutzt (Port 5353, Multicast-Adresse <code>224.0.0.251</code>).</p>
+            </div>
+
+            <h3>SNMP – Simple Network Management Protocol</h3>
+            <p><strong>SNMP</strong> ermöglicht die zentrale Überwachung und Verwaltung von Netzwerkgeräten. Sie können damit von einer Management-Station aus alle Switches, Router und Server abfragen – Auslastung, Fehler, Verbindungsstatus – und erhalten automatische Alarmmeldungen (Traps) bei Problemen.</p>
+            <div class="tech-specs">
+                <h4>🔧 Technische Details</h4>
+                <p><strong>Protokoll:</strong> UDP, Port 161 (Abfragen) / Port 162 (Traps)</p>
+                <p><strong>Versionen:</strong> SNMPv1/v2c (unsicher, Community-String als Passwort), SNMPv3 (verschlüsselt und authentifiziert – empfohlen!)</p>
+                <p><strong>Praxis:</strong> Tools wie PRTG Network Monitor, Zabbix oder LibreNMS visualisieren SNMP-Daten in Echtzeit-Dashboards.</p>
+            </div>
+
+            <h3>STP / RSTP – Spanning Tree Protocol</h3>
+            <p><strong>STP</strong> (IEEE 802.1D) und sein schnelleres Nachfolgeprotokoll <strong>RSTP</strong> (IEEE 802.1w) verhindern Netzwerkschleifen (Loops), die entstehen, wenn redundante Verbindungen zwischen Switches geschaltet sind. Ohne STP würden Broadcasts endlos durch das Netzwerk kreisen und es zum Stillstand bringen.</p>
+            <div class="tech-specs">
+                <h4>🔧 Technische Details</h4>
+                <p><strong>Funktion:</strong> STP erkennt redundante Pfade und deaktiviert alle bis auf einen. RSTP konvergiert innerhalb von Sekunden (STP: 30–50 s).</p>
+                <p><strong>Wichtig für VT:</strong> Bei Reaktivierung eines deaktivierten Pfades kann kurzzeitig Paketverlust auftreten – kritisch für latenzsensitive Dante-Audio-Verbindungen. <strong>PortFast</strong> (deaktiviert STP auf Access-Ports) und <strong>BPDU Guard</strong> sind bewährte Maßnahmen.</p>
+            </div>
+
+            <h3>LACP – Link Aggregation Control Protocol</h3>
+            <p><strong>LACP</strong> (IEEE 802.3ad) bündelt mehrere physische Netzwerkleitungen zu einem logischen Link mit höherer Gesamtbandbreite und Redundanz. Ein Server mit zwei 10-GbE-Ports kann so mit 20 Gbit/s betrieben werden.</p>
+            <div class="tech-specs">
+                <h4>🔧 Technische Details</h4>
+                <p><strong>Typische Anwendung VT:</strong> Recording-Server und Streaming-Workstations werden über LACP angebunden, um ausreichend Bandbreite für unkomprimierte 4K-Videoaufnahmen sicherzustellen.</p>
+            </div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen – Infrastrukturprotokolle:</strong>
+                <ol>
+                    <li>Warum sollten Dante-Geräte statische IP-Adressen oder DHCP-Reservierungen haben?</li>
+                    <li>Was ist der Unterschied zwischen DNS und mDNS und wann kommt mDNS in der Veranstaltungstechnik zum Einsatz?</li>
+                    <li>Erklären Sie, welche Folgen eine Netzwerkschleife ohne STP auf einen laufenden Dante-Audiotransport hätte.</li>
+                    <li>Für welche Geräte am Festival-Netzwerk würden Sie LACP einsetzen? Begründen Sie Ihre Auswahl.</li>
+                    <li>Welche SNMP-Version sollten Sie auf dem Managementnetzwerk konfigurieren und warum?</li>
+                </ol>
+            </div>
+            </div><!-- /accordion-body 1 -->
+        </div>
+
+        <!-- ===================== KAPITEL 2: STEUERUNG ===================== -->
+        <div class="section" style="padding: 0; overflow: hidden;">
+            <div class="accordion-header">
+                <h2>🎛️ 2. Steuerprotokolle</h2>
+                <span class="accordion-arrow">▼</span>
+            </div>
+            <div class="accordion-body">
+            <p style="margin-top:1rem;">Steuerprotokolle transportieren <strong>Steuersignale</strong> für Geräte der Veranstaltungstechnik. Sie übertragen keine Medieninhalte (Audio/Video), sondern Befehle: Dimmer-Werte für Scheinwerfer, Lautstärke-Regler für Mischpulte oder Kamerapositionierungen. Geringe Latenz und Zuverlässigkeit sind entscheidend.</p>
+
+            <h3>Art-Net</h3>
+            <p><strong>Art-Net</strong> ist ein weit verbreitetes Protokoll zur Übertragung von DMX-Lichtsteuerdaten über Ethernet-Netzwerke. Es wurde von Artistic Licence entwickelt und ist seit Version 4 lizenzfrei. Art-Net kapselt bis zu 512 DMX-Werte (ein Universe) in UDP-Pakete.</p>
+            <div class="tech-specs">
+                <h4>🔧 Technische Details</h4>
+                <p><strong>Protokoll:</strong> UDP, Port 6454 <span class="badge badge-udp">UDP</span></p>
+                <p><strong>Übertragung:</strong> Broadcast (<code>x.x.x.255</code>) oder Unicast <span class="badge badge-bc">Broadcast</span></p>
+                <p><strong>Universes:</strong> Art-Net unterstützt bis zu 32.768 Universen (Art-Net 4)</p>
+                <p><strong>Refresh-Rate:</strong> Standard 44 Hz (DMX-konform), maximal bis zu 44 fps</p>
+                <p><strong>Problem:</strong> Broadcast-basierter Art-Net-Datenverkehr belastet alle Geräte im Netzwerksegment. Deshalb muss Art-Net immer in ein eigenes VLAN!</p>
+            </div>
+
+            <h3>sACN – Streaming ACN (E1.31)</h3>
+            <p><strong>sACN</strong> (ANSI E1.31) ist der modernere Nachfolger für IP-basierte DMX-Übertragung und basiert auf dem <strong>ACN-Standard</strong> (Architecture for Control Networks). Im Gegensatz zu Art-Net nutzt sACN standardmäßig <strong>IP-Multicast</strong>, was deutlich effizienter ist.</p>
+            <div class="tech-specs">
+                <h4>🔧 Technische Details</h4>
+                <p><strong>Protokoll:</strong> UDP, Multicast-Adressen <code>239.255.0.x</code> bis <code>239.255.2.x</code> <span class="badge badge-mc">Multicast</span></p>
+                <p><strong>Vorteil gegenüber Art-Net:</strong> Multicast belastet nur die Geräte, die sich für eine Multicast-Gruppe angemeldet haben (IGMP-Snooping erforderlich!). Weniger Netzlast bei großen Lichtanlagen.</p>
+                <p><strong>Universe-Adressierung:</strong> Universe 1–63.999 direkt auf Multicast-Gruppenaddresse gemappt.</p>
+            </div>
+
+            <h3>OSC – Open Sound Control</h3>
+            <p><strong>OSC</strong> ist ein flexibles Protokoll zur Gerätesteuerung, das ursprünglich für audiotechnische Anwendungen entwickelt wurde. OSC-Nachrichten bestehen aus einem Adresspfad und Parameterwerten, z.B. <code>/licht/bühne/dimmer 0.8</code>. Es wird von Mischpulten, Lichtsteuerungen, Medienserver-Software und Showsteuerungen genutzt.</p>
+            <div class="tech-specs">
+                <h4>🔧 Technische Details</h4>
+                <p><strong>Protokoll:</strong> UDP (häufig) oder TCP <span class="badge badge-udp">UDP</span></p>
+                <p><strong>Port:</strong> Frei konfigurierbar (typisch: 8000, 9000, 7700 je nach Anwendung)</p>
+                <p><strong>Typische VT-Anwendungen:</strong> QLab (Showsteuerung), TouchOSC (Kontroller-App), Resolume (Medienserver), Qlight (Lichtsteuerung)</p>
+            </div>
+
+            <h3>RDM – Remote Device Management</h3>
+            <p><strong>RDM</strong> (ANSI E1.20) ist eine bidirektionale Erweiterung von DMX512. Es ermöglicht, Geräteparameter zu lesen und zu schreiben, ohne das Gerät physisch zu berühren – z.B. Geräteadresse ändern, Betriebsstunden auslesen oder Fehlerdiagnose aus der Ferne. Über Art-Net und sACN wird RDM auch über IP transportiert.</p>
+
+            <h3>MIDI over Network (RTP-MIDI)</h3>
+            <p><strong>RTP-MIDI</strong> überträgt MIDI-Daten über IP-Netzwerke. In der Veranstaltungstechnik wird es für die Synchronisation zwischen Showsteuerungen, Mischpulten, Lichtpulten und Medienservern eingesetzt – um z.B. eine Lichtshow exakt mit der Musik zu synchronisieren.</p>
+            <div class="tech-specs">
+                <h4>🔧 Technische Details</h4>
+                <p><strong>Protokoll:</strong> RTP über UDP <span class="badge badge-udp">UDP</span></p>
+                <p><strong>Apple Session Protocol:</strong> Apples Implementierung läuft auf Port 5004/5005 und ist in macOS und iOS direkt integriert.</p>
+            </div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen – Steuerprotokolle:</strong>
+                <ol>
+                    <li>Erklären Sie den Unterschied zwischen Broadcast (Art-Net) und Multicast (sACN) und deren Auswirkung auf die Netzwerklast.</li>
+                    <li>Wozu dient RDM und welchen Vorteil bietet es im Vergleich zur direkten DMX-Konfiguration am Gerät?</li>
+                    <li>Beschreiben Sie ein Szenario im Festival-Kontext, bei dem OSC eine sinnvolle Lösung für die Gerätesteuerung wäre.</li>
+                    <li>Warum ist IGMP-Snooping eine Voraussetzung für den effizienten Betrieb von sACN?</li>
+                </ol>
+            </div>
+        </div><!-- /accordion-body 2 -->
+        </div><!-- /section 2 wrapper -->
+
+        <!-- ===================== KAPITEL 3: NUTZDATENTRANSPORT ===================== -->
+        <div class="section" style="padding:0; overflow:hidden;">
+            <div class="accordion-header">
+                <h2>📺 3. Nutzdatentransport-Protokolle</h2>
+                <span class="accordion-arrow">▼</span>
+            </div>
+            <div class="accordion-body">
+            <p>Nutzdatentransport-Protokolle übertragen die eigentlichen Medieninhalte – also Audio und Video. Sie stellen die höchsten Anforderungen an das Netzwerk: <strong>hohe Bandbreite</strong>, <strong>geringe Latenz</strong> und <strong>minimaler Jitter</strong> (Laufzeitschwankungen) sind entscheidend.</p>
+
+            <h3>Dante / AES67 – Audio over IP</h3>
+            <p><strong>Dante</strong> (von Audinate) ist das in der Veranstaltungstechnik am weitesten verbreitete Protokoll für Audio over IP. Es überträgt unkomprimiertes, professionelles Mehrkanaudio mit sehr geringer Latenz über Standard-Ethernet.</p>
+            <div class="tech-specs">
+                <h4>🔧 Technische Details</h4>
+                <p><strong>Protokoll:</strong> RTP über UDP (Audiosignale) <span class="badge badge-udp">UDP</span>, TCP für Konfiguration <span class="badge badge-tcp">TCP</span></p>
+                <p><strong>Latenz:</strong> 0,15 ms – 10 ms (konfigurierbar, abhängig von Netzwerkqualität)</p>
+                <p><strong>Kanal-Kapazität:</strong> 512 Kanäle (32-Bit, 48 kHz) auf Gigabit-Ethernet</p>
+                <p><strong>Synchronisation:</strong> Präzise Uhrensynchronisation via PTP (Precision Time Protocol, IEEE 1588) – alle Geräte teilen sich eine Netzwerkzeit mit Nanosekunden-Genauigkeit</p>
+                <p><strong>AES67:</strong> Offener Standard für Audio over IP (SMPTE ST 2110 kompatibel), der Interoperabilität zwischen verschiedenen Herstellern sicherstellt. Dante-Geräte können über AES67 mit Q-SYS, Ravenna und anderen Systemen kommunizieren.</p>
+                <p><strong>Netzwerkanforderungen:</strong> Dante benötigt zwingend ein dediziertes VLAN! QoS (DSCP-Markierung) ist für zuverlässige Priorisierung empfohlen.</p>
+            </div>
+
+            <h3>NDI – Network Device Interface</h3>
+            <p><strong>NDI</strong> (von NewTek/Vizrt) überträgt vollauflösende Video- und Audiosignale über Standard-IP-Netzwerke. Es ist die Grundlage für moderne IP-basierte Videoproduktionen und macht teure SDI-Verkabelung über längere Strecken überflüssig.</p>
+            <div class="tech-specs">
+                <h4>🔧 Technische Details</h4>
+                <p><strong>Protokoll:</strong> UDP/TCP über IP <span class="badge badge-udp">UDP</span> <span class="badge badge-tcp">TCP</span></p>
+                <p><strong>Bandbreite:</strong> NDI Full-Bandwidth: ca. 125–250 Mbit/s pro Stream (1080i/p); NDI|HX: ca. 10–20 Mbit/s (komprimiert, für Low-Bandwidth-Szenarien)</p>
+                <p><strong>Erkennung:</strong> Automatische Geräteerkennung über mDNS – Kameras und Quellen erscheinen sofort in NDI-fähigen Geräten ohne manuelle IP-Eingabe</p>
+                <p><strong>Latenz:</strong> 1–2 Frames (ca. 33–67 ms bei 30 fps) für Full-Bandwidth NDI</p>
+                <p><strong>Netzwerkanforderungen:</strong> Mindestens 1-GbE-Switch für mehrere parallele NDI-Streams. Bei 10+ Streams empfiehlt sich 10 GbE im Backbone.</p>
+            </div>
+
+            <h3>RTP / RTCP – Real-Time Transport Protocol</h3>
+            <p><strong>RTP</strong> (RFC 3550) ist das grundlegende Protokoll für die Echtzeitübertragung von Audio und Video im Internet und in professionellen AV-Netzwerken. Es fügt jedem Paket einen Zeitstempel und eine Sequenznummer hinzu, was dem Empfänger ermöglicht, Paketverluste zu erkennen und Jitter auszugleichen.</p>
+            <div class="tech-specs">
+                <h4>🔧 Technische Details</h4>
+                <p><strong>Protokoll:</strong> UDP (RTP selbst) + UDP (RTCP für Statistiken) <span class="badge badge-udp">UDP</span></p>
+                <p><strong>RTCP:</strong> Das Companion-Protokoll liefert Qualitätsstatistiken (Paketverlust, Jitter, Round-Trip-Time) und ermöglicht damit Netzwerk-Monitoring.</p>
+                <p><strong>Nutzung:</strong> Dante nutzt RTP intern; AES67 basiert auf RTP; WebRTC baut auf RTP auf.</p>
+            </div>
+
+            <h3>RTSP – Real Time Streaming Protocol</h3>
+            <p><strong>RTSP</strong> (RFC 7826) ist ein Steuerungsprotokoll für Streaming-Medienserver. Es funktioniert ähnlich wie HTTP, aber für Medienströme: RTSP steuert den Transport (Play, Pause, Stop, Seek), während RTP die eigentlichen Mediendaten überträgt.</p>
+            <div class="tech-specs">
+                <h4>🔧 Technische Details</h4>
+                <p><strong>Protokoll:</strong> TCP (Steuerung), RTP/UDP (Mediendaten) <span class="badge badge-tcp">TCP</span></p>
+                <p><strong>Port:</strong> 554 (Standard)</p>
+                <p><strong>Typische VT-Anwendung:</strong> IP-Kameras (PTZ-Kameras senden ihren Stream per RTSP), Medienserver, Monitoring-Systeme</p>
+            </div>
+
+            <h3>RTMP / HLS – Streaming-Protokolle für Live-Streaming</h3>
+            <p><strong>RTMP</strong> (Real Time Messaging Protocol) wurde von Adobe entwickelt und ist bis heute das Standardprotokoll für die Einspeisug von Live-Streams zu Plattformen wie YouTube, Twitch und Facebook Live (Ingest-Protokoll). <strong>HLS</strong> (HTTP Live Streaming, Apple) oder <strong>MPEG-DASH</strong> wird für die Distribution an Endnutzer genutzt.</p>
+            <div class="tech-specs">
+                <h4>🔧 Technische Details</h4>
+                <p><strong>RTMP:</strong> TCP, Port 1935 <span class="badge badge-tcp">TCP</span> – geringe Latenz beim Ingest (~2–5 s)</p>
+                <p><strong>HLS:</strong> HTTP/HTTPS, Port 80/443 – segmentbasiert, hohe Kompatibilität, Latenz 10–30 s (Low-Latency HLS: ~2 s)</p>
+                <p><strong>SRT:</strong> Secure Reliable Transport – modernes Alternative zu RTMP mit eingebauter Fehlerkorrektur (ARQ) für unsichere Verbindungen (4G, Internet-Backhaul). Wird zunehmend für Remote-Produktionen eingesetzt.</p>
+            </div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen – Nutzdatentransport:</strong>
+                <ol>
+                    <li>Berechnen Sie den ungefähren Bandbreitenbedarf für ein Dante-Netzwerk mit 128 Audiokanälen (32-Bit, 48 kHz).</li>
+                    <li>Warum wird für Dante zwingend PTP (Precision Time Protocol) benötigt?</li>
+                    <li>Vergleichen Sie NDI Full-Bandwidth und NDI|HX. Für welches Festival-Szenario würden Sie welche Variante einsetzen?</li>
+                    <li>Erklären Sie den Unterschied zwischen RTMP und HLS hinsichtlich Latenz und Verwendungszweck.</li>
+                    <li>Was ist der Vorteil von SRT gegenüber RTMP bei einer Remote-Produktion über das Internet?</li>
+                </ol>
+            </div>
+        </div><!-- /accordion-body 3 -->
+        </div><!-- /section 3 wrapper -->
+
+        <!-- ===================== ÜBERBLICK-TABELLE ===================== -->
+        <div class="section" style="padding:0; overflow:hidden;">
+            <div class="accordion-header">
+                <h2>📋 Protokoll-Übersicht</h2>
+                <span class="accordion-arrow">▼</span>
+            </div>
+            <div class="accordion-body">
+            <p>Die folgende Tabelle gibt einen strukturierten Überblick über alle wichtigen Protokolle in der Veranstaltungstechnik:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Protokoll</th>
+                        <th>Kategorie</th>
+                        <th>Transport</th>
+                        <th>Port</th>
+                        <th>Typischer Einsatz VT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>DHCP</strong></td>
+                        <td>Infrastruktur</td>
+                        <td>UDP</td>
+                        <td>67/68</td>
+                        <td>Automatische IP-Vergabe</td>
+                    </tr>
+                    <tr>
+                        <td><strong>DNS / mDNS</strong></td>
+                        <td>Infrastruktur</td>
+                        <td>UDP/TCP</td>
+                        <td>53 / 5353</td>
+                        <td>Namensauflösung, Dante-Erkennung</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SNMP</strong></td>
+                        <td>Infrastruktur</td>
+                        <td>UDP</td>
+                        <td>161/162</td>
+                        <td>Netzwerk-Monitoring, Switch-Überwachung</td>
+                    </tr>
+                    <tr>
+                        <td><strong>STP / RSTP</strong></td>
+                        <td>Infrastruktur</td>
+                        <td>Ethernet (Layer 2)</td>
+                        <td>–</td>
+                        <td>Loop-Vermeidung, Redundanz</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LACP</strong></td>
+                        <td>Infrastruktur</td>
+                        <td>Ethernet (Layer 2)</td>
+                        <td>–</td>
+                        <td>Bandbreiten-Bündelung, Redundanz</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Art-Net</strong></td>
+                        <td>Steuerung</td>
+                        <td>UDP</td>
+                        <td>6454</td>
+                        <td>DMX-Lichtsteuerung über IP (Broadcast)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>sACN (E1.31)</strong></td>
+                        <td>Steuerung</td>
+                        <td>UDP</td>
+                        <td>5568</td>
+                        <td>DMX-Lichtsteuerung über IP (Multicast)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>OSC</strong></td>
+                        <td>Steuerung</td>
+                        <td>UDP/TCP</td>
+                        <td>frei konfigurierbar</td>
+                        <td>Showsteuerung, Medienserver, Mischpulte</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RDM</strong></td>
+                        <td>Steuerung</td>
+                        <td>DMX / Art-Net / sACN</td>
+                        <td>–</td>
+                        <td>Fernkonfiguration von Scheinwerfern</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RTP-MIDI</strong></td>
+                        <td>Steuerung</td>
+                        <td>UDP (RTP)</td>
+                        <td>5004/5005</td>
+                        <td>MIDI über IP, Show-Synchronisation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dante / AES67</strong></td>
+                        <td>Nutzdaten – Audio</td>
+                        <td>UDP (RTP)</td>
+                        <td>dynamisch</td>
+                        <td>Professionelles Audio over IP</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NDI</strong></td>
+                        <td>Nutzdaten – Video</td>
+                        <td>UDP/TCP</td>
+                        <td>dynamisch</td>
+                        <td>Video over IP, IP-Produktion</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RTP / RTCP</strong></td>
+                        <td>Nutzdaten – A/V</td>
+                        <td>UDP</td>
+                        <td>dynamisch</td>
+                        <td>Basis für Dante, AES67, WebRTC</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RTSP</strong></td>
+                        <td>Nutzdaten – Video</td>
+                        <td>TCP</td>
+                        <td>554</td>
+                        <td>IP-Kamera-Streams, Monitoring</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RTMP</strong></td>
+                        <td>Nutzdaten – Streaming</td>
+                        <td>TCP</td>
+                        <td>1935</td>
+                        <td>Live-Stream-Ingest zu Plattformen</td>
+                    </tr>
+                    <tr>
+                        <td><strong>HLS</strong></td>
+                        <td>Nutzdaten – Streaming</td>
+                        <td>HTTP/HTTPS</td>
+                        <td>80/443</td>
+                        <td>Live-Stream-Distribution an Endgeräte</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SRT</strong></td>
+                        <td>Nutzdaten – Streaming</td>
+                        <td>UDP</td>
+                        <td>9000–9999</td>
+                        <td>Sicherer Remote-Transport über Internet</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div><!-- /accordion-body overview -->
+        </div><!-- /section overview wrapper -->
+
+        <!-- ===================== ABSCHLUSS-AUFGABE ===================== -->
+        <div class="section">
+            <h2>Arbeitsauftrag 7 – Protokoll-Konzept für das Festival</h2>
+
+            <div class="task">
+                <strong>Vollständiges Protokoll-Konzept erstellen</strong>
+                <p><strong>Sozialform:</strong> Einzelarbeit</p>
+                <p><strong>Methode:</strong> Vollständige Handlung</p>
+                <br>
+                <p><strong>Ausgangssituation:</strong><br>
+                Sie erstellen das vollständige Protokoll-Konzept für das „Open Air Summit". Die technische Infrastruktur enthält fünf VLANs (VLAN 10 Licht, VLAN 20 Audio, VLAN 30 Video/Streaming, VLAN 40 Management, VLAN 50 Gäste-WLAN).</p>
+                <br>
+                <ol>
+                    <li><strong>Informieren:</strong> Ordnen Sie allen Geräten des Festivals (aus dem Einführungsszenario) eine Protokollkategorie und ein VLAN zu.</li>
+                    <li><strong>Planen:</strong> Erstellen Sie eine vollständige Protokoll-Liste für jedes VLAN: Welche Protokolle laufen in welchem VLAN? Welche Bandbreite ist pro VLAN zu erwarten?</li>
+                    <li><strong>Entscheiden:</strong> Legen Sie QoS-Prioritäten fest. Welche Protokolle bekommen die höchste Priorität (DSCP-Werte) und warum?</li>
+                    <li><strong>Ausführen:</strong> Dokumentieren Sie Ihr Konzept als Tabelle und als Netzwerkdiagramm, das Protokolle, VLANs und Bandbreiten zeigt.</li>
+                    <li><strong>Kontrollieren:</strong> Überprüfen Sie: Sind alle Bandbreiten durch die gewählte Switch-Hardware abgedeckt? Gibt es potenzielle Engpässe?</li>
+                    <li><strong>Bewerten:</strong> Welche drei Maßnahmen sind aus Ihrer Sicht am wichtigsten, um bei diesem Festival einen stabilen Betrieb zu sichern? Begründen Sie.</li>
+                </ol>
+            </div>
+
+            <div class="question">
+                <strong>💡 Abschlusskontrolle – Gesamtverständnis:</strong>
+                <ol>
+                    <li>Warum ist es wichtig, Infrastruktur-, Steuer- und Nutzdatenprotokolle in separaten VLANs zu betreiben?</li>
+                    <li>Welche Protokolle sind besonders latenzsensitiv und welche Netzwerkmaßnahmen sichern deren zuverlässigen Betrieb?</li>
+                    <li>Ein Techniker berichtet, dass die Moving Heads beim Festival unregelmäßig auf Art-Net-Signale reagieren. Nennen Sie drei mögliche Ursachen und Lösungen.</li>
+                    <li>Erklären Sie, warum Dante für den live-audio-kritischen Einsatz TCP als Transportprotokoll für die Signalübertragung sofort ausschließt.</li>
+                    <li>Für welche Aufgabe würden Sie bei einer Outdoor-Veranstaltung SRT anstelle von RTMP wählen? Begründen Sie.</li>
+                </ol>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

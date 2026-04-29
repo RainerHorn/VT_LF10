@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redundanz in der Veranstaltungstechnik - Block 1 Lehrerversion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2563eb;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.1rem !important;
+        }
+
+        h2 {
+            color: #1d4ed8;
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 0.1rem !important;
+            margin-top: 2rem;
+        }
+
+        h3 {
+            color: #1e40af;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.1rem !important;
+            margin-top: 1rem;
+        }
+
+        h4 {
+            color: #c62828;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem !important;
+            margin-top: 0;
+        }
+
+        .section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .intro {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-left: 4px solid #6b7280;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(107, 114, 128, 0.1);
+        }
+
+        .teacher-solution {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-left: 4px solid #d32f2f;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(211, 47, 47, 0.1);
+        }
+
+        .tech-specs {
+            background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+            border-left: 4px solid #0288d1;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(2, 136, 209, 0.1);
+        }
+
+        .tech-specs h4 {
+            color: #01579b;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #444;
+            line-height: 1.7;
+        }
+
+        ul, ol {
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        a {
+            color: #1d4ed8;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        th {
+            background: #1d4ed8;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        pre {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid #dbe3ef;
+            overflow-x: auto;
+            margin: 1rem 0;
+            line-height: 1.5;
+        }
+
+        code {
+            background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+            color: #01579b;
+            padding: 3px 6px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+            font-weight: 600;
+            border: 1px solid #81d4fa;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .header,
+            .section {
+                padding: 1.25rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.35rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 Redundanz in der Veranstaltungstechnik - Block 1 (LEHRERVERSION)</h1>
+            <p><strong>Kompakte Lösungsübersicht zu Grundlagen, Topologien, STP/RSTP und Praxistransfer</strong></p>
+        </div>
+
+        <div class="section">
+            <div class="intro">
+                <p><strong>Hinweis:</strong> Diese Lehrerversion enthält bewusst nur <strong>Erwartungshorizonte, Musterlösungen und Bewertungshinweise</strong>. Die vollständigen Aufgabenstellungen stehen in der Schülerversion <a href="Block1_Redundanz_Grundlagen.html" target="_blank" rel="noopener">Block1_Redundanz_Grundlagen.html</a>.</p>
+                <p><strong>Didaktischer Fokus:</strong> Die Lernenden sollen Single Points of Failure erkennen, passende Redundanzformen unterscheiden, RSTP fachlich begründen und ein VT-Netzwerk unter Ausfallgesichtspunkten bewerten.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📚 Phase 1: Informieren - Lösungen</h2>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartungshorizont Phase 1</h4>
+                <p><strong>Single Point of Failure:</strong> Eine einzelne Komponente oder Verbindung, deren Ausfall das Gesamtsystem stoppt. In der VT ist das kritisch, weil Live-Situationen nicht wiederholt werden können.</p>
+                <ul>
+                    <li><strong>Typische VT-Beispiele:</strong> einzelner Core-Switch, einziges Glasfaserkabel zur Bühne, einzelner Streaming-Server ohne Backup, einziges Steuerpult für sicherheitsrelevante Funktionen.</li>
+                    <li><strong>Folgen:</strong> Show-Unterbrechung, Broadcast-Ausfall, Vertragsstrafe, Reputationsschaden, im Extremfall Sicherheitsproblem.</li>
+                </ul>
+
+                <p><strong>Beispiele für zwingend notwendige Redundanz:</strong></p>
+                <ul>
+                    <li>Live-TV- oder Streaming-Produktionen</li>
+                    <li>Audio- und Lichtsteuerung großer Bühnen</li>
+                    <li>Sicherheitsbeleuchtung und Evakuierungssysteme</li>
+                    <li>Medienserver für Show- oder Mapping-Inhalte</li>
+                </ul>
+
+                <p><strong>Verfügbarkeit:</strong> Didaktisch genügt die Aussage, dass zwei unabhängige Geräte die gemeinsame Ausfallwahrscheinlichkeit stark reduzieren. Im Unterricht reicht hier eine qualitative Begründung; realistische VT-Werte liegen meist eher bei <strong>99,9 % bis 99,95 %</strong> als bei theoretischen Idealwerten.</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Begriff</th>
+                            <th>Kernaussage</th>
+                            <th>VT-Beispiel</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Geräte-Redundanz</td>
+                            <td>Doppelte Hardware übernimmt bei Ausfall</td>
+                            <td>Zwei Core-Switches</td>
+                        </tr>
+                        <tr>
+                            <td>Pfad-Redundanz</td>
+                            <td>Mehrere logische Wege über verschiedene Geräte</td>
+                            <td>Zwei getrennte Uplinks FOH ↔ Bühne</td>
+                        </tr>
+                        <tr>
+                            <td>Link-Redundanz</td>
+                            <td>Mehrere physische Leitungen zwischen denselben Geräten</td>
+                            <td>LACP-Bündel zum Streaming-Server</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🗺️ Phase 2: Planen - Lösungen</h2>
+
+            <div class="teacher-solution">
+                <h4>🎯 Lösung zu Arbeitsauftrag 1: Netzwerk-Topologie planen</h4>
+                <p><strong>Musterlage:</strong> Für das Festival ist eine redundante Stern-Topologie mit zwei zentralen Core-Switches fachlich am sinnvollsten. Jeder Access-Switch sollte zwei Uplinks erhalten, kritische Systeme zusätzlich echte Geräte- oder NIC-Redundanz.</p>
+
+                <pre>Technik-Container:
+CORE-SW-01 (Root Bridge, Priorität 4096)
+CORE-SW-02 (Backup Root, Priorität 8192)
+
+Access-Ebene:
+MAIN-SW-01  -> Uplink zu beiden Core-Switches
+SEC-SW-01   -> Uplink zu beiden Core-Switches
+FOH-SW-01   -> Uplink zu beiden Core-Switches
+BACK-SW-01  -> Uplink zu beiden Core-Switches
+
+Kritische Zusatzpunkte:
+- Streaming-Server mit Dual-NIC an beide Cores
+- Getrennte Kabeltrassen für kritische Leitungen
+- VLAN-Trennung für Audio/Licht, Video, Streaming, Management</pre>
+
+                <p><strong>Worauf geachtet werden soll:</strong></p>
+                <ul>
+                    <li>Mindestens zwei Core-Switches sauber als Root und Backup Root benannt</li>
+                    <li>Keine einzelnen Uplinks zu kritischen Bereichen</li>
+                    <li>Streaming nicht nur als Link-Redundanz, sondern möglichst als echte System-Redundanz gedacht</li>
+                    <li>Single Points auch außerhalb des Switchings erkennen, z. B. Stromversorgung oder Kabeltrasse</li>
+                </ul>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartungshorizont Phase 2</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fragestellung</th>
+                            <th>Erwartete Aussage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Warum nicht Ring?</td>
+                            <td>Langsame Konvergenz, unübersichtliche Fehlerdiagnose, für Live-Betrieb ungünstig</td>
+                        </tr>
+                        <tr>
+                            <td>Was ist Konvergenzzeit?</td>
+                            <td>Zeit bis das Netz nach einem Ausfall wieder einen stabilen aktiven Pfad gefunden hat</td>
+                        </tr>
+                        <tr>
+                            <td>Kleine Messe mit 10 Clients?</td>
+                            <td>Oft einfacher Stern ohne volle Redundanz ausreichend; Entscheidung über Kritikalität begründen</td>
+                        </tr>
+                        <tr>
+                            <td>Warum selten vollvermascht?</td>
+                            <td>Sehr hoher Verkabelungs- und Konfigurationsaufwand, teuer, unübersichtlich</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚖️ Phase 3: Entscheiden - Lösungen</h2>
+
+            <div class="teacher-solution">
+                <h4>🎯 Lösung zu Arbeitsauftrag 2: Protokoll-Entscheidung</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Szenario</th>
+                            <th>Empfehlung</th>
+                            <th>Begründung</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Kleiner Firmen-Event</td>
+                            <td>RSTP oder bei sehr geringer Kritikalität sogar kein echter Redundanzaufbau</td>
+                            <td>Wenig Switches, geringe Ausfallfolgen, Kosten-Nutzen abwägen</td>
+                        </tr>
+                        <tr>
+                            <td>Theater-Installation mit 5 VLANs</td>
+                            <td>MSTP</td>
+                            <td>Mehrere VLANs sinnvoll gruppierbar, feste Infrastruktur, mögliche Lastverteilung</td>
+                        </tr>
+                        <tr>
+                            <td>Großes Festival mit Hersteller-Mix</td>
+                            <td>RSTP</td>
+                            <td>IEEE-Standard, schnell, robust, herstellerübergreifend besser beherrschbar als proprietäre Varianten</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p><strong>Zentrale Argumente:</strong></p>
+                <ul>
+                    <li><strong>STP</strong> ist für Live-Situationen meist zu langsam.</li>
+                    <li><strong>RSTP</strong> ist in der VT der Standard, weil es schnell und interoperabel ist.</li>
+                    <li><strong>MSTP</strong> wird interessant, wenn viele VLANs effizient über mehrere Instanzen organisiert werden sollen.</li>
+                    <li><strong>Root Bridge</strong> sollte manuell auf einen leistungsfähigen, zentralen Core-Switch gelegt werden.</li>
+                </ul>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartungshorizont Phase 3</h4>
+                <ul>
+                    <li><strong>STP-Problem im Konzert:</strong> 30 bis 50 Sekunden Ausfall wären für Audio, Video und Licht deutlich zu lang.</li>
+                    <li><strong>RSTP schneller als STP:</strong> weniger Wartezeiten, schnellere Rollenfindung, aktive Protokollmechanismen statt langer Timerphasen.</li>
+                    <li><strong>MSTP sinnvoll:</strong> bei größeren VLAN-Strukturen und wenn unterschiedliche Instanzen bzw. Pfade sinnvoll aufgeteilt werden sollen.</li>
+                    <li><strong>Root Bridge wichtig:</strong> Von ihr aus werden Pfade bewertet; eine schlechte Root-Platzierung führt zu unnötigen Wegen und unpassenden Blocking-Entscheidungen.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚙️ Phase 4: Ausführen - Lösungen</h2>
+
+            <div class="teacher-solution">
+                <h4>🎯 Kernaussagen zur RSTP-Konfiguration</h4>
+                <p>In der Ausführung geht es nicht um Gerätepraxis vor Ort, sondern um das <strong>fachliche Verstehen der Konfigurationslogik</strong>. Erwartet wird, dass die Lernenden die wichtigsten Stellhebel richtig benennen und ihre Wirkung erklären.</p>
+
+                <pre>Beispielhafte Kernbefehle:
+spanning-tree mode rapid-pvst
+spanning-tree vlan 1-100 priority 4096
+interface range GigabitEthernet1/0/1-24
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+interface TenGigabitEthernet1/0/1
+ spanning-tree vlan 1-100 cost 10</pre>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartungshorizont Phase 4</h4>
+                <ul>
+                    <li><strong>PortFast:</strong> Nur für Endgeräteports; zwischen Switches wäre es gefährlich, weil Schleifen zu schnell aktiv würden.</li>
+                    <li><strong>BPDU Guard:</strong> Schützt PortFast-Ports davor, versehentlich doch an einen Switch angeschlossen zu werden.</li>
+                    <li><strong>Pfadpriorisierung:</strong> Über Pfadkosten oder Port-Prioritäten; niedrigere Kosten bedeuten bevorzugter Weg.</li>
+                    <li><strong>Root-Priorität:</strong> Typisch 4096 für die Root Bridge, 8192 für die Backup Root.</li>
+                    <li><strong>Unterschied PortFast vs. RSTP-Modus:</strong> PortFast wirkt lokal auf einzelne Access-Ports, <code>rapid-pvst</code> setzt den globalen Spanning-Tree-Modus.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔍 Phase 5 & 6: Kontrollieren und Bewerten - Lösungen</h2>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartungshorizont Praxisaufgabe: Festival-Netzwerk absichern</h4>
+                <p><strong>Fachlich erwartet:</strong></p>
+                <ol>
+                    <li>Zwei Core-Switches als Root und Backup Root mit redundanten Uplinks zu allen Access-Switches</li>
+                    <li>Saubere VLAN-Trennung für Audio/DMX, Video, Streaming, Management und Gäste</li>
+                    <li>Begründete Priorisierung kritischer Pfade, insbesondere Audio/DMX und Streaming</li>
+                    <li>Beschreibung des Failovers bei Ausfall von CORE-SW-01 mit Umschaltung auf CORE-SW-02 innerhalb weniger Sekunden</li>
+                    <li>Nennung ergänzender Maßnahmen wie Monitoring, USV, getrennte Leitungswege, Dokumentation, Ersatzhardware</li>
+                </ol>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Musterbewertung für die Praxisaufgabe</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kriterium</th>
+                            <th>Punkte</th>
+                            <th>Erwartung</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Netzwerk-Topologie</td>
+                            <td>0-20</td>
+                            <td>Vollständig, logisch, Root/Backup und Redundanzpfade korrekt</td>
+                        </tr>
+                        <tr>
+                            <td>RSTP-Konfigurationslogik</td>
+                            <td>0-30</td>
+                            <td>Root Bridge, Trunks, PortFast/BPDU Guard und Pfadkosten fachlich richtig</td>
+                        </tr>
+                        <tr>
+                            <td>Failover-Beschreibung</td>
+                            <td>0-20</td>
+                            <td>Umschaltung nachvollziehbar, Konvergenz fachlich korrekt eingeschätzt</td>
+                        </tr>
+                        <tr>
+                            <td>Best Practices</td>
+                            <td>0-15</td>
+                            <td>Monitoring, Stromversorgung, Dokumentation, Ersatzkonzept benannt</td>
+                        </tr>
+                        <tr>
+                            <td>Dokumentation und Begründung</td>
+                            <td>0-15</td>
+                            <td>Entscheidungen nachvollziehbar, strukturiert, VT-bezogen</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><strong>Maximal:</strong> 100 Punkte</p>
+            </div>
+
+            <div class="tech-specs">
+                <h4>🔧 Typische Schwächen, auf die geachtet werden sollte</h4>
+                <ul>
+                    <li>Nur ein Uplink pro Access-Switch eingezeichnet</li>
+                    <li>Streaming- oder Audio-Pfade nicht als besonders kritisch markiert</li>
+                    <li>Root Bridge ohne Begründung auf einen ungeeigneten Switch gelegt</li>
+                    <li>Link-Redundanz mit echter Geräte-Redundanz verwechselt</li>
+                    <li>Monitoring und Stromversorgung als Redundanzfaktor vergessen</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        try {
+            const { MMBBSBOT } = await import('https://dev.mm-bbs.de:8085/mmbbs-bot.js');
+            const htmlContent = document.querySelector('.container')?.innerHTML || '';
+
+            new MMBBSBOT({
+                host: 'dev.mm-bbs.de',
+                protocol: 'https',
+                port: 8085,
+                opener: 'Hallo! Ich unterstütze Sie bei den Lösungen zu Block 1. Wie kann ich helfen?',
+                chat_icon: '',
+                chat_icon_style: 'border-radius: 50%; width: 40px; height: 40px;',
+                title: 'VT GPT',
+                task: htmlContent,
+                hints: 'Sie unterstützen Lehrkräfte im Bereich Veranstaltungstechnik. Liefern Sie kompakte fachliche Erläuterungen zu Redundanz, Topologien, STP, RSTP und Bewertung von Netzwerkausfällen.',
+                cookie: document.cookie
+            });
+        } catch (error) {
+            console.error('Fehler beim Laden des Chatbots:', error);
+        }
+    </script>
+</body>
+</html>

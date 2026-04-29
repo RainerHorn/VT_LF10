@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Aufgabe 7 – Protokolle in der Veranstaltungstechnik – Lehrerversion</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+                    min-height: 100vh;
+                    padding: 20px;
+                }
+
+                .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+                h1 {
+                    color: #2563eb; font-size: 2.2rem; font-weight: 700;
+                    margin-bottom: 0.1rem !important;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                }
+                h2 {
+                    color: #1d4ed8; font-size: 1.6rem; font-weight: 600;
+                    margin-bottom: 0.1rem !important; margin-top: 2rem;
+                }
+                h3 {
+                    color: #1e40af; font-size: 1.3rem; font-weight: 600;
+                    margin-bottom: 0.1rem !important; margin-top: 1.5rem;
+                }
+                h4 {
+                    color: #1e40af; font-size: 1.1rem; font-weight: 600;
+                    margin-bottom: 0.1rem !important; margin-top: 1rem;
+                }
+
+                .section {
+                    background: white; padding: 2rem; border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem; border: 1px solid #e5e7eb;
+                }
+
+                p { margin-bottom: 1.2rem; text-align: justify; color: #444; line-height: 1.7; }
+
+                ul, ol { padding-left: 2rem; margin-bottom: 1.2rem; }
+                li { margin-bottom: 0.5rem; color: #555; }
+
+                table {
+                    width: 100%; border-collapse: collapse; margin-bottom: 1.5rem;
+                    font-size: 0.95rem;
+                }
+                th {
+                    background: #1d4ed8; color: white; padding: 0.7rem 1rem;
+                    text-align: left; font-weight: 600;
+                }
+                td { padding: 0.6rem 1rem; border-bottom: 1px solid #e5e7eb; color: #444; }
+                tr:nth-child(even) td { background: #f8fafc; }
+                tr:hover td { background: #eff6ff; }
+
+                .intro {
+                    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+                    border-left: 4px solid #6b7280; padding: 1.5rem; margin: 1.5rem 0;
+                    border-radius: 8px; box-shadow: 0 3px 10px rgba(107,114,128,0.1);
+                }
+
+                .task {
+                    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+                    border-left: 4px solid #4caf50; padding: 1.5rem; margin: 1.5rem 0;
+                    border-radius: 8px; box-shadow: 0 3px 10px rgba(76,175,80,0.1);
+                }
+                .task strong {
+                    color: #2e7d32; font-size: 1.1rem; display: block; margin-bottom: 0.8rem;
+                }
+
+                .question {
+                    background: linear-gradient(135deg, #fff3cd 0%, #fdeaa7 100%);
+                    border-left: 4px solid #f39c12; padding: 1.2rem; margin: 1rem 0;
+                    border-radius: 8px; box-shadow: 0 3px 10px rgba(243,156,18,0.1);
+                }
+                .question strong { color: #b7950b; font-weight: 600; }
+
+                .tech-specs {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    border-left: 4px solid #0288d1; padding: 1.5rem; margin: 1.5rem 0;
+                    border-radius: 8px; box-shadow: 0 3px 10px rgba(2,136,209,0.1);
+                }
+                .tech-specs h4 { color: #01579b; margin-bottom: 1rem; font-weight: 600; font-size: 1.1rem; }
+
+                .teacher-solution {
+                    background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+                    border-left: 4px solid #dc2626; padding: 1.5rem; margin: 1.5rem 0;
+                    border-radius: 8px; box-shadow: 0 3px 10px rgba(220,38,38,0.1);
+                }
+                .teacher-solution h4 { color: #991b1b; margin-bottom: 1rem; font-weight: 600; font-size: 1.1rem; }
+                .teacher-solution p, .teacher-solution li { color: #7f1d1d; }
+                .teacher-solution strong { color: #991b1b; }
+
+                .badge {
+                    display: inline-block; padding: 2px 8px; border-radius: 12px;
+                    font-size: 0.8rem; font-weight: 600; margin-left: 6px;
+                }
+                .badge-udp  { background: #fef3c7; color: #92400e; }
+                .badge-tcp  { background: #dbeafe; color: #1e3a8a; }
+                .badge-mc   { background: #d1fae5; color: #065f46; }
+                .badge-bc   { background: #fee2e2; color: #991b1b; }
+
+                .lehrer-hinweis {
+                    background: #faf5ff; border: 2px dashed #7c3aed;
+                    padding: 1rem; margin: 1rem 0; border-radius: 8px;
+                    font-size: 0.95rem; color: #5b21b6;
+                }
+                .lehrer-hinweis strong { color: #5b21b6; }
+
+                strong { color: #1e40af; }
+
+                code {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    color: #01579b; padding: 3px 6px; border-radius: 6px;
+                    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+                    font-size: 0.9em; font-weight: 600; border: 1px solid #81d4fa;
+                }
+
+                @media (max-width: 768px) {
+                    body { padding: 10px; }
+                    .container { padding: 10px; }
+                    h1 { font-size: 1.8rem; } h2 { font-size: 1.4rem; } h3 { font-size: 1.2rem; }
+                    .section { padding: 1.5rem; margin-bottom: 1.5rem; }
+                    .task, .question { padding: 1rem; margin: 1rem 0; }
+                    table { font-size: 0.85rem; }
+                    th, td { padding: 0.4rem 0.6rem; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // DOM-Manipulation für Moodle
+            setTimeout(() => {
+                document.querySelectorAll('h2, h3, h4').forEach(el => {
+                    el.style.marginBottom = '0.1rem';
+                });
+            }, 100);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+
+        <!-- Titelbereich -->
+        <div class="section">
+            <h1>📡 Netzwerkprotokolle in der Veranstaltungstechnik</h1>
+            <p><em>Infrastruktur, Steuerung und Nutzdatentransport – Aufgabe 7</em></p>
+            <div class="lehrer-hinweis">
+                <strong>🎓 Lehrerversion</strong> – Diese Version enthält alle Erwartungshorizonte und didaktische Hinweise. Zeitbedarf: ca. 2–3 Unterrichtsstunden. Arbeitsauftrag 7 eignet sich als Hausaufgabe oder Abschluss in Stunde 3.
+            </div>
+        </div>
+
+        <!-- Einführung / Szenario -->
+        <div class="section">
+            <div class="intro">
+                <p><strong>📍 Berufsbezogener Kontext:</strong></p>
+                <p>Sie sind als Netzwerkspezialist für die technische Infrastruktur des „Open Air Summit" verantwortlich – ein dreitägiges Hybridfestival mit zwei Hauptbühnen, vier Nebenstages, einem Messebereich mit 60 Ausstellern und einer Live-Streamingproduktion für 50.000 Online-Zuschauer. Auf dem Gelände sind rund 800 netzwerkfähige Geräte aktiv:</p>
+                <ul>
+                    <li><strong>Lichttechnik:</strong> 120 Moving Heads, 40 LED-Bars, 6 Grandma-Konsolen, Pixel-Mapping-Server</li>
+                    <li><strong>Audiotechnik:</strong> Dante-Netzwerk mit 320 Kanälen, Yamaha-Mischpulte, Shure-Funksysteme, Monitoring-Systeme</li>
+                    <li><strong>Videotechnik:</strong> 18 PTZ-Kameras, 4 Handkameras, Blackmagic ATEM-Mischer, NDI-Konverter, LED-Video-Wände</li>
+                    <li><strong>Streaming:</strong> Encoder-Racks, CDN-Anbindung, OBS-Workstations, Grafik-Insert-Systeme</li>
+                    <li><strong>IT-Management:</strong> Server-Rack, Monitoring-System, WLAN für Crew und Publikum</li>
+                </ul>
+                <p>Damit das alles reibungslos funktioniert, kommunizieren diese Systeme über eine Vielzahl von Netzwerkprotokollen. Diese lassen sich in drei Kategorien einteilen: <strong>Infrastrukturprotokolle</strong>, <strong>Steuerprotokolle</strong> und <strong>Nutzdatentransport-Protokolle</strong>.</p>
+            </div>
+        </div>
+
+        <!-- ===================== KAPITEL 1: INFRASTRUKTUR ===================== -->
+        <div class="section">
+            <h2>1. Infrastrukturprotokolle</h2>
+            <div class="lehrer-hinweis">📖 Protokollbeschreibungen und technische Details sind in der Schülerversion enthalten.</div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen – Infrastrukturprotokolle:</strong>
+                <ol>
+                    <li>Warum sollten Dante-Geräte statische IP-Adressen oder DHCP-Reservierungen haben?</li>
+                    <li>Was ist der Unterschied zwischen DNS und mDNS und wann kommt mDNS in der Veranstaltungstechnik zum Einsatz?</li>
+                    <li>Erklären Sie, welche Folgen eine Netzwerkschleife ohne STP auf einen laufenden Dante-Audiotransport hätte.</li>
+                    <li>Für welche Geräte am Festival-Netzwerk würden Sie LACP einsetzen? Begründen Sie Ihre Auswahl.</li>
+                    <li>Welche SNMP-Version sollten Sie auf dem Managementnetzwerk konfigurieren und warum?</li>
+                </ol>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartungshorizont – Infrastrukturprotokolle</h4>
+                <ol>
+                    <li><strong>Dante + statische IPs:</strong> Dante speichert Routing-Konfigurationen (welches Gerät an welches Gerät wie viele Kanäle schickt) unter der IP-Adresse. Ändert DHCP die IP nach einem Neustart, verliert Dante alle Verbindungen. Zusätzlich sind Latenz-Messungen und PTP-Synchronisation IP-basiert – eine wechselnde Adresse würde PTP destabilisieren.</li>
+                    <li><strong>DNS vs. mDNS:</strong> DNS braucht einen zentralen Server; eine Abfrage läuft über diesen. mDNS fragt direkt per Multicast alle Geräte im lokalen Netzwerk – ohne Server. Im VT-Einsatz: Dante Controller nutzt mDNS, um Dante-Geräte automatisch zu finden. NDI nutzt mDNS ebenfalls zur Quellenerkennung. In einem gemanagten Netzwerk mit VLANs muss mDNS durch einen mDNS-Proxy (z.B. Avahi) über VLAN-Grenzen hinweg weitergeleitet werden.</li>
+                    <li><strong>Schleife ohne STP:</strong> Broadcast-Pakete (z.B. Art-Net-Broadcasts, DHCP-Discovers) kreisen endlos durch das Netzwerk. Die Switches werden mit diesen Paketen überflutet (Broadcast-Storm), der Uplink zum Dante-VLAN saturiert, Pakete gehen verloren → Audioaussetzer, Komplettausfall in Sekunden.</li>
+                    <li><strong>LACP-Einsatz:</strong> Recording-Server (unkomprimiertes 4K benötigt &gt;3,5 Gbit/s), Streaming-Encoder-Racks (mehrere parallele Streams), zentraler Backbone-Switch-Uplink. Nicht sinnvoll für einzelne Dante-Geräteanschlüsse (1 GbE reicht für Dante).</li>
+                    <li><strong>SNMP-Version:</strong> SNMPv3, da verschlüsselt (AES) und authentifiziert (SHA). SNMPv2c überträgt den Community-String im Klartext – auf dem Managementnetz eines Festivals, an dem viele Techniker arbeiten, ein erhebliches Sicherheitsrisiko.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- ===================== KAPITEL 2: STEUERUNG ===================== -->
+        <div class="section">
+            <h2>2. Steuerprotokolle</h2>
+            <div class="lehrer-hinweis">📖 Protokollbeschreibungen und technische Details sind in der Schülerversion enthalten.</div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Didaktische Hinweise – Steuerprotokolle (Art-Net vs. sACN)</h4>
+                <p><strong>Vergleichstabelle (Musterlösung):</strong></p>
+                <table>
+                    <thead>
+                        <tr><th>Kriterium</th><th>Art-Net</th><th>sACN (E1.31)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Übertragungsart</td><td>Broadcast (Standard) oder Unicast</td><td>Multicast (Standard)</td></tr>
+                        <tr><td>Netzwerklast</td><td>Hoch (Broadcast an alle Geräte)</td><td>Gering (nur angemeldete Empfänger)</td></tr>
+                        <tr><td>Skalierbarkeit</td><td>Gut, aber bei vielen Universes Broadcast-Last steigt</td><td>Sehr gut, IGMP-Snooping ermöglicht gezielte Verteilung</td></tr>
+                        <tr><td>Herstellerkompatibilität</td><td>Sehr weit verbreitet, nahezu universell</td><td>Zunehmend verbreitet, moderner Standard</td></tr>
+                        <tr><td>Konfigurationsaufwand</td><td>Gering</td><td>Mittel (IGMP-Snooping am Switch erforderlich)</td></tr>
+                    </tbody>
+                </table>
+                <p><strong>Empfehlung für das Festival:</strong> sACN – bei 200 Moving Heads auf 3 Bühnen entstehen viele Universes. Art-Net würde alle 800 Netzwerkgeräte im Segment mit Broadcasts belasten. sACN mit IGMP-Snooping sendet jeden Universe-Datenstrom nur an die Switches und Geräte, die ihn tatsächlich benötigen → deutlich geringere Netzwerklast, stabiler Betrieb.</p>
+                <p><strong>Art-Net bevorzugen wenn:</strong> Einfache Installation ohne managed Switches (z.B. kleines Event mit unmanaged Switches); ältere Geräte ohne sACN-Unterstützung; kurzfristiger Einsatz ohne Vorab-Konfiguration.</p>
+                <p><strong>Didaktischer Hinweis:</strong> Schüler sollen erkennen, dass beide Protokolle parallel eingesetzt werden können (Art-Net für ältere Geräte, sACN für neue). Die richtige Antwort ist kontextabhängig – kein einfaches Richtig/Falsch.</p>
+            </div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen – Steuerprotokolle:</strong>
+                <ol>
+                    <li>Erklären Sie den Unterschied zwischen Broadcast und Multicast und deren Auswirkung auf die Netzwerklast.</li>
+                    <li>Wozu dient RDM und welchen Vorteil bietet es im Vergleich zur direkten DMX-Konfiguration am Gerät?</li>
+                    <li>Beschreiben Sie ein Szenario, bei dem OSC eine sinnvolle Lösung ist.</li>
+                    <li>Warum ist IGMP-Snooping Voraussetzung für effizienten sACN-Betrieb?</li>
+                </ol>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartungshorizont – Steuerprotokolle Kontrollfragen</h4>
+                <ol>
+                    <li><strong>Broadcast vs. Multicast:</strong> Broadcast sendet ein Paket an <em>alle</em> Geräte im Subnetz – jede NIC muss es empfangen und verarbeiten, auch wenn das Gerät keine Art-Net-Node ist (z.B. Streaming-PC). Multicast sendet an eine Gruppe – nur Geräte, die sich per IGMP angemeldet haben, empfangen das Paket. Switches mit IGMP-Snooping leiten Multicast-Pakete nur an die entsprechenden Ports weiter, statt sie wie Broadcasts zu fluten.</li>
+                    <li><strong>RDM:</strong> Ohne RDM muss man an jeden Moving Head physisch herangehen, die Adresstaste drücken und die DMX-Adresse manuell einstellen. Mit RDM (z.B. über Art-Net RDM) kann man vom Lichtpult aus alle 200 Moving Heads adressieren, fehlende Geräte identifizieren, Fehler auslesen und Software-Updates anstoßen – in Minuten statt Stunden.</li>
+                    <li><strong>OSC-Szenario:</strong> Ein Musiker auf der Bühne steuert mit einem iPad über TouchOSC die Effekte seines Loops-Setups und gleichzeitig werden über dieselben OSC-Nachrichten Lichteffekte auf der Bühne ausgelöst (QLab-Trigger) – ohne separates Lichttechnik-Personal für diese Sequenz.</li>
+                    <li><strong>IGMP-Snooping:</strong> Ohne IGMP-Snooping behandelt der Switch Multicast-Pakete wie Broadcasts und sendet sie an alle Ports. Mit sACN bei 20 Universes (ca. 800 Kbit/s je Universe) würden alle 800 Geräteanschlüsse mit ~16 Mbit/s Multicast-Last überlagert. IGMP-Snooping analysiert IGMP-Nachrichten und leitet Multicast nur an angemeldete Ports – damit bleibt sACN effizient.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- ===================== KAPITEL 3: NUTZDATENTRANSPORT ===================== -->
+        <div class="section">
+            <h2>3. Nutzdatentransport-Protokolle</h2>
+            <div class="lehrer-hinweis">📖 Protokollbeschreibungen und technische Details sind in der Schülerversion enthalten.</div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Didaktische Hinweise – Nutzdatentransport-Protokolle</h4>
+                <p><strong>Musterlösung Protokoll-Tabelle:</strong></p>
+                <table>
+                    <thead>
+                        <tr><th>Protokoll</th><th>Bereich</th><th>Transport</th><th>VLAN</th><th>Bandbreite ca.</th><th>Begründung</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Dante</td><td>Audio</td><td>RTP/UDP</td><td>VLAN 20</td><td>2 Gbit/s (320 ch, 32-Bit)</td><td>Standard im professionellen VT-Audio</td></tr>
+                        <tr><td>AES67</td><td>Audio</td><td>RTP/UDP</td><td>VLAN 20</td><td>Geteilt mit Dante</td><td>Für Interop mit Nicht-Dante-Geräten</td></tr>
+                        <tr><td>NDI Full-BW</td><td>Video</td><td>UDP/TCP</td><td>VLAN 30</td><td>~3,5 Gbit/s (18 Cams)</td><td>IP-Produktion ohne SDI-Kabel</td></tr>
+                        <tr><td>NDI|HX</td><td>Video</td><td>UDP/TCP</td><td>VLAN 30</td><td>~360 Mbit/s (18× HX)</td><td>Wenn GbE-Backbone nicht ausreicht</td></tr>
+                        <tr><td>RTMP</td><td>Streaming</td><td>TCP</td><td>VLAN 30</td><td>~20 Mbit/s pro Stream</td><td>Ingest zu YouTube/Twitch</td></tr>
+                        <tr><td>SRT</td><td>Streaming</td><td>UDP</td><td>VLAN 30</td><td>~20 Mbit/s</td><td>Backup-Stream über 4G-Bonding</td></tr>
+                    </tbody>
+                </table>
+                <p><strong>Bandbreitenberechnung Dante:</strong> 320 Kanäle × 32 Bit × 48.000 Hz = 491.520.000 Bit/s ≈ 492 Mbit/s reine Nutzdaten. Mit RTP-Overhead (ca. 20 %) und Sicherheitspuffer: ca. 700–900 Mbit/s. Mit vollständiger Redundanz (doppeltes Netzwerk): 2 Gbit/s geplant → 10-GbE-Uplinks für Dante-VLAN empfohlen.</p>
+                <p><strong>Herausforderungen bei gemeinsamer Infrastruktur:</strong> Ohne QoS verdrängt NDI-Videotraffic (hohe Bandbreite, kein Retransmit-Bedarf auf kurzen Strecken) das latenzsensitvere Dante-Audio. DSCP EF (Expedited Forwarding) für Dante, DSCP AF41 für Video, DSCP AF21 für Streaming empfohlen.</p>
+                <p><strong>Didaktischer Hinweis:</strong> Schüler sollen erkennen, dass die Protokollwahl nicht isoliert getroffen werden kann – Bandbreite, VLAN-Design und QoS bedingen sich gegenseitig.</p>
+            </div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen – Nutzdatentransport:</strong>
+                <ol>
+                    <li>Berechnen Sie den ungefähren Bandbreitenbedarf für ein Dante-Netzwerk mit 128 Audiokanälen (32-Bit, 48 kHz).</li>
+                    <li>Warum wird für Dante zwingend PTP (Precision Time Protocol) benötigt?</li>
+                    <li>Vergleichen Sie NDI Full-Bandwidth und NDI|HX. Für welches Szenario würden Sie welche Variante einsetzen?</li>
+                    <li>Erklären Sie den Unterschied zwischen RTMP und HLS hinsichtlich Latenz und Verwendungszweck.</li>
+                    <li>Was ist der Vorteil von SRT gegenüber RTMP bei einer Remote-Produktion über das Internet?</li>
+                </ol>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartungshorizont – Nutzdatentransport Kontrollfragen</h4>
+                <ol>
+                    <li><strong>Bandbreite Dante 128 ch:</strong> 128 × 32 Bit × 48.000 Hz = 196.608.000 Bit/s ≈ 197 Mbit/s Nutzdaten. Mit RTP/UDP-Overhead (~20 %) ≈ 235 Mbit/s. Für redundanten Betrieb (Dante Primary + Secondary Network): ≈ 470 Mbit/s → 1-GbE-Uplink ausreichend, mit Puffer empfohlen.</li>
+                    <li><strong>PTP für Dante:</strong> Digitalaudio besteht aus Samples, die in einer exakt definierten zeitlichen Reihenfolge ausgespielt werden müssen. Bei 48.000 Hz muss jedes Sample zur richtigen Zeit ankommen. Kommen Samples von verschiedenen Quellen mit unterschiedlicher Gerätezeit an, entstehen Phasenfehler und Aussetzer. PTP synchronisiert alle Dante-Geräte auf eine gemeinsame Uhr mit &lt;1 µs Genauigkeit – damit ist Sample-synchrone Addition von Signalen (z.B. Haupt- und Monitormischpult) möglich.</li>
+                    <li><strong>NDI Full vs. HX:</strong> Full-Bandwidth nutzt verlustfreie Kompression (visually lossless), ~125–250 Mbit/s pro Stream – für Schnitt, Regie, jede Anwendung mit höchsten Qualitätsanforderungen. NDI|HX nutzt H.264/H.265 Kompression, 10–20 Mbit/s – für Multiview-Monitoring, Strecken über 1-GbE-Switches mit vielen gleichzeitigen Streams, Remote-Produktionspunkte. Faustregel: Im Produktionskern Full-BW, an der Peripherie HX.</li>
+                    <li><strong>RTMP vs. HLS:</strong> RTMP ist ein Push-Protokoll, das der Encoder zum Streaming-Server schickt (Ingest). Latenz 2–5 s. HLS ist ein Pull-Protokoll; der Zuschauer-Client fragt Segmente beim Server ab. Latenz 10–30 s. RTMP = Einspeisung vom Veranstaltungsgelände zur Plattform. HLS = Distribution von der Plattform zu Millionen Zuschauern. Beide werden kombiniert: OBS sendet RTMP zu YouTube, YouTube liefert HLS an Zuschauer.</li>
+                    <li><strong>SRT vs. RTMP über Internet:</strong> RTMP über TCP ist anfällig für Paketverluste im Internet – bei Verlusten bricht die Verbindung ab oder es entstehen Stottern durch TCP-Übertragungswiederholungen. SRT implementiert ARQ (Automatic Repeat reQuest) auf UDP-Ebene: Verlorene Pakete werden selektiv nachübertragen, ohne den gesamten Stream zu beeinflussen. Zusätzlich bietet SRT AES-Verschlüsselung und Authentifizierung – für professionelle Remote-Produktionen über ungesicherte 4G/5G-Verbindungen unverzichtbar.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- ===================== ÜBERBLICK-TABELLE ===================== -->
+        <div class="section">
+            <h2>Protokoll-Übersicht</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Protokoll</th>
+                        <th>Kategorie</th>
+                        <th>Transport</th>
+                        <th>Port</th>
+                        <th>Typischer Einsatz VT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>DHCP</strong></td><td>Infrastruktur</td><td>UDP</td><td>67/68</td><td>Automatische IP-Vergabe</td></tr>
+                    <tr><td><strong>DNS / mDNS</strong></td><td>Infrastruktur</td><td>UDP/TCP</td><td>53 / 5353</td><td>Namensauflösung, Dante-/NDI-Erkennung</td></tr>
+                    <tr><td><strong>SNMP</strong></td><td>Infrastruktur</td><td>UDP</td><td>161/162</td><td>Netzwerk-Monitoring</td></tr>
+                    <tr><td><strong>STP / RSTP</strong></td><td>Infrastruktur</td><td>Ethernet (L2)</td><td>–</td><td>Loop-Vermeidung, Redundanz</td></tr>
+                    <tr><td><strong>LACP</strong></td><td>Infrastruktur</td><td>Ethernet (L2)</td><td>–</td><td>Bandbreiten-Bündelung</td></tr>
+                    <tr><td><strong>Art-Net</strong></td><td>Steuerung</td><td>UDP</td><td>6454</td><td>DMX über IP (Broadcast)</td></tr>
+                    <tr><td><strong>sACN (E1.31)</strong></td><td>Steuerung</td><td>UDP</td><td>5568</td><td>DMX über IP (Multicast)</td></tr>
+                    <tr><td><strong>OSC</strong></td><td>Steuerung</td><td>UDP/TCP</td><td>frei</td><td>Showsteuerung, Medienserver</td></tr>
+                    <tr><td><strong>RDM</strong></td><td>Steuerung</td><td>DMX / Art-Net</td><td>–</td><td>Fernkonfiguration Scheinwerfer</td></tr>
+                    <tr><td><strong>RTP-MIDI</strong></td><td>Steuerung</td><td>UDP (RTP)</td><td>5004/5005</td><td>MIDI über IP</td></tr>
+                    <tr><td><strong>Dante / AES67</strong></td><td>Nutzdaten – Audio</td><td>UDP (RTP)</td><td>dynamisch</td><td>Audio over IP</td></tr>
+                    <tr><td><strong>NDI</strong></td><td>Nutzdaten – Video</td><td>UDP/TCP</td><td>dynamisch</td><td>Video over IP</td></tr>
+                    <tr><td><strong>RTP / RTCP</strong></td><td>Nutzdaten – A/V</td><td>UDP</td><td>dynamisch</td><td>Basis für Dante, AES67, WebRTC</td></tr>
+                    <tr><td><strong>RTSP</strong></td><td>Nutzdaten – Video</td><td>TCP</td><td>554</td><td>IP-Kamera-Streams</td></tr>
+                    <tr><td><strong>RTMP</strong></td><td>Nutzdaten – Streaming</td><td>TCP</td><td>1935</td><td>Live-Stream-Ingest</td></tr>
+                    <tr><td><strong>HLS</strong></td><td>Nutzdaten – Streaming</td><td>HTTP/HTTPS</td><td>80/443</td><td>Live-Stream-Distribution</td></tr>
+                    <tr><td><strong>SRT</strong></td><td>Nutzdaten – Streaming</td><td>UDP</td><td>9000–9999</td><td>Sicherer Remote-Transport</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ===================== ABSCHLUSS-AUFGABE ===================== -->
+        <div class="section">
+            <h2>Arbeitsauftrag 7 – Protokoll-Konzept für das Festival</h2>
+
+            <div class="task">
+                <strong>Vollständiges Protokoll-Konzept erstellen</strong>
+                <p><strong>Sozialform:</strong> Einzelarbeit</p>
+                <p><strong>Methode:</strong> Vollständige Handlung</p>
+                <br>
+                <p>Erstellen Sie ein vollständiges Protokoll-Konzept für das „Open Air Summit" mit fünf VLANs, inkl. QoS-Priorisierung und Bandbreitenplanung.</p>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartungshorizont – Arbeitsauftrag 7</h4>
+                <p><strong>Musterlösung VLAN-Protokoll-Zuordnung:</strong></p>
+                <table>
+                    <thead>
+                        <tr><th>VLAN</th><th>Protokolle</th><th>Bandbreite gesamt (ca.)</th><th>QoS DSCP</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>VLAN 10 – Licht</td><td>sACN, Art-Net, RDM (via Art-Net), OSC (Showctl.)</td><td>~50 Mbit/s</td><td>AF21</td></tr>
+                        <tr><td>VLAN 20 – Audio</td><td>Dante (RTP/UDP), AES67, mDNS (Geräteerkennung), RTP-MIDI</td><td>~1 Gbit/s</td><td>EF (46)</td></tr>
+                        <tr><td>VLAN 30 – Video/Stream</td><td>NDI, RTSP, RTMP, SRT, HLS (Monitoring)</td><td>~5 Gbit/s</td><td>AF41 (Video), AF21 (Stream)</td></tr>
+                        <tr><td>VLAN 40 – Management</td><td>SNMP, SSH, HTTP/S (Webinterfaces), Syslog, DHCP (Server), DNS</td><td>~100 Mbit/s</td><td>CS6 (Management)</td></tr>
+                        <tr><td>VLAN 50 – Gäste</td><td>DHCP, DNS, HTTP/S, QUIC</td><td>~1 Gbit/s</td><td>BE (0) – Best Effort</td></tr>
+                    </tbody>
+                </table>
+                <p><strong>Drei wichtigste Maßnahmen (Musterlösung):</strong></p>
+                <ol>
+                    <li><strong>VLAN-Segmentierung + QoS:</strong> Ohne klare VLAN-Trennung und DSCP-Markierung verdrängt Video-Broadcast-Traffic das Dante-Audio. QoS sichert die Latenzanforderungen von Dante (&lt;1 ms Jitter) selbst bei hoher Netzwerkauslastung.</li>
+                    <li><strong>Redundante Switches + RSTP:</strong> Ein Switch-Ausfall ohne Redundanz bedeutet kompletter Produktionsausfall. Redundante Verbindungen mit RSTP (Konvergenz &lt;3 s) oder MSTP sichern den Betrieb. PortFast auf Audio-Ports verhindert 30-Sekunden-Unterbrechungen bei Neustarts.</li>
+                    <li><strong>Statische IPs / DHCP-Reservierungen für alle VT-Geräte:</strong> Dante, Art-Net, sACN und NDI verlieren bei IP-Änderung ihre Konfiguration. Alle produktionskritischen Geräte müssen vorab mit fester IP in Betrieb genommen werden.</li>
+                </ol>
+                <p><strong>Didaktischer Hinweis:</strong> Die Aufgabe verbindet alle Inhalte von Kapitel 2 (IP-Adressen, Subnetze, VLANs, Protokolle). Sie eignet sich als Überprüfungsaufgabe am Ende des Kapitels. Mögliche Differenzierung: Leistungsstarke Schüler berechnen Bandbreiten exakt; schwächere Schüler nutzen die Richtwerte aus der Tabelle.</p>
+            </div>
+
+            <div class="question">
+                <strong>💡 Abschlusskontrolle – Gesamtverständnis:</strong>
+                <ol>
+                    <li>Warum ist es wichtig, Infrastruktur-, Steuer- und Nutzdatenprotokolle in separaten VLANs zu betreiben?</li>
+                    <li>Welche Protokolle sind besonders latenzsensitiv und welche Maßnahmen sichern deren Betrieb?</li>
+                    <li>Ein Techniker berichtet, die Moving Heads reagieren unregelmäßig auf Art-Net. Nennen Sie drei mögliche Ursachen und Lösungen.</li>
+                    <li>Erklären Sie, warum Dante für die Signalübertragung TCP ausschließt.</li>
+                    <li>Für welche Aufgabe würden Sie SRT statt RTMP wählen? Begründen Sie.</li>
+                </ol>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartungshorizont – Abschlusskontrolle</h4>
+                <ol>
+                    <li><strong>Separate VLANs:</strong> (a) Isolation: Broadcast-Stürme oder Ausfälle in einem VLAN beeinflussen andere nicht. (b) Bandbreite: Video-Streams mit mehreren Gbit/s würden ohne VLAN-Trennung das Audio-VLAN fluten. (c) Sicherheit: Gäste-WLAN hat keinen Zugriff auf Steuer- und Produktionsnetzwerke. (d) QoS: Pro VLAN können unterschiedliche Prioritäten vergeben werden.</li>
+                    <li><strong>Latenzsensitive Protokolle:</strong> Dante (max. 1 ms Jitter), sACN/Art-Net (DMX-Timing ≤22 ms). Maßnahmen: Dediziertes VLAN, QoS mit DSCP EF für Dante, kein Jumbo-Frame auf Dante-Switches, PTP-fähige Switches (IEEE 1588), RSTP mit PortFast auf Dante-Ports.</li>
+                    <li><strong>Art-Net-Diagnose:</strong> (a) Broadcasts landen im falschen VLAN / werden durch Switch gefiltert → VLAN-Konfiguration prüfen. (b) Duplicate Universe IDs: Zwei Quellen senden auf demselben Universe → Adresskonfiguration prüfen, Netzwerkanalyse mit Wireshark. (c) Netzwerküberlastung: Art-Net teilt sich Bandbreite mit Video/Audio → VLAN trennen, QoS konfigurieren.</li>
+                    <li><strong>Dante und TCP:</strong> TCP garantiert Zustellung durch Bestätigung und Retransmission verlorener Pakete. Bei Paketverlust wartet TCP auf das wiederholte Paket – das kann Millisekunden bis Sekunden dauern. Bei einem 48-kHz-Dante-Signal ist ein einzelnes fehlerhaftes Sample in 20 µs vorbei. Eine TCP-Wiederholung nach 5–100 ms würde das Sample so spät liefern, dass es beim Decoding einen Aussetzer oder ein Pop erzeugt. UDP akzeptiert Paketverluste; Dante nutzt zusätzlich Redundanz-Streams (Primary/Secondary Netzwerk) um Ausfälle zu kompensieren.</li>
+                    <li><strong>SRT statt RTMP:</strong> Bei einer Remote-Produktion, bei der der Encoder über eine 4G-LTE-Verbindung (Mobilfunk-Backhaul) einspeist. 4G hat schwankende Paketverluste von 1–5 %. RTMP (TCP) bricht bei hohem Verlust ab oder stottert durch TCP-Slow-Start. SRT (UDP + ARQ) überbrückt Paketverluste transparent durch selektive Nachübertragung ohne Stream-Unterbrechung. Zusätzlich bietet SRT Ende-zu-Ende-Verschlüsselung (AES-128/256) – wichtig für sichere Übertragung von Veranstaltungsmaterial über öffentliche Netze.</li>
+                </ol>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

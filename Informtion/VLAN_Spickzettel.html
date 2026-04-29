@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>VLAN-Design in der Veranstaltungstechnik - Spickzettel</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Funktion zum Kopieren von Code in die Zwischenablage
+            window.copyToClipboard = function(code) {
+                navigator.clipboard.writeText(code).then(() => {
+                    const tooltip = document.createElement('div');
+                    tooltip.textContent = 'Code kopiert!';
+                    tooltip.style.position = 'fixed';
+                    tooltip.style.top = '50%';
+                    tooltip.style.left = '50%';
+                    tooltip.style.transform = 'translate(-50%, -50%)';
+                    tooltip.style.backgroundColor = '#333';
+                    tooltip.style.color = '#fff';
+                    tooltip.style.padding = '10px';
+                    tooltip.style.borderRadius = '5px';
+                    tooltip.style.zIndex = '1000';
+                    document.body.appendChild(tooltip);
+                    setTimeout(() => {
+                        document.body.removeChild(tooltip);
+                    }, 1000);
+                }).catch(err => {
+                    console.error('Fehler beim Kopieren:', err);
+                });
+            };
+
+            // Funktion zum Erklären des Codes mithilfe des Chatbots
+            window.explainCode = function(code) {
+                console.log('Erkläre Code:', code); // Debugging
+                sendToChatbot(code);
+            };
+
+            // Funktion zum Simulieren eines Klicks auf den Chatbot-Button
+            window.simulateChatbotClick = function() {
+                // Der Chatbot-Button hat die ID 'chat-icon' in mmbbs-bot.js
+                const chatButton = document.getElementById('chat-icon');
+                if (chatButton) {
+                    console.log('Chatbot-Button gefunden. Simuliere Klick.'); // Debugging
+                    chatButton.click();
+                } else {
+                    console.error('Chatbot-Button nicht gefunden.');
+                }
+            };
+
+            // Funktion zum Senden von Nachrichten an den Chatbot
+            window.sendToChatbot = function(message) {
+                // Öffne den Chatbot-Chatfenster durch Klick auf das Chat-Icon
+                simulateChatbotClick();
+
+                // Warte kurz, bis das Chatfenster geöffnet ist
+                setTimeout(() => {
+                    const chatInput = document.getElementById('chat-input');
+                    const sendButton = document.getElementById('send-button');
+
+                    if (chatInput && sendButton) {
+                        chatInput.value = message;
+                        sendButton.click();
+                        console.log('Nachricht an Chatbot gesendet:', message); // Debugging
+                    } else {
+                        console.error('Chat-Eingabefeld oder Senden-Button nicht gefunden.');
+                    }
+                }, 500); // Verzögerung von 500 ms
+            };
+            
+            const style = document.createElement('style');
+            style.innerHTML = `
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+                    min-height: 100vh;
+                    padding: 20px;
+                }
+
+                .container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }
+
+                h1 {
+                    color: #2563eb;
+                    font-size: 2.2rem;
+                    font-weight: 700;
+                    margin-bottom: 1rem;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                }
+
+                h2 {
+                    color: #1d4ed8;
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                    margin-bottom: 1rem;
+                    margin-top: 2rem;
+                }
+
+                h3 {
+                    color: #1e40af;
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    margin-bottom: 0.8rem;
+                    margin-top: 1.5rem;
+                }
+
+                .section {
+                    background: white;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                    border: 1px solid #e5e7eb;
+                }
+
+                p {
+                    margin-bottom: 1.2rem;
+                    text-align: justify;
+                    color: #444;
+                    line-height: 1.7;
+                }
+
+                code {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    color: #01579b;
+                    padding: 3px 6px;
+                    border-radius: 6px;
+                    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+                    font-size: 0.9em;
+                    font-weight: 600;
+                    border: 1px solid #81d4fa;
+                }
+
+                ul {
+                    padding-left: 2rem;
+                    margin-bottom: 1.2rem;
+                }
+
+                li {
+                    margin-bottom: 0.5rem;
+                    color: #555;
+                }
+
+                .task {
+                    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+                    border-left: 4px solid #4caf50;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(76, 175, 80, 0.1);
+                }
+
+                .task strong {
+                    color: #2e7d32;
+                    font-size: 1.1rem;
+                    display: block;
+                    margin-bottom: 0.8rem;
+                }
+
+                .question {
+                    background: linear-gradient(135deg, #fff3cd 0%, #fdeaa7 100%);
+                    border-left: 4px solid #f39c12;
+                    padding: 1.2rem;
+                    margin: 1rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(243, 156, 18, 0.1);
+                    color: #b7950b;
+                    font-weight: 500;
+                }
+
+                .tech-specs {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    border-left: 4px solid #0288d1;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(2, 136, 209, 0.1);
+                }
+
+                .tech-specs h4 {
+                    color: #01579b;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+
+                .info-box {
+                    background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+                    border-left: 4px solid #9c27b0;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(156, 39, 176, 0.1);
+                }
+
+                .info-box h4 {
+                    color: #6a1b9a;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+
+                strong {
+                    color: #1e40af;
+                }
+
+                @media (max-width: 768px) {
+                    body {
+                        padding: 10px;
+                    }
+
+                    .container {
+                        padding: 10px;
+                    }
+
+                    h1 {
+                        font-size: 1.8rem;
+                    }
+
+                    h2 {
+                        font-size: 1.4rem;
+                    }
+
+                    h3 {
+                        font-size: 1.2rem;
+                    }
+
+                    .section {
+                        padding: 1.5rem;
+                        margin-bottom: 1.5rem;
+                    }
+
+                    .task, .question {
+                        padding: 1rem;
+                        margin: 1rem 0;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .section {
+                        padding: 1rem;
+                    }
+
+                    h1 {
+                        font-size: 1.6rem;
+                    }
+
+                    .task, .question {
+                        padding: 0.8rem;
+                    }
+                }
+
+                /* Chatbot-spezifische Styles */
+                #chat-container {
+                    color: white !important;
+                }
+
+                #chat-container * {
+                    color: white !important;
+                }
+
+                #chat-container .chat-message {
+                    color: white !important;
+                }
+
+                #chat-container .bot-message {
+                    color: white !important;
+                    background-color: rgba(59, 130, 246, 0.8) !important;
+                }
+
+                #chat-container .user-message {
+                    color: white !important;
+                    background-color: rgba(107, 114, 128, 0.8) !important;
+                }
+
+                #chat-container input, #chat-container textarea {
+                    color: white !important;
+                    background-color: rgba(55, 65, 81, 0.9) !important;
+                }
+
+                #chat-container button {
+                    color: white !important;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+
+        // Funktion zum Initialisieren des Chatbots
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const { MMBBSBOT } = await import('https://dev.mm-bbs.de:8085/mmbbs-bot.js');
+
+                // Wählt das erste Element mit der Klasse "activity-description" aus (falls vorhanden)
+                var element = document.querySelector('.activity-description');
+
+                // Prüft, ob das Element existiert und Inhalt hat
+                var htmlContent = element ? element.innerHTML : '';
+
+                const settings = {
+                    "host": "dev.mm-bbs.de",
+                    "protocol": "https",
+                    "port": 8085,
+                    "opener": "Hallo, wie kann ich Ihnen beim Thema VLAN-Design helfen?",
+                    "chat_icon": "",
+                    "chat_icon_style": "border-radius: 50%; width: 40px; height: 40px;",
+                    "title": "VT GPT",
+                    "task": htmlContent,
+                    "hints": "Sie sind Netzwerkexperte im Bereich Veranstaltungstechnik. Sie beantworten Fragen zum Thema VLAN-Design und geben Erklärungen. Ihre Schüler sind Fachkräfte für Veranstaltungstechnik im dritten Ausbildungsjahr.",
+                    "cookie": document.cookie
+                };
+
+                const bot = new MMBBSBOT(settings);
+                console.log('Chatbot initialisiert:', bot); // Debugging
+
+                // Make toggleChat, sendMessage, and handleKeyDown available globally
+                window.toggleChat = bot.toggleChat.bind(bot);
+                window.sendMessage = bot.sendMessage.bind(bot);
+                window.handleKeyDown = bot.handleKeyDown.bind(bot);
+            } catch (error) {
+                console.error('Fehler beim Laden des Chatbots:', error);
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <h1>📡 VLAN-Design in der Veranstaltungstechnik</h1>
+            <p><strong>Kompakte Übersicht</strong> der wichtigsten Grundsätze und Best Practices für die Planung und Umsetzung von VLAN-Strukturen in der Veranstaltungstechnik.</p>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Grundlegende VLAN-Trennung</h2>
+            
+            <div class="info-box">
+                <h4>💡 Trennung nach Gewerken</h4>
+                <p>Erstellen Sie mindestens ein separates VLAN für jedes technische Gewerk:</p>
+                <ul>
+                    <li><strong>Audio-VLAN:</strong> Dante/Q-SYS und andere Audio-Protokolle</li>
+                    <li><strong>Video-VLAN:</strong> AVoIP (Audio/Video over IP) und Videosignale</li>
+                    <li><strong>Licht-/Steuerungs-VLAN:</strong> MA (MA Lighting), sACN, Art-Net</li>
+                    <li><strong>Office-/Internet-VLAN:</strong> Administrative Kommunikation und Internetzugang</li>
+                </ul>
+                <p>Diese Trennung verhindert gegenseitige Störungen und ermöglicht gezielte QoS-Einstellungen pro Gewerk.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎵 Dante-Besonderheiten</h2>
+            
+            <div class="tech-specs">
+                <h4>🔧 Control- und Audio-Traffic trennen</h4>
+                <p>Bei Dante-Netzwerken ist eine zusätzliche Trennung empfehlenswert:</p>
+                <ul>
+                    <li><strong>VLAN Dante-Audio:</strong> Ausschließlich für Audiostreams</li>
+                    <li><strong>VLAN Dante-Control:</strong> Für Management- und Steuerungsdaten</li>
+                </ul>
+                <p>Diese Trennung ist besonders wichtig bei gemischten Netzen mit mehreren Protokollen, um Latenz und Jitter zu minimieren.</p>
+            </div>
+
+            <div class="info-box">
+                <h4>💡 Dante-Redundanz richtig umsetzen</h4>
+                <p><strong>Best Practice:</strong> Nutzen Sie für Dante-Redundanz (Primary/Secondary) <strong>physisch getrennte Switches und Verkabelung</strong>.</p>
+                <p><strong>Wichtig:</strong> VLAN-Redundanz auf demselben physischen Switch bietet nur eine <em>logische</em> Trennung und schützt nicht vor Hardware-Ausfällen des Switches selbst.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚙️ AV-Switch-Profile nutzen</h2>
+            
+            <div class="tech-specs">
+                <h4>🔧 Vorkonfigurierte Templates</h4>
+                <p>Moderne AV-Switches (z.B. <strong>Netgear AV Line</strong>) bieten fertige Profile mit optimierten Einstellungen:</p>
+                <ul>
+                    <li>Vorkonfigurierte VLAN-IDs für Audio/Video</li>
+                    <li>Optimierte QoS-Einstellungen (Quality of Service)</li>
+                    <li>IGMP-Snooping für Multicast-Verkehr</li>
+                </ul>
+                <p><strong>Empfehlung:</strong> Nutzen Sie diese Templates als Ausgangspunkt statt alles "from scratch" zu konfigurieren. Passen Sie die Einstellungen anschließend an Ihre spezifischen Anforderungen an.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔗 Uplinks und Trunk-Konfiguration</h2>
+            
+            <div class="info-box">
+                <h4>💡 Trunk-Ports zwischen Standorten</h4>
+                <p><strong>Uplinks</strong> zwischen FOH (Front of House), Bühne, Regie und anderen Standorten müssen immer als <strong>Trunk-Ports</strong> konfiguriert werden:</p>
+                <ul>
+                    <li>Alle benötigten VLANs werden <strong>getaggt</strong> über den Trunk transportiert</li>
+                    <li>Ermöglicht Zugriff auf mehrere VLANs über eine physische Verbindung</li>
+                </ul>
+            </div>
+
+            <div class="tech-specs">
+                <h4>🔧 Access-Ports für Endgeräte</h4>
+                <p><strong>Endgeräte-Ports</strong> (z.B. für Mischpulte, Kameras, Steuerrechner) werden als <strong>Access-Ports</strong> konfiguriert:</p>
+                <ul>
+                    <li><strong>Untagged</strong> in genau <strong>einem</strong> VLAN</li>
+                    <li>Endgerät muss keine VLAN-Tags verstehen</li>
+                    <li>Einfachere Konfiguration und höhere Kompatibilität</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🚦 Inter-VLAN-Routing und Sicherheit</h2>
+            
+            <div class="info-box">
+                <h4>💡 Routing nur wo nötig</h4>
+                <p><strong>Inter-VLAN-Routing</strong> sollte nur dort erlaubt werden, wo es tatsächlich erforderlich ist:</p>
+                <ul>
+                    <li><strong>Beispiel:</strong> FOH-PC benötigt Zugriff auf Dante-Controller im Audio-VLAN</li>
+                    <li><strong>Prinzip:</strong> Keine direkte Kommunikation zwischen allen VLANs ermöglichen</li>
+                </ul>
+                <p><strong>Sicherheit:</strong> Begrenzen Sie den Zugriff über Firewall-Regeln oder ACLs (Access Control Lists). Definieren Sie klar, welche Quell-VLANs auf welche Ziel-VLANs zugreifen dürfen.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 DHCP-Planung</h2>
+            
+            <div class="tech-specs">
+                <h4>🔧 DHCP pro VLAN konfigurieren</h4>
+                <p>Planen Sie DHCP-Server sorgfältig für jedes VLAN:</p>
+                <ul>
+                    <li><strong>Separate DHCP-Bereiche</strong> pro VLAN zur klaren Adresszuordnung</li>
+                    <li><strong>Statische IPs im Audio-VLAN:</strong> Viele Dante-Geräte arbeiten besser mit festen IP-Adressen</li>
+                    <li><strong>Vermeiden:</strong> Mehrere DHCP-Server in einer Broadcast-Domäne, die sich gegenseitig stören</li>
+                </ul>
+                <p>Falsch konfigurierte DHCP-Server können Ihr Dante/AVoIP-Netz erheblich beeinträchtigen.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚠️ Default-VLAN vermeiden</h2>
+            
+            <div class="info-box">
+                <h4>💡 VLAN 1 nicht für produktiven Traffic</h4>
+                <p>Das <strong>Default-VLAN</strong> (oft VLAN 1) sollte <strong>nicht</strong> für produktiven AV-Traffic verwendet werden:</p>
+                <ul>
+                    <li><strong>Verwendung:</strong> Nur für Switch-Management oder gar nicht nutzen</li>
+                    <li><strong>Best Practice:</strong> Alle produktiven Netze mit eigenen, <strong>dokumentierten VLAN-IDs</strong> anlegen</li>
+                    <li><strong>Sicherheit:</strong> Default-VLAN ist häufiges Angriffsziel und sollte isoliert werden</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📚 Zusammenfassung</h2>
+            <p>Ein durchdachtes VLAN-Design ist die Grundlage für stabile und performante Netzwerke in der Veranstaltungstechnik. Die wichtigsten Erfolgsfaktoren sind:</p>
+            <ul>
+                <li>✅ Klare Trennung nach Gewerken und Protokollen</li>
+                <li>✅ Physische Redundanz für kritische Systeme wie Dante</li>
+                <li>✅ Professionelle Switches mit AV-optimierten Profilen nutzen</li>
+                <li>✅ Trunk-Ports für Uplinks, Access-Ports für Endgeräte</li>
+                <li>✅ Inter-VLAN-Routing gezielt und sicher konfigurieren</li>
+                <li>✅ DHCP sauber planen oder statische IPs verwenden</li>
+                <li>✅ Default-VLAN nicht produktiv nutzen</li>
+            </ul>
+            <p><strong>Dokumentation ist entscheidend:</strong> Halten Sie alle VLAN-IDs, IP-Bereiche und Routing-Regeln in einem übersichtlichen Netzwerkplan fest.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redundanz in der Veranstaltungstechnik - Block 2</title>
+    <script>
+        const SIMULATOR_URL = 'Material 7a.html';
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('[data-simulator-link]').forEach(function (link) {
+                link.href = SIMULATOR_URL;
+            });
+        });
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2563eb;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.1rem !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #1d4ed8;
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 0.1rem !important;
+            margin-top: 2rem;
+        }
+
+        h3 {
+            color: #1e40af;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.1rem !important;
+            margin-top: 1.5rem;
+        }
+
+        h4 {
+            color: #1e40af;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.1rem !important;
+            margin-top: 1rem;
+        }
+
+        .section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .intro {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-left: 4px solid #6b7280;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(107, 114, 128, 0.1);
+        }
+
+        p {
+            margin-bottom: 1.2rem;
+            text-align: justify;
+            color: #444;
+            line-height: 1.7;
+        }
+
+        ul, ol {
+            padding-left: 2rem;
+            margin-bottom: 1.2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        a {
+            color: #1d4ed8;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        code {
+            background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+            color: #01579b;
+            padding: 3px 6px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+            font-weight: 600;
+            border: 1px solid #81d4fa;
+        }
+
+        pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            line-height: 1.5;
+            font-size: 0.92rem;
+        }
+
+        .task {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            border-left: 4px solid #4caf50;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(76, 175, 80, 0.1);
+        }
+
+        .task strong {
+            color: #2e7d32;
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 0.8rem;
+        }
+
+        .question {
+            background: linear-gradient(135deg, #fff3cd 0%, #fdeaa7 100%);
+            border-left: 4px solid #f39c12;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(243, 156, 18, 0.1);
+            color: #b7950b;
+            font-weight: 500;
+        }
+
+        .tech-specs {
+            background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+            border-left: 4px solid #0288d1;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(2, 136, 209, 0.1);
+        }
+
+        .tech-specs h4 {
+            color: #01579b;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .diagram {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            border: 2px solid #e5e7eb;
+            text-align: center;
+        }
+
+        .diagram svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .comparison-table {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        th {
+            background: #1d4ed8;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .footer-note {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-left: 4px solid #2563eb;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .header,
+            .section {
+                padding: 1.25rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.35rem;
+            }
+
+            h3 {
+                font-size: 1.15rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 Redundanz in der Veranstaltungstechnik - Block 2</h1>
+            <p><strong>Fehleranalyse, Link Aggregation und betriebliche Bewertung</strong></p>
+        </div>
+
+        <div class="section">
+            <div class="intro">
+                <p><strong>Berufsbezogener Kontext:</strong> Beim Stadtfestival „Nordlicht Live“ ist der erste Probentag abgeschlossen. Die redundante Grundstruktur steht, aber am zweiten Tag muss das Team prüfen, wie sich das Netzwerk unter Last und bei Störungen verhält. Entscheidend ist jetzt nicht mehr nur das <em>Planen</em>, sondern das <strong>Erkennen, Bewerten und Dokumentieren</strong> von Fehlern im laufenden Betrieb.</p>
+            </div>
+
+            <p>In Block 2 vertiefen Sie die Redundanz-Konzepte aus Block 1. Der Schwerpunkt liegt auf typischen Fehlerbildern, dem Unterschied zwischen <strong>Link Aggregation (LACP)</strong> und echter Pfad- oder Geräte-Redundanz sowie auf einer systematischen Test- und Abnahmestrategie für Live-Produktionen.</p>
+        </div>
+
+        <div class="section">
+            <h2>📚 Phase 1: Informieren - Fehlerbilder in redundanten Netzen erkennen (15 Minuten)</h2>
+
+            <h3>Was sieht man im Betrieb zuerst?</h3>
+            <p>In der Veranstaltungstechnik zeigt sich ein Redundanzproblem selten zuerst auf dem Schaltplan. Meistens fällt zunächst ein <strong>Symptom im Betrieb</strong> auf: ein kurzer Video-Black, eine Statusmeldung im Monitoring, ein Wechsel des aktiven Pfads oder eine Topology-Change-Meldung im Switch-Log. Wer diese Symptome sauber einordnet, spart im Live-Betrieb kritische Zeit.</p>
+
+            <div class="tech-specs">
+                <h4>🔧 Typische Anzeichen im Störungsfall</h4>
+                <ul>
+                    <li><strong>LACP-Mitglied down:</strong> Ein Port im Bündel fällt aus, der Port-Channel bleibt aber aktiv.</li>
+                    <li><strong>RSTP-Failover:</strong> Ein bisher blockierter Port geht in den Forwarding-Zustand.</li>
+                    <li><strong>Switch-Ausfall:</strong> Mehrere Nachbarn verschwinden gleichzeitig, ganze Segmente werden unerreichbar.</li>
+                    <li><strong>Pfadverlust:</strong> Der Dienstpfad reißt vollständig ab, Pakete erreichen das Ziel nicht mehr.</li>
+                </ul>
+            </div>
+
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Beobachtung</th>
+                            <th>Wahrscheinliche Ursache</th>
+                            <th>Sofortreaktion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Einzelner Uplink gestört, Dienst läuft weiter</td>
+                            <td>Link-Ausfall innerhalb eines LACP-Bündels oder auf einem redundanten Uplink</td>
+                            <td>Restkapazität prüfen und Ursache eingrenzen</td>
+                        </tr>
+                        <tr>
+                            <td>Kurzzeitige Unterbrechung, danach neuer aktiver Pfad</td>
+                            <td>RSTP-Failover oder Topology Change</td>
+                            <td>Pfadwechsel dokumentieren und Dauer messen</td>
+                        </tr>
+                        <tr>
+                            <td>Ganzes Teilnetz offline</td>
+                            <td>Switch-Ausfall oder letzter aktiver Pfad verloren</td>
+                            <td>Produktion priorisieren, Eskalation auslösen</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="task">
+                <strong>Arbeitsauftrag 1: Störungsprotokolle auswerten</strong>
+                <p><strong>Sozialform:</strong> Tandemarbeit</p>
+                <p><strong>Methode:</strong> Fehlerprotokoll-Analyse</p>
+                <p><strong>Zeit:</strong> 15 Minuten</p>
+                <p>Analysieren Sie die folgenden Meldungsblöcke. Ordnen Sie jeweils zu, <strong>welcher Fehler vorliegt</strong>, <strong>welche Redundanz greift</strong> und <strong>ob ein Produktionsstopp notwendig ist</strong>.</p>
+
+                <pre>A) 14:03:11 LACP: Member Ten1/0/2 removed from Port-Channel 1
+14:03:12 IFMGR: Port-Channel 1 remains up
+14:03:14 NMS: Throughput reduced, service available
+
+B) 14:09:41 RSTP: Topology change detected on Dist-A
+14:09:42 RSTP: Alternate port Gi1/0/48 transitions to forwarding
+14:09:44 STREAM: 1 short interruption, service stable
+
+C) 14:16:08 LLDP: Access-B unreachable
+14:16:09 SYSLOG: No active uplink to Stagebox
+14:16:10 APP: Video feed lost</pre>
+
+                <ol>
+                    <li>Beschreiben Sie die Ursache von A, B und C in je einem vollständigen Satz.</li>
+                    <li>Nennen Sie pro Fall die Redundanzform oder das Protokoll, das reagiert.</li>
+                    <li>Entscheiden Sie, ob weiterproduziert werden kann oder ob sofort eskaliert werden muss.</li>
+                </ol>
+            </div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen Phase 1:</strong>
+                <ol>
+                    <li>Woran erkennen Sie im Log den Unterschied zwischen Link-Ausfall und Switch-Ausfall?</li>
+                    <li>Warum bedeutet „Topology Change“ nicht automatisch „Totalausfall“?</li>
+                    <li>Welche Meldung weist am eindeutigsten auf den Verlust des letzten aktiven Pfads hin?</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🗺️ Phase 2: Planen - Link Aggregation und Testmatrix (20 Minuten)</h2>
+
+            <h3>LACP ersetzt keine Geräte-Redundanz</h3>
+            <p><strong>Link Aggregation (LACP)</strong> bündelt mehrere physische Leitungen zu einem logischen Kanal. Das erhöht Bandbreite und schützt gegen den Ausfall eines einzelnen Kabels. Fällt jedoch der <strong>gesamte Switch</strong> aus, hilft LACP auf demselben Gerät nicht weiter. Für echte Ausfallsicherheit braucht man zusätzlich <strong>Pfad- oder Geräte-Redundanz</strong>.</p>
+
+            <div class="diagram">
+                <h4>LACP-Bündel vs. Pfad-Redundanz</h4>
+                <svg viewBox="0 0 860 280" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;max-width:860px;margin:auto;">
+                    <rect x="20" y="20" width="390" height="240" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+                    <text x="215" y="45" text-anchor="middle" font-size="16" font-weight="bold" fill="#1d4ed8">LACP-Bündel</text>
+                    <rect x="60" y="105" width="110" height="60" rx="8" fill="#e0f2fe" stroke="#0288d1" stroke-width="2"/>
+                    <text x="115" y="140" text-anchor="middle" font-size="14" font-weight="bold" fill="#01579b">Server</text>
+                    <rect x="255" y="85" width="110" height="100" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+                    <text x="310" y="122" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e3a8a">Core-Switch</text>
+                    <text x="310" y="145" text-anchor="middle" font-size="11" fill="#1e40af">ein Gerät</text>
+                    <line x1="170" y1="115" x2="255" y2="105" stroke="#16a34a" stroke-width="4"/>
+                    <line x1="170" y1="130" x2="255" y2="125" stroke="#16a34a" stroke-width="4"/>
+                    <line x1="170" y1="145" x2="255" y2="145" stroke="#16a34a" stroke-width="4"/>
+                    <line x1="170" y1="160" x2="255" y2="165" stroke="#16a34a" stroke-width="4"/>
+                    <text x="212" y="92" text-anchor="middle" font-size="11" fill="#166534">Port-Channel / LACP</text>
+                    <text x="215" y="210" text-anchor="middle" font-size="12" fill="#166534">✓ Kabelausfall tolerant</text>
+                    <text x="215" y="228" text-anchor="middle" font-size="12" fill="#b91c1c">✗ Switch-Ausfall bleibt kritisch</text>
+
+                    <rect x="450" y="20" width="390" height="240" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+                    <text x="645" y="45" text-anchor="middle" font-size="16" font-weight="bold" fill="#1d4ed8">Pfad- und Geräte-Redundanz</text>
+                    <rect x="490" y="105" width="110" height="60" rx="8" fill="#e0f2fe" stroke="#0288d1" stroke-width="2"/>
+                    <text x="545" y="140" text-anchor="middle" font-size="14" font-weight="bold" fill="#01579b">Server</text>
+                    <rect x="675" y="70" width="110" height="60" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+                    <text x="730" y="106" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e3a8a">Core A</text>
+                    <rect x="675" y="145" width="110" height="60" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+                    <text x="730" y="181" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e3a8a">Core B</text>
+                    <line x1="600" y1="120" x2="675" y2="100" stroke="#16a34a" stroke-width="4"/>
+                    <line x1="600" y1="150" x2="675" y2="175" stroke="#6366f1" stroke-width="4" stroke-dasharray="8,5"/>
+                    <text x="640" y="92" text-anchor="middle" font-size="11" fill="#166534">Primärpfad</text>
+                    <text x="640" y="202" text-anchor="middle" font-size="11" fill="#4f46e5">Backup-Pfad</text>
+                    <text x="645" y="225" text-anchor="middle" font-size="12" fill="#166534">✓ Kabel- und Geräteausfall abfangbar</text>
+                </svg>
+            </div>
+
+            <div class="tech-specs">
+                <h4>🔧 Planungsregel für VT-Netze</h4>
+                <ul>
+                    <li><strong>LACP</strong> ist sinnvoll für Server-Uplinks, Storage oder Backbone-Bündel.</li>
+                    <li><strong>Physisch getrennte Switches</strong> sind nötig, wenn der Ausfall eines kompletten Geräts abgefangen werden soll.</li>
+                    <li><strong>Dante-Primary/Secondary</strong> sollte bei kritischen Produktionen nicht nur logisch, sondern auch physisch getrennt geführt werden.</li>
+                </ul>
+            </div>
+
+            <div class="task">
+                <strong>Arbeitsauftrag 2: Testmatrix für die Abnahme planen</strong>
+                <p><strong>Sozialform:</strong> Gruppenarbeit (3er-Teams)</p>
+                <p><strong>Methode:</strong> Testfall-Matrix</p>
+                <p><strong>Zeit:</strong> 20 Minuten</p>
+                <p>Erstellen Sie für das Festival-Netz eine <strong>Testmatrix mit mindestens fünf Testfällen</strong>. Die Matrix soll enthalten:</p>
+                <ol>
+                    <li>Testfall (z. B. ein LACP-Mitglied trennen, Distribution-Switch ausfallen lassen)</li>
+                    <li>Erwartetes Verhalten des Netzwerks</li>
+                    <li>Beobachtbarer Nachweis (Log, aktiver Pfad, Paketfluss, Dienstverfügbarkeit)</li>
+                    <li>Bewertung: bestanden / nicht bestanden</li>
+                </ol>
+                <p><strong>Hinweis:</strong> Berücksichtigen Sie sowohl <strong>Link-Ausfälle</strong> als auch <strong>Geräte-Ausfälle</strong>.</p>
+            </div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen Phase 2:</strong>
+                <ol>
+                    <li>Warum erhöht LACP die Verfügbarkeit nur in einem Teilbereich des Netzes?</li>
+                    <li>Welche Messpunkte müssen in einer guten Testmatrix zwingend vorkommen?</li>
+                    <li>Weshalb ist „Dienst verfügbar“ eine wichtigere Aussage als nur „Link up“?</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚖️ Phase 3: Entscheiden - Maßnahmen priorisieren (10 Minuten)</h2>
+
+            <h3>Was bringt bei begrenztem Budget den größten Nutzen?</h3>
+            <p>Im Produktionsalltag stehen Zeit und Geld selten unbegrenzt zur Verfügung. Daher muss entschieden werden, <strong>welche Redundanzmaßnahme zuerst umgesetzt wird</strong>. Ziel ist nicht maximale Technik um jeden Preis, sondern das beste Verhältnis aus Risiko, Wirkung und Aufwand.</p>
+
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Maßnahme</th>
+                            <th>Kosten</th>
+                            <th>Nutzen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Zweiter Distribution-Switch inkl. SFPs</td>
+                            <td>4.200 €</td>
+                            <td>Geräte- und Pfad-Redundanz in der Mitte des Netzes</td>
+                        </tr>
+                        <tr>
+                            <td>Zweites Medienserver-Netzteil + separater USV-Pfad</td>
+                            <td>2.200 €</td>
+                            <td>Hardware- und Versorgungs-Redundanz am kritischen Dienst</td>
+                        </tr>
+                        <tr>
+                            <td>Zentrales Monitoring / Syslog / Alarmierung</td>
+                            <td>1.100 €</td>
+                            <td>Schnellere Diagnose und klare Eskalation</td>
+                        </tr>
+                        <tr>
+                            <td>Zwei zusätzliche Glasfaserstrecken für Server-Uplinks</td>
+                            <td>1.600 €</td>
+                            <td>Mehr Bandbreite und LACP-Reserve</td>
+                        </tr>
+                        <tr>
+                            <td>Reserve-SFPs und Patchkabel</td>
+                            <td>450 €</td>
+                            <td>Schnelle Wiederherstellung im Fehlerfall</td>
+                        </tr>
+                        <tr>
+                            <td>Unmanaged Switch für den Backstage-Bereich</td>
+                            <td>350 €</td>
+                            <td>Zusätzlicher Anschluss, aber keine echte Redundanz</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="task">
+                <strong>Arbeitsauftrag 3: Redundanz-Maßnahmen priorisieren</strong>
+                <p><strong>Sozialform:</strong> Partnerarbeit</p>
+                <p><strong>Methode:</strong> Nutzwertanalyse</p>
+                <p><strong>Zeit:</strong> 10 Minuten</p>
+                <p>Sie dürfen für die nächste Produktionswoche <strong>maximal drei Maßnahmen</strong> auswählen. Treffen Sie eine Reihenfolge von <strong>Priorität 1 bis 3</strong> und begründen Sie Ihre Entscheidung schriftlich.</p>
+                <ol>
+                    <li>Welche Maßnahme reduziert das größte Risiko?</li>
+                    <li>Welche Maßnahme verbessert die Diagnosefähigkeit am stärksten?</li>
+                    <li>Welche Maßnahme wirkt nur lokal und darf deshalb nicht überschätzt werden?</li>
+                </ol>
+            </div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen Phase 3:</strong>
+                <ol>
+                    <li>Warum ist ein zusätzlicher unmanaged Switch keine gute Antwort auf ein Redundanzproblem?</li>
+                    <li>Wann ist Monitoring keine Luxusfunktion, sondern betriebliche Pflicht?</li>
+                    <li>Welche Maßnahme verbessert Verfügbarkeit, ohne die eigentliche Topologie zu verändern?</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚙️ Phase 4: Ausführen - Simulatorgestützte Fehlersuche (20 Minuten)</h2>
+
+            <h3>Fehler jetzt gezielt provozieren</h3>
+            <p>Da im Unterricht keine physischen Switches zur Verfügung stehen, wird die Fehleranalyse mit dem bereitgestellten Simulator durchgeführt. Öffnen Sie dazu <a data-simulator-link target="_blank" rel="noopener">Material 7a - Redundanz-Simulator</a> in einem neuen Tab. Beobachten Sie dabei immer <strong>Log-Fenster, Root Bridge, aktiven Pfad und Paketfluss</strong>.</p>
+
+            <div class="tech-specs">
+                <h4>🔧 Worauf Sie im Simulator achten sollen</h4>
+                <ul>
+                    <li>Ändert sich der <strong>aktive Dienstpfad</strong> oder bleibt er bestehen?</li>
+                    <li>Übernimmt ein <strong>Hot-Standby-Link</strong> oder fällt ein Segment vollständig aus?</li>
+                    <li>Laufen die kleinen <strong>Pakete / Briefe</strong> weiter oder „platzen“ sie?</li>
+                    <li>Bleibt die Root Bridge gleich oder wird neu gewählt?</li>
+                </ul>
+            </div>
+
+            <div class="task">
+                <strong>Arbeitsauftrag 4: Drei Fehlerszenarien im Simulator untersuchen</strong>
+                <p><strong>Sozialform:</strong> Einzelarbeit</p>
+                <p><strong>Methode:</strong> Simulation und Beobachtung</p>
+                <p><strong>Zeit:</strong> 20 Minuten</p>
+                <ol>
+                    <li>Unterbrechen Sie <strong>einen einzelnen Uplink</strong> und notieren Sie die sichtbare Auswirkung.</li>
+                    <li>Schalten Sie <strong>einen Access-Switch</strong> aus und beobachten Sie, wie sich Pfad, Log und Pakete ändern.</li>
+                    <li>Erzeugen Sie einen Zustand, in dem <strong>kein vollständiger Pfad</strong> mehr vorhanden ist.</li>
+                    <li>Stellen Sie danach alle Verbindungen wieder her und prüfen Sie, ob das Netz in einen stabilen Zustand zurückkehrt.</li>
+                </ol>
+                <p>Dokumentieren Sie für jeden Fall: <strong>ausgelöster Fehler, sichtbares Symptom, Reaktion des Netzes, betriebliche Bewertung</strong>.</p>
+            </div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen Phase 4:</strong>
+                <ol>
+                    <li>Bei welchem Szenario bleibt der Dienst verfügbar, obwohl ein Teil der Infrastruktur ausfällt?</li>
+                    <li>Woran erkennen Sie im Simulator, dass kein aktiver Pfad mehr besteht?</li>
+                    <li>Warum ist die Beobachtung des Paketflusses didaktisch hilfreicher als nur die LED-Farbe eines Links?</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔍 Phase 5: Kontrollieren - Abnahme nach dem Failover (10 Minuten)</h2>
+
+            <h3>Ist das Netz produktionsreif?</h3>
+            <p>Nach den Tests reicht ein „funktioniert meistens“ nicht aus. Im VT-Betrieb muss klar festgelegt werden, <strong>welche Kriterien für eine Freigabe erfüllt sein müssen</strong>. Dazu gehören technische Messwerte, eine nachvollziehbare Dokumentation und eine eindeutige Eskalationskette.</p>
+
+            <div class="task">
+                <strong>Arbeitsauftrag 5: Go / No-Go entscheiden</strong>
+                <p><strong>Sozialform:</strong> Einzelarbeit</p>
+                <p><strong>Methode:</strong> Abnahmecheckliste</p>
+                <p><strong>Zeit:</strong> 10 Minuten</p>
+                <p>Bewerten Sie die folgenden Testergebnisse und entscheiden Sie, ob das Netz für den Abend freigegeben werden darf:</p>
+                <ul>
+                    <li>Kabelausfall im LACP-Bündel: <strong>kein Produktionsstopp</strong>, Dienst weiter aktiv</li>
+                    <li>Failover im Distribution-Bereich: <strong>2,1 Sekunden</strong> Video-Unterbrechung, Audio stabil</li>
+                    <li>Ausfall eines Access-Switches: <strong>Stage-Rack 18 Sekunden</strong> ohne alternativen Pfad</li>
+                    <li>Monitoring-Meldungen vorhanden, aber <strong>keine automatische Alarmweiterleitung</strong></li>
+                </ul>
+                <ol>
+                    <li>Entscheiden Sie: <strong>Go</strong> oder <strong>No-Go</strong>.</li>
+                    <li>Formulieren Sie zwei Sofortmaßnahmen vor Einlass.</li>
+                    <li>Nennen Sie einen Punkt, der erst mittelfristig verbessert werden kann.</li>
+                </ol>
+            </div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen Phase 5:</strong>
+                <ol>
+                    <li>Welcher Befund aus der Liste ist für die Freigabe am kritischsten?</li>
+                    <li>Warum ist eine fehlende Alarmweiterleitung auch dann problematisch, wenn Logs vorhanden sind?</li>
+                    <li>Welche Grenze zwischen „akzeptablem Failover“ und „betrieblichem Risiko“ würden Sie für eine Live-Produktion setzen?</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🧾 Phase 6: Bewerten - Störungsbericht und Verbesserungsmaßnahmen (15 Minuten)</h2>
+
+            <h3>Redundanz ist nur dann nützlich, wenn sie dokumentiert wird</h3>
+            <p>Zur professionellen Veranstaltungstechnik gehört nicht nur die technische Lösung, sondern auch die <strong>saubere betriebliche Dokumentation</strong>. Nach einer Störung muss nachvollziehbar sein, was passiert ist, welche Auswirkungen auf die Produktion entstanden und welche Maßnahmen künftig erforderlich sind.</p>
+
+            <div class="task">
+                <strong>Praxisaufgabe: Kurzbericht für die Produktionsleitung</strong>
+                <p><strong>Sozialform:</strong> Gruppenarbeit (3er-Teams)</p>
+                <p><strong>Methode:</strong> Incident Report</p>
+                <p><strong>Zeit:</strong> 15 Minuten</p>
+                <p>Erstellen Sie einen kurzen Bericht an die Produktionsleitung. Der Bericht soll enthalten:</p>
+                <ol>
+                    <li><strong>Fehlerbild:</strong> Was ist ausgefallen?</li>
+                    <li><strong>Auswirkung:</strong> Welche Dienste waren betroffen?</li>
+                    <li><strong>Sofortmaßnahme:</strong> Was wurde getan, um den Betrieb zu stabilisieren?</li>
+                    <li><strong>Bewertung:</strong> War die vorhandene Redundanz ausreichend?</li>
+                    <li><strong>Verbesserung:</strong> Welche Maßnahme hat höchste Priorität vor der nächsten Veranstaltung?</li>
+                </ol>
+                <p>Bereiten Sie zum Schluss eine <strong>60-Sekunden-Kurzvorstellung</strong> Ihrer Entscheidung im Plenum vor.</p>
+            </div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen Phase 6:</strong>
+                <ol>
+                    <li>Warum reicht eine gute Topologie allein nicht aus, wenn Dokumentation und Alarmierung fehlen?</li>
+                    <li>Welche Verbesserung stärkt die Organisation, auch wenn sich die Hardware nicht ändert?</li>
+                    <li>Welcher Unterschied besteht zwischen „Fehler behoben“ und „Betrieb dauerhaft abgesichert“?</li>
+                </ol>
+            </div>
+
+            <div class="footer-note">
+                <p><strong>Ausblick:</strong> Nach Block 2 können Sie Redundanz nicht nur planen, sondern auch im Betrieb analysieren, priorisieren und dokumentieren. Aufbauend darauf lassen sich später weitere Themen wie <strong>VRRP/HSRP</strong>, <strong>Controller-Failover</strong> oder <strong>redundante Medienserver</strong> behandeln.</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        try {
+            const { MMBBSBOT } = await import('https://dev.mm-bbs.de:8085/mmbbs-bot.js');
+            const htmlContent = document.querySelector('.container')?.innerHTML || '';
+
+            new MMBBSBOT({
+                host: 'dev.mm-bbs.de',
+                protocol: 'https',
+                port: 8085,
+                opener: 'Hallo! Ich unterstütze Sie beim Thema Redundanz in Block 2. Wie kann ich helfen?',
+                chat_icon: '',
+                chat_icon_style: 'border-radius: 50%; width: 40px; height: 40px;',
+                title: 'VT GPT',
+                task: htmlContent,
+                hints: 'Sie sind Netzwerkexperte für Veranstaltungstechnik mit Schwerpunkt Redundanz, Fehleranalyse und Link Aggregation. Geben Sie keine fertigen Lösungen, sondern erklären Sie Konzepte und regen Sie zum Nachdenken an.',
+                cookie: document.cookie
+            });
+        } catch (error) {
+            console.error('Fehler beim Laden des Chatbots:', error);
+        }
+    </script>
+</body>
+</html>

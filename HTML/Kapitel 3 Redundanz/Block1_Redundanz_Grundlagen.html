@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Redundanz in der Veranstaltungstechnik - Block 1</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Funktion zum Kopieren von Code in die Zwischenablage
+            window.copyToClipboard = function(code) {
+                navigator.clipboard.writeText(code).then(() => {
+                    const tooltip = document.createElement('div');
+                    tooltip.textContent = 'Code kopiert!';
+                    tooltip.style.position = 'fixed';
+                    tooltip.style.top = '50%';
+                    tooltip.style.left = '50%';
+                    tooltip.style.transform = 'translate(-50%, -50%)';
+                    tooltip.style.backgroundColor = '#333';
+                    tooltip.style.color = '#fff';
+                    tooltip.style.padding = '10px';
+                    tooltip.style.borderRadius = '5px';
+                    tooltip.style.zIndex = '1000';
+                    document.body.appendChild(tooltip);
+                    setTimeout(() => {
+                        document.body.removeChild(tooltip);
+                    }, 1000);
+                }).catch(err => {
+                    console.error('Fehler beim Kopieren:', err);
+                });
+            };
+
+            // Funktion zum Erklären des Codes mithilfe des Chatbots
+            window.explainCode = function(code) {
+                console.log('Erkläre Code:', code);
+                sendToChatbot(code);
+            };
+
+            // Funktion zum Simulieren eines Klicks auf den Chatbot-Button
+            window.simulateChatbotClick = function() {
+                const chatButton = document.getElementById('chat-icon');
+                if (chatButton) {
+                    console.log('Chatbot-Button gefunden. Simuliere Klick.');
+                    chatButton.click();
+                } else {
+                    console.error('Chatbot-Button nicht gefunden.');
+                }
+            };
+
+            // Funktion zum Senden von Nachrichten an den Chatbot
+            window.sendToChatbot = function(message) {
+                simulateChatbotClick();
+                setTimeout(() => {
+                    const chatInput = document.getElementById('chat-input');
+                    const sendButton = document.getElementById('send-button');
+
+                    if (chatInput && sendButton) {
+                        chatInput.value = message;
+                        sendButton.click();
+                        console.log('Nachricht an Chatbot gesendet:', message);
+                    } else {
+                        console.error('Chat-Eingabefeld oder Senden-Button nicht gefunden.');
+                    }
+                }, 500);
+            };
+            
+            const style = document.createElement('style');
+            style.innerHTML = `
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    background: linear-gradient(135deg, #1e2a4a 0%, #2d4a6b 100%);
+                    min-height: 100vh;
+                    padding: 20px;
+                }
+
+                .container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }
+
+                .header {
+                    background: white;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                    text-align: center;
+                }
+
+                h1 {
+                    color: #2563eb;
+                    font-size: 2.2rem;
+                    font-weight: 700;
+                    margin-bottom: 0.1rem !important;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                }
+
+                h2 {
+                    color: #1d4ed8;
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                    margin-bottom: 0.1rem !important;
+                    margin-top: 2rem;
+                }
+
+                h3 {
+                    color: #1e40af;
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    margin-bottom: 0.1rem !important;
+                    margin-top: 1.5rem;
+                }
+
+                h4 {
+                    color: #1e40af;
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    margin-bottom: 0.1rem !important;
+                    margin-top: 1rem;
+                }
+
+                .section {
+                    background: white;
+                    padding: 2rem;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                    margin-bottom: 2rem;
+                    border: 1px solid #e5e7eb;
+                }
+
+                .intro {
+                    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+                    border-left: 4px solid #6b7280;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(107, 114, 128, 0.1);
+                }
+
+                p {
+                    margin-bottom: 1.2rem;
+                    text-align: justify;
+                    color: #444;
+                    line-height: 1.7;
+                }
+
+                code {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    color: #01579b;
+                    padding: 3px 6px;
+                    border-radius: 6px;
+                    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+                    font-size: 0.9em;
+                    font-weight: 600;
+                    border: 1px solid #81d4fa;
+                }
+
+                ul, ol {
+                    padding-left: 2rem;
+                    margin-bottom: 1.2rem;
+                }
+
+                li {
+                    margin-bottom: 0.5rem;
+                    color: #555;
+                }
+
+                .task {
+                    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+                    border-left: 4px solid #4caf50;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(76, 175, 80, 0.1);
+                }
+
+                .task strong {
+                    color: #2e7d32;
+                    font-size: 1.1rem;
+                    display: block;
+                    margin-bottom: 0.8rem;
+                }
+
+                .question {
+                    background: linear-gradient(135deg, #fff3cd 0%, #fdeaa7 100%);
+                    border-left: 4px solid #f39c12;
+                    padding: 1.2rem;
+                    margin: 1rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(243, 156, 18, 0.1);
+                    color: #b7950b;
+                    font-weight: 500;
+                }
+
+                .tech-specs {
+                    background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+                    border-left: 4px solid #0288d1;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(2, 136, 209, 0.1);
+                }
+
+                .tech-specs h4 {
+                    color: #01579b;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+
+                .interactive-game {
+                    background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+                    border: 2px solid #e91e63;
+                    padding: 1.5rem;
+                    margin: 1.5rem 0;
+                    border-radius: 12px;
+                    box-shadow: 0 5px 15px rgba(233, 30, 99, 0.2);
+                }
+
+                .interactive-game h4 {
+                    color: #c2185b;
+                    margin-bottom: 1rem;
+                }
+
+                .game-button {
+                    background: #e91e63;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 1rem;
+                    margin: 5px;
+                    transition: all 0.3s ease;
+                }
+
+                .game-button:hover {
+                    background: #c2185b;
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                }
+
+                .diagram {
+                    background: white;
+                    padding: 1.5rem;
+                    border-radius: 10px;
+                    margin: 1.5rem 0;
+                    border: 2px solid #e5e7eb;
+                    text-align: center;
+                }
+
+                .diagram svg {
+                    max-width: 100%;
+                    height: auto;
+                }
+
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 1rem 0;
+                }
+
+                th, td {
+                    padding: 12px;
+                    text-align: left;
+                    border: 1px solid #ddd;
+                }
+
+                th {
+                    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                    color: white;
+                    font-weight: 600;
+                }
+
+                tr:nth-child(even) {
+                    background-color: #f9fafb;
+                }
+
+                strong {
+                    color: #1e40af;
+                }
+
+                @media (max-width: 768px) {
+                    body {
+                        padding: 10px;
+                    }
+
+                    .container {
+                        padding: 10px;
+                    }
+
+                    h1 {
+                        font-size: 1.8rem;
+                    }
+
+                    h2 {
+                        font-size: 1.4rem;
+                    }
+
+                    h3 {
+                        font-size: 1.2rem;
+                    }
+
+                    .section {
+                        padding: 1.5rem;
+                        margin-bottom: 1.5rem;
+                    }
+
+                    .task, .question {
+                        padding: 1rem;
+                        margin: 1rem 0;
+                    }
+                }
+
+                #chat-container {
+                    color: white !important;
+                }
+
+                #chat-container * {
+                    color: white !important;
+                }
+
+                #chat-container .chat-message {
+                    color: white !important;
+                }
+
+                #chat-container .bot-message {
+                    color: white !important;
+                    background-color: rgba(59, 130, 246, 0.8) !important;
+                }
+
+                #chat-container .user-message {
+                    color: white !important;
+                    background-color: rgba(107, 114, 128, 0.8) !important;
+                }
+
+                #chat-container input, #chat-container textarea {
+                    color: white !important;
+                    background-color: rgba(55, 65, 81, 0.9) !important;
+                }
+
+                #chat-container button {
+                    color: white !important;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+
+        // Chatbot-Initialisierung
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const { MMBBSBOT } = await import('https://dev.mm-bbs.de:8085/mmbbs-bot.js');
+
+                var element = document.querySelector('.activity-description');
+                var htmlContent = element ? element.innerHTML : '';
+
+                const settings = {
+                    "host": "dev.mm-bbs.de",
+                    "protocol": "https",
+                    "port": 8085,
+                    "opener": "Hallo! Ich unterstütze Sie beim Thema Redundanz in der Veranstaltungstechnik. Wie kann ich Ihnen helfen?",
+                    "chat_icon": "",
+                    "chat_icon_style": "border-radius: 50%; width: 40px; height: 40px;",
+                    "title": "VT GPT",
+                    "task": htmlContent,
+                    "hints": "Sie sind Netzwerkexperte für Veranstaltungstechnik mit Schwerpunkt Redundanz und Ausfallsicherheit. Ihre Schüler sind Fachkräfte für Veranstaltungstechnik im 3. Ausbildungsjahr. Geben Sie keine fertigen Lösungen, sondern erklären Sie Konzepte und regen Sie zum Nachdenken an.",
+                    "cookie": document.cookie
+                };
+
+                const bot = new MMBBSBOT(settings);
+                console.log('Chatbot initialisiert:', bot);
+
+                window.toggleChat = bot.toggleChat.bind(bot);
+                window.sendMessage = bot.sendMessage.bind(bot);
+                window.handleKeyDown = bot.handleKeyDown.bind(bot);
+            } catch (error) {
+                console.error('Fehler beim Laden des Chatbots:', error);
+            }
+        });
+
+        // Interaktive Funktionen
+        function checkRedundanzMatch(button, correct) {
+            if (correct) {
+                button.style.background = '#4caf50';
+                button.textContent = '✓ Richtig!';
+                button.disabled = true;
+            } else {
+                button.style.background = '#f44336';
+                button.textContent = '✗ Falsch';
+                setTimeout(() => {
+                    button.style.background = '#e91e63';
+                    button.textContent = button.getAttribute('data-original');
+                }, 1500);
+            }
+        }
+
+        function dragStart(event) {
+            event.dataTransfer.setData('text/plain', event.target.id);
+            event.target.style.opacity = '0.5';
+        }
+
+        function dragEnd(event) {
+            event.target.style.opacity = '1';
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const data = event.dataTransfer.getData('text/plain');
+            const draggedElement = document.getElementById(data);
+            const dropZone = event.target.closest('.drop-zone');
+            
+            if (dropZone && draggedElement) {
+                const correct = dropZone.getAttribute('data-correct') === draggedElement.getAttribute('data-type');
+                if (correct) {
+                    dropZone.appendChild(draggedElement);
+                    dropZone.style.background = '#c8e6c9';
+                    draggedElement.style.cursor = 'default';
+                    draggedElement.draggable = false;
+                } else {
+                    dropZone.style.background = '#ffcdd2';
+                    setTimeout(() => {
+                        dropZone.style.background = '#e3f2fd';
+                    }, 1000);
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 Redundanz in der Veranstaltungstechnik - Block 1</h1>
+            <p><strong>Grundlagen der Netzwerk-Redundanz</strong></p>
+            <p>⏱️ Dauer: 90 Minuten | 📊 Schwierigkeitsgrad: Mittel | 🎯 Zielgruppe: 3. Ausbildungsjahr</p>
+        </div>
+
+        <!-- Einführung -->
+        <div class="section">
+            <h2>🎬 Ausgangssituation: Festival-Katastrophe verhindert</h2>
+            
+            <div class="intro">
+                <p><strong>📅 Szenario:</strong> Großes Open-Air-Festival mit 50.000 Besuchern</p>
+                <p><strong>🎤 Veranstaltung:</strong> „Rock am Ring Spezial" - Live-Übertragung im TV und Internet</p>
+                <p><strong>⚠️ Kritischer Moment:</strong> Hauptbühne, Samstag 21:00 Uhr - Headliner-Auftritt</p>
+                
+                <p style="margin-top: 1.5rem; font-size: 1.05em; background: white; padding: 1rem; border-radius: 8px;">
+                    Sie sind Teil des Technik-Teams und haben die Netzwerkinfrastruktur mit aufgebaut. Plötzlich fällt während des Headliner-Auftritts ein Core-Switch aus. Doch das Publikum merkt nichts – die Show läuft weiter, die Live-Übertragung läuft stabil, die Lichter synchronisieren perfekt zur Musik. Der Grund: Redundante Netzwerkarchitektur!
+                </p>
+                
+                <p><strong>🎯 Ihre Aufgabe in diesem Block:</strong> Verstehen Sie, wie solche redundanten Systeme funktionieren, warum sie in der Veranstaltungstechnik unverzichtbar sind und welche Protokolle dafür sorgen, dass bei Ausfällen automatisch umgeschaltet wird.</p>
+            </div>
+        </div>
+
+        <!-- Phase 1: Informieren (15 Min) -->
+        <div class="section">
+            <h2>📚 Phase 1: Informieren - Was ist Redundanz? (15 Minuten)</h2>
+            
+            <h3>Was bedeutet Redundanz?</h3>
+            <p>
+                <strong>Redundanz</strong> bezeichnet in der Netzwerktechnik das Vorhandensein von <strong>mehrfachen, parallelen Komponenten oder Verbindungen</strong>, 
+                die im Fehlerfall automatisch die Funktion übernehmen können. Das Ziel: <strong>Ausfallsicherheit</strong> und <strong>hohe Verfügbarkeit</strong>.
+            </p>
+
+            <div class="diagram">
+                <h4>Einfaches vs. Redundantes Netzwerk</h4>
+                <svg viewBox="0 0 860 330" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;max-width:860px">
+                    <!-- ===== EINFACHES NETZWERK ===== -->
+                    <text x="430" y="22" font-size="16" font-weight="bold" fill="#1d4ed8" text-anchor="middle">Einfaches Netzwerk – Single Points of Failure</text>
+
+                    <rect x="20" y="45" width="120" height="55" rx="6" fill="#e0f2fe" stroke="#0288d1" stroke-width="2"/>
+                    <text x="80" y="74" text-anchor="middle" font-size="13" font-weight="bold" fill="#01579b">Server</text>
+                    <text x="80" y="91" text-anchor="middle" font-size="11" fill="#0277bd">Streaming</text>
+
+                    <line x1="140" y1="72" x2="230" y2="72" stroke="#e53935" stroke-width="2"/>
+                    <circle cx="185" cy="72" r="13" fill="#ffcdd2" stroke="#e53935" stroke-width="2"/>
+                    <text x="185" y="77" text-anchor="middle" font-size="13" fill="#c62828">✗</text>
+                    <text x="185" y="100" text-anchor="middle" font-size="10" fill="#c62828">Kabelbruch!</text>
+
+                    <rect x="230" y="45" width="120" height="55" rx="6" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="290" y="74" text-anchor="middle" font-size="13" font-weight="bold" fill="#92400e">Switch</text>
+                    <text x="290" y="91" text-anchor="middle" font-size="11" fill="#b45309">Core SW</text>
+
+                    <line x1="350" y1="72" x2="440" y2="72" stroke="#e53935" stroke-width="2"/>
+                    <circle cx="395" cy="72" r="13" fill="#ffcdd2" stroke="#e53935" stroke-width="2"/>
+                    <text x="395" y="77" text-anchor="middle" font-size="13" fill="#c62828">✗</text>
+                    <text x="395" y="100" text-anchor="middle" font-size="10" fill="#c62828">Switch-Ausfall!</text>
+
+                    <rect x="440" y="45" width="120" height="55" rx="6" fill="#e8f5e9" stroke="#43a047" stroke-width="2"/>
+                    <text x="500" y="74" text-anchor="middle" font-size="13" font-weight="bold" fill="#2e7d32">Clients</text>
+                    <text x="500" y="91" text-anchor="middle" font-size="11" fill="#388e3c">FOH / Bühne</text>
+
+                    <rect x="590" y="38" width="250" height="68" rx="6" fill="#ffebee" stroke="#e53935" stroke-width="1.5"/>
+                    <text x="715" y="60" text-anchor="middle" font-size="12" fill="#c62828" font-weight="bold">⚠ Keine Redundanz!</text>
+                    <text x="715" y="78" text-anchor="middle" font-size="11" fill="#c62828">Jeder Ausfall = Totalausfall</text>
+                    <text x="715" y="95" text-anchor="middle" font-size="11" fill="#c62828">Keine Wiederherstellung</text>
+
+                    <!-- Trennlinie -->
+                    <line x1="10" y1="120" x2="850" y2="120" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="8,4"/>
+
+                    <!-- ===== REDUNDANTES NETZWERK ===== -->
+                    <text x="430" y="143" font-size="16" font-weight="bold" fill="#15803d" text-anchor="middle">Redundantes Netzwerk – Automatisches Failover</text>
+
+                    <rect x="20" y="160" width="120" height="55" rx="6" fill="#e0f2fe" stroke="#0288d1" stroke-width="2"/>
+                    <text x="80" y="189" text-anchor="middle" font-size="13" font-weight="bold" fill="#01579b">Server</text>
+                    <text x="80" y="206" text-anchor="middle" font-size="11" fill="#0277bd">Streaming</text>
+
+                    <line x1="140" y1="177" x2="230" y2="177" stroke="#43a047" stroke-width="3"/>
+                    <text x="185" y="170" text-anchor="middle" font-size="10" fill="#15803d" font-weight="bold">Primär</text>
+
+                    <line x1="140" y1="198" x2="230" y2="230" stroke="#1e88e5" stroke-width="2.5" stroke-dasharray="6,3"/>
+                    <text x="185" y="245" text-anchor="middle" font-size="10" fill="#1565c0">Backup</text>
+
+                    <rect x="230" y="155" width="120" height="45" rx="6" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+                    <text x="290" y="178" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e3a8a">Core-SW 1</text>
+                    <text x="290" y="194" text-anchor="middle" font-size="10" fill="#1e40af">★ Root Bridge</text>
+
+                    <rect x="230" y="215" width="120" height="45" rx="6" fill="#fff9e6" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="290" y="238" text-anchor="middle" font-size="12" font-weight="bold" fill="#92400e">Core-SW 2</text>
+                    <text x="290" y="254" text-anchor="middle" font-size="10" fill="#b45309">Backup Root</text>
+
+                    <line x1="290" y1="200" x2="290" y2="215" stroke="#6366f1" stroke-width="3"/>
+                    <text x="310" y="210" font-size="10" fill="#4f46e5">ISL</text>
+
+                    <line x1="350" y1="177" x2="440" y2="187" stroke="#43a047" stroke-width="3"/>
+                    <line x1="350" y1="237" x2="440" y2="207" stroke="#1e88e5" stroke-width="2.5" stroke-dasharray="6,3"/>
+
+                    <rect x="440" y="160" width="120" height="100" rx="6" fill="#e8f5e9" stroke="#43a047" stroke-width="2"/>
+                    <text x="500" y="205" text-anchor="middle" font-size="13" font-weight="bold" fill="#2e7d32">Clients</text>
+                    <text x="500" y="222" text-anchor="middle" font-size="11" fill="#388e3c">FOH / Bühne</text>
+                    <text x="500" y="238" text-anchor="middle" font-size="11" fill="#388e3c">immer erreichbar</text>
+
+                    <rect x="590" y="155" width="250" height="105" rx="6" fill="#e8f5e9" stroke="#43a047" stroke-width="1.5"/>
+                    <text x="715" y="177" text-anchor="middle" font-size="12" fill="#1b5e20" font-weight="bold">✓ Redundanz aktiv</text>
+                    <text x="715" y="196" text-anchor="middle" font-size="11" fill="#2e7d32">Auto-Failover &lt; 3 Sek.</text>
+                    <text x="715" y="213" text-anchor="middle" font-size="11" fill="#2e7d32">Keine Single Points</text>
+                    <text x="715" y="230" text-anchor="middle" font-size="11" fill="#2e7d32">Verfügbarkeit 99,99%</text>
+                    <text x="715" y="247" text-anchor="middle" font-size="11" fill="#2e7d32">TV-tauglich</text>
+
+                    <!-- Legende -->
+                    <line x1="20" y1="294" x2="70" y2="294" stroke="#43a047" stroke-width="3"/>
+                    <text x="80" y="298" font-size="11" fill="#2e7d32">Aktiver Pfad (primär)</text>
+                    <line x1="260" y1="294" x2="310" y2="294" stroke="#1e88e5" stroke-width="2.5" stroke-dasharray="6,3"/>
+                    <text x="320" y="298" font-size="11" fill="#1565c0">Backup-Pfad (Standby)</text>
+                    <line x1="540" y1="294" x2="590" y2="294" stroke="#6366f1" stroke-width="3"/>
+                    <text x="600" y="298" font-size="11" fill="#4f46e5">Inter-Switch-Link</text>
+                </svg>
+            </div>
+
+            <h3>Arten von Redundanz in der Veranstaltungstechnik</h3>
+            <table>
+                <tr>
+                    <th>Redundanzart</th>
+                    <th>Beschreibung</th>
+                    <th>Beispiel in der VT</th>
+                    <th>Verfügbarkeit</th>
+                </tr>
+                <tr>
+                    <td><strong>Geräte-Redundanz</strong></td>
+                    <td>Doppelte Hardware-Komponenten</td>
+                    <td>Zwei Core-Switches für Hauptbühne</td>
+                    <td>99,9%</td>
+                </tr>
+                <tr>
+                    <td><strong>Pfad-Redundanz</strong></td>
+                    <td>Mehrere Netzwerkpfade zwischen Geräten</td>
+                    <td>Zwei Glasfaserstrecken FOH ↔ Bühne</td>
+                    <td>99,95%</td>
+                </tr>
+                <tr>
+                    <td><strong>Link-Redundanz</strong></td>
+                    <td>Mehrere physische Verbindungen</td>
+                    <td>Link Aggregation (LACP) für Streaming-Server</td>
+                    <td>99,99%</td>
+                </tr>
+                <tr>
+                    <td><strong>Protokoll-Redundanz</strong></td>
+                    <td>Automatische Umschaltung bei Ausfällen</td>
+                    <td>VRRP für Gateway-Redundanz</td>
+                    <td>99,999%</td>
+                </tr>
+            </table>
+
+            <div class="tech-specs">
+                <h4>🔧 Warum ist Redundanz in der Veranstaltungstechnik kritisch?</h4>
+                <ul>
+                    <li><strong>Live-Events:</strong> Keine Wiederholung möglich – ein Ausfall ist unwiederbringlich</li>
+                    <li><strong>Finanzielle Risiken:</strong> Ausfälle können Vertragsstrafen bis zu 100.000 € bedeuten</li>
+                    <li><strong>Reputationsschaden:</strong> Negative Presse verbreitet sich schnell</li>
+                    <li><strong>Komplexe Systeme:</strong> Moderne Shows nutzen DMX, ArtNet, Audio-Streaming, Video über IP</li>
+                    <li><strong>Sicherheitsrelevant:</strong> Notbeleuchtung und Evakuierungssysteme müssen funktionieren</li>
+                </ul>
+            </div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen Phase 1:</strong>
+                <ol>
+                    <li>Was versteht man unter einem "Single Point of Failure" und warum ist dieser problematisch?</li>
+                    <li>Nennen Sie drei konkrete Beispiele aus der Veranstaltungstechnik, wo Redundanz zwingend erforderlich ist.</li>
+                    <li>Welche Verfügbarkeit (in %) erreicht man bei doppelter Geräte-Redundanz und warum?</li>
+                    <li>Erklären Sie den Unterschied zwischen Pfad-Redundanz und Link-Redundanz.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Interaktives Spiel 1 -->
+        <div class="interactive-game">
+            <h4>🎮 Interaktives Spiel: Redundanz-Konzepte zuordnen</h4>
+            <p>Ordnen Sie die Redundanz-Konzepte den richtigen Szenarien zu:</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                <div>
+                    <h5 style="color: #c2185b; margin-bottom: 10px;">Szenarien:</h5>
+                    <button class="game-button" data-original="Open-Air-Festival" onclick="checkRedundanzMatch(this, false)">Open-Air-Festival</button>
+                    <button class="game-button" data-original="Live-TV-Übertragung" onclick="checkRedundanzMatch(this, true)">Live-TV-Übertragung</button>
+                    <button class="game-button" data-original="Firmenpräsentation" onclick="checkRedundanzMatch(this, false)">Firmenpräsentation</button>
+                    <button class="game-button" data-original="Theaterstück" onclick="checkRedundanzMatch(this, false)">Theaterstück</button>
+                </div>
+                <div>
+                    <h5 style="color: #c2185b; margin-bottom: 10px;">Wann ist Redundanz KRITISCH?</h5>
+                    <p style="background: white; padding: 15px; border-radius: 8px; color: #333;">
+                        Klicken Sie auf die Szenarien, bei denen Redundanz absolut notwendig ist!<br>
+                        <em>Tipp: Bei welchen Events gibt es keine zweite Chance?</em>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 2: Planen (20 Min) -->
+        <div class="section">
+            <h2>🗺️ Phase 2: Planen - Redundante Netzwerk-Topologien (20 Minuten)</h2>
+            
+            <h3>Grundlegende Topologien für Redundanz</h3>
+            
+            <div class="diagram">
+                <h4>Redundante Netzwerk-Topologien im Vergleich</h4>
+                <svg viewBox="0 0 895 310" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;max-width:895px">
+                    <!-- ===== 1. RING-TOPOLOGIE ===== -->
+                    <text x="145" y="22" font-size="14" font-weight="bold" fill="#1d4ed8" text-anchor="middle">1. Ring-Topologie</text>
+
+                    <circle cx="100" cy="90" r="24" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="100" y="94" text-anchor="middle" font-size="12" font-weight="bold" fill="#92400e">SW1</text>
+                    <circle cx="190" cy="90" r="24" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="190" y="94" text-anchor="middle" font-size="12" font-weight="bold" fill="#92400e">SW2</text>
+                    <circle cx="190" cy="180" r="24" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="190" y="184" text-anchor="middle" font-size="12" font-weight="bold" fill="#92400e">SW3</text>
+                    <circle cx="100" cy="180" r="24" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="100" y="184" text-anchor="middle" font-size="12" font-weight="bold" fill="#92400e">SW4</text>
+
+                    <line x1="124" y1="90" x2="166" y2="90" stroke="#43a047" stroke-width="3"/>
+                    <line x1="190" y1="114" x2="190" y2="156" stroke="#43a047" stroke-width="3"/>
+                    <line x1="166" y1="180" x2="124" y2="180" stroke="#43a047" stroke-width="3"/>
+                    <line x1="100" y1="156" x2="100" y2="114" stroke="#43a047" stroke-width="3"/>
+
+                    <text x="145" y="225" text-anchor="middle" font-size="11" fill="#15803d">✓ Einfach und günstig</text>
+                    <text x="145" y="243" text-anchor="middle" font-size="11" fill="#e53935">✗ Konvergenz 30–50 s</text>
+                    <text x="145" y="261" text-anchor="middle" font-size="11" fill="#e53935">✗ Fehlerdiagnose schwierig</text>
+                    <text x="145" y="279" text-anchor="middle" font-size="11" fill="#e53935">✗ Schlecht skalierbar</text>
+
+                    <!-- Trennlinie -->
+                    <line x1="295" y1="20" x2="295" y2="295" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5,4"/>
+
+                    <!-- ===== 2. STERN MIT REDUNDANZ ===== -->
+                    <text x="530" y="22" font-size="14" font-weight="bold" fill="#1d4ed8" text-anchor="middle">2. Stern mit Redundanz ✅ (VT-Standard)</text>
+
+                    <rect x="400" y="55" width="100" height="40" rx="5" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+                    <text x="450" y="78" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e3a8a">Core-SW 1</text>
+
+                    <rect x="560" y="55" width="100" height="40" rx="5" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+                    <text x="610" y="78" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e3a8a">Core-SW 2</text>
+
+                    <line x1="500" y1="75" x2="560" y2="75" stroke="#6366f1" stroke-width="3"/>
+
+                    <circle cx="360" cy="175" r="24" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="360" y="179" text-anchor="middle" font-size="11" font-weight="bold" fill="#92400e">SW A</text>
+
+                    <circle cx="450" cy="185" r="24" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="450" y="189" text-anchor="middle" font-size="11" font-weight="bold" fill="#92400e">SW B</text>
+
+                    <circle cx="610" cy="185" r="24" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="610" y="189" text-anchor="middle" font-size="11" font-weight="bold" fill="#92400e">SW C</text>
+
+                    <circle cx="710" cy="175" r="24" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="710" y="179" text-anchor="middle" font-size="11" font-weight="bold" fill="#92400e">SW D</text>
+
+                    <line x1="415" y1="88" x2="378" y2="151" stroke="#43a047" stroke-width="2.5"/>
+                    <line x1="560" y1="88" x2="379" y2="151" stroke="#43a047" stroke-width="2" stroke-dasharray="5,3"/>
+                    <line x1="435" y1="93" x2="445" y2="161" stroke="#43a047" stroke-width="2.5"/>
+                    <line x1="575" y1="93" x2="466" y2="161" stroke="#43a047" stroke-width="2" stroke-dasharray="5,3"/>
+                    <line x1="595" y1="93" x2="600" y2="161" stroke="#43a047" stroke-width="2.5"/>
+                    <line x1="450" y1="93" x2="588" y2="161" stroke="#43a047" stroke-width="2" stroke-dasharray="5,3"/>
+                    <line x1="645" y1="88" x2="693" y2="151" stroke="#43a047" stroke-width="2.5"/>
+                    <line x1="500" y1="88" x2="687" y2="151" stroke="#43a047" stroke-width="2" stroke-dasharray="5,3"/>
+
+                    <text x="535" y="230" text-anchor="middle" font-size="11" fill="#15803d">✓ Schnelle Konvergenz &lt; 3 s</text>
+                    <text x="535" y="248" text-anchor="middle" font-size="11" fill="#15803d">✓ Einfache Fehlerdiagnose</text>
+                    <text x="535" y="266" text-anchor="middle" font-size="11" fill="#15803d">✓ Gut skalierbar</text>
+                    <text x="535" y="284" text-anchor="middle" font-size="11" fill="#e53935">✗ Höhere Kosten</text>
+
+                    <!-- Trennlinie -->
+                    <line x1="765" y1="20" x2="765" y2="295" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5,4"/>
+
+                    <!-- ===== 3. VOLLVERMASCHT ===== -->
+                    <text x="812" y="22" font-size="14" font-weight="bold" fill="#1d4ed8" text-anchor="middle">3. Vollvermascht</text>
+
+                    <circle cx="790" cy="90" r="22" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="790" y="94" text-anchor="middle" font-size="11" font-weight="bold" fill="#92400e">S1</text>
+                    <circle cx="850" cy="90" r="22" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="850" y="94" text-anchor="middle" font-size="11" font-weight="bold" fill="#92400e">S2</text>
+                    <circle cx="850" cy="178" r="22" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="850" y="182" text-anchor="middle" font-size="11" font-weight="bold" fill="#92400e">S3</text>
+                    <circle cx="790" cy="178" r="22" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="790" y="182" text-anchor="middle" font-size="11" font-weight="bold" fill="#92400e">S4</text>
+
+                    <line x1="812" y1="90" x2="828" y2="90" stroke="#43a047" stroke-width="2"/>
+                    <line x1="850" y1="112" x2="850" y2="156" stroke="#43a047" stroke-width="2"/>
+                    <line x1="828" y1="178" x2="812" y2="178" stroke="#43a047" stroke-width="2"/>
+                    <line x1="790" y1="156" x2="790" y2="112" stroke="#43a047" stroke-width="2"/>
+                    <line x1="808" y1="104" x2="832" y2="164" stroke="#43a047" stroke-width="2"/>
+                    <line x1="832" y1="104" x2="808" y2="164" stroke="#43a047" stroke-width="2"/>
+
+                    <text x="820" y="225" text-anchor="middle" font-size="11" fill="#15803d">✓ Höchste Redundanz</text>
+                    <text x="820" y="243" text-anchor="middle" font-size="11" fill="#e53935">✗ n×(n-1)/2 Kabel</text>
+                    <text x="820" y="261" text-anchor="middle" font-size="11" fill="#e53935">✗ Sehr teuer</text>
+                    <text x="820" y="279" text-anchor="middle" font-size="11" fill="#e53935">✗ Selten in VT</text>
+                </svg>
+            </div>
+
+            <div class="task">
+                <strong>Arbeitsauftrag 1: Netzwerk-Topologie planen</strong>
+                <p><strong>Sozialform:</strong> Partnerarbeit (2er-Teams)</p>
+                <p><strong>Methode:</strong> Think-Pair-Share</p>
+                <p><strong>Zeit:</strong> 15 Minuten</p>
+                
+                <p><strong>Szenario:</strong> Sie planen die Netzwerkinfrastruktur für ein dreitägiges Musik-Festival mit:</p>
+                <ul>
+                    <li>2 Bühnen (Hauptbühne + Second Stage)</li>
+                    <li>FOH (Front of House) - Mischpult-Position 50m von Hauptbühne</li>
+                    <li>Backstage-Bereich mit Künstler-Garderoben</li>
+                    <li>Streaming-Server für Live-Übertragung (muss 99,9% Verfügbarkeit haben)</li>
+                    <li>DMX-Lichtsteuerung und ArtNet für LED-Walls</li>
+                </ul>
+                
+                <p><strong>Aufgaben:</strong></p>
+                <ol>
+                    <li><strong>Think (5 Min):</strong> Skizzieren Sie individuell eine redundante Netzwerk-Topologie für dieses Festival. Markieren Sie:
+                        <ul>
+                            <li>Core-Switches (mindestens 2)</li>
+                            <li>Access-Switches an den Bühnen</li>
+                            <li>Redundante Verbindungen</li>
+                            <li>Kritische Pfade für Streaming</li>
+                        </ul>
+                    </li>
+                    <li><strong>Pair (7 Min):</strong> Vergleichen Sie Ihre Skizzen mit Ihrem Partner. Diskutieren Sie:
+                        <ul>
+                            <li>Wo haben Sie unterschiedliche Ansätze gewählt?</li>
+                            <li>Welche Lösung ist robuster?</li>
+                            <li>Wo könnten Single Points of Failure entstehen?</li>
+                        </ul>
+                    </li>
+                    <li><strong>Share (3 Min):</strong> Einigen Sie sich auf eine gemeinsame Lösung und bereiten Sie eine kurze Präsentation vor (2 Min).</li>
+                </ol>
+            </div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen Phase 2:</strong>
+                <ol>
+                    <li>Warum ist eine Ring-Topologie für Live-Events weniger geeignet als eine Stern-Topologie?</li>
+                    <li>Was bedeutet "Konvergenzzeit" bei redundanten Netzwerken?</li>
+                    <li>Welche Topologie würden Sie für einen kleinen Messestand mit 10 Clients empfehlen und warum?</li>
+                    <li>Erklären Sie, warum vollständig vermaschte Topologien in der Praxis selten verwendet werden.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Phase 3: Entscheiden (10 Min) -->
+        <div class="section">
+            <h2>⚖️ Phase 3: Entscheiden - Das richtige Redundanz-Protokoll wählen (10 Minuten)</h2>
+            
+            <h3>Spanning Tree Protocol (STP) - Die Basis für Redundanz</h3>
+            
+            <div class="tech-specs">
+                <h4>🔧 Was ist STP und warum brauchen wir es?</h4>
+                <p>
+                    <strong>Problem:</strong> Wenn in einem Netzwerk redundante Verbindungen existieren, entstehen <strong>Schleifen (Loops)</strong>. 
+                    Diese führen zu <strong>Broadcast-Stürmen</strong>, die das gesamte Netzwerk lahmlegen.
+                </p>
+                <p>
+                    <strong>Lösung:</strong> Das <strong>Spanning Tree Protocol (IEEE 802.1D)</strong> verhindert Schleifen, indem es:
+                </p>
+                <ul>
+                    <li>Automatisch redundante Pfade <strong>blockiert</strong> (logisch deaktiviert)</li>
+                    <li>Einen <strong>schleifenfreien Baum</strong> aus dem Netzwerk erstellt</li>
+                    <li>Bei Ausfällen automatisch <strong>blockierte Pfade aktiviert</strong></li>
+                </ul>
+            </div>
+
+            <div class="diagram">
+                <h4>STP in Aktion: Schleifenvermeidung</h4>
+                <svg viewBox="0 0 860 415" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;max-width:860px">
+                    <defs>
+                        <marker id="arrowred" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#e53935"/>
+                        </marker>
+                    </defs>
+
+                    <!-- ===== OHNE STP ===== -->
+                    <rect x="15" y="10" width="380" height="195" rx="8" fill="#fff5f5" stroke="#e53935" stroke-width="2"/>
+                    <text x="205" y="32" text-anchor="middle" font-size="15" font-weight="bold" fill="#c62828">⚠ Ohne STP: Broadcast-Storm!</text>
+
+                    <rect x="55" y="55" width="100" height="50" rx="5" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="105" y="78" text-anchor="middle" font-size="13" font-weight="bold" fill="#92400e">SW 1</text>
+                    <text x="105" y="96" text-anchor="middle" font-size="10" fill="#b45309">Switch A</text>
+
+                    <rect x="240" y="55" width="100" height="50" rx="5" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="290" y="78" text-anchor="middle" font-size="13" font-weight="bold" fill="#92400e">SW 2</text>
+                    <text x="290" y="96" text-anchor="middle" font-size="10" fill="#b45309">Switch B</text>
+
+                    <rect x="148" y="148" width="100" height="50" rx="5" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="198" y="171" text-anchor="middle" font-size="13" font-weight="bold" fill="#92400e">SW 3</text>
+                    <text x="198" y="189" text-anchor="middle" font-size="10" fill="#b45309">Switch C</text>
+
+                    <line x1="155" y1="80" x2="240" y2="80" stroke="#e53935" stroke-width="2.5" marker-end="url(#arrowred)"/>
+                    <line x1="290" y1="105" x2="248" y2="148" stroke="#e53935" stroke-width="2.5" marker-end="url(#arrowred)"/>
+                    <line x1="148" y1="173" x2="105" y2="105" stroke="#e53935" stroke-width="2.5" marker-end="url(#arrowred)"/>
+
+                    <text x="198" y="120" text-anchor="middle" font-size="13" fill="#c62828" font-weight="bold">∞ Endlosschleife!</text>
+                    <text x="198" y="138" text-anchor="middle" font-size="11" fill="#c62828">Netz wird lahmgelegt</text>
+
+                    <!-- ===== MIT STP ===== -->
+                    <rect x="465" y="10" width="380" height="195" rx="8" fill="#f0fdf4" stroke="#43a047" stroke-width="2"/>
+                    <text x="655" y="32" text-anchor="middle" font-size="15" font-weight="bold" fill="#15803d">✓ Mit STP/RSTP: Schleifenfrei!</text>
+
+                    <rect x="505" y="55" width="100" height="50" rx="5" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2.5"/>
+                    <text x="555" y="75" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e3a8a">SW 1</text>
+                    <text x="555" y="89" text-anchor="middle" font-size="10" fill="#1e40af" font-weight="bold">★ Root Bridge</text>
+                    <text x="555" y="101" text-anchor="middle" font-size="9" fill="#1e40af">Priorität 4096</text>
+
+                    <rect x="700" y="55" width="100" height="50" rx="5" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="750" y="78" text-anchor="middle" font-size="13" font-weight="bold" fill="#92400e">SW 2</text>
+                    <text x="750" y="96" text-anchor="middle" font-size="10" fill="#b45309">Root Port</text>
+
+                    <rect x="603" y="148" width="100" height="50" rx="5" fill="#fff3cd" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="653" y="171" text-anchor="middle" font-size="13" font-weight="bold" fill="#92400e">SW 3</text>
+                    <text x="653" y="189" text-anchor="middle" font-size="10" fill="#b45309">Root Port</text>
+
+                    <line x1="605" y1="80" x2="700" y2="80" stroke="#43a047" stroke-width="3"/>
+                    <text x="652" y="70" text-anchor="middle" font-size="10" fill="#15803d" font-weight="bold">✓ Aktiv</text>
+
+                    <line x1="750" y1="105" x2="703" y2="148" stroke="#43a047" stroke-width="3"/>
+                    <text x="748" y="133" text-anchor="middle" font-size="10" fill="#15803d" font-weight="bold">✓ Aktiv</text>
+
+                    <line x1="603" y1="173" x2="555" y2="105" stroke="#e53935" stroke-width="2.5" stroke-dasharray="6,4"/>
+                    <circle cx="580" cy="139" r="15" fill="#fee2e2" stroke="#e53935" stroke-width="2"/>
+                    <text x="580" y="144" text-anchor="middle" font-size="14" fill="#c62828" font-weight="bold">✗</text>
+                    <text x="555" y="158" text-anchor="middle" font-size="10" fill="#c62828">Blockiert</text>
+
+                    <!-- ===== ALGORITHMUS ===== -->
+                    <rect x="10" y="220" width="840" height="185" rx="8" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+                    <text x="430" y="243" text-anchor="middle" font-size="15" font-weight="bold" fill="#1d4ed8">STP / RSTP Algorithmus – 4 Schritte</text>
+
+                    <rect x="25" y="255" width="190" height="138" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+                    <text x="120" y="274" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e3a8a">① Root Bridge wählen</text>
+                    <text x="120" y="292" text-anchor="middle" font-size="11" fill="#1e40af">Niedrigste Bridge-ID</text>
+                    <text x="120" y="308" text-anchor="middle" font-size="11" fill="#1e40af">= Priorität + MAC</text>
+                    <text x="120" y="324" text-anchor="middle" font-size="11" fill="#1e40af">Standard: 32768</text>
+                    <text x="120" y="340" text-anchor="middle" font-size="11" fill="#1e40af">VT-Empfehlung: 4096</text>
+                    <text x="120" y="356" text-anchor="middle" font-size="11" fill="#1e40af">Backup Root: 8192</text>
+                    <text x="120" y="374" text-anchor="middle" font-size="10" fill="#1e40af">→ Zentraler Referenzpunkt</text>
+
+                    <rect x="228" y="255" width="190" height="138" rx="6" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+                    <text x="323" y="274" text-anchor="middle" font-size="12" font-weight="bold" fill="#14532d">② Root Ports bestimmen</text>
+                    <text x="323" y="292" text-anchor="middle" font-size="11" fill="#166534">Pro Switch ein Port</text>
+                    <text x="323" y="308" text-anchor="middle" font-size="11" fill="#166534">mit kürzestem Pfad</text>
+                    <text x="323" y="324" text-anchor="middle" font-size="11" fill="#166534">zur Root Bridge</text>
+                    <text x="323" y="340" text-anchor="middle" font-size="11" fill="#166534">Kosten: 10GbE=2</text>
+                    <text x="323" y="356" text-anchor="middle" font-size="11" fill="#166534">1GbE=4, 100M=19</text>
+                    <text x="323" y="374" text-anchor="middle" font-size="10" fill="#166534">→ Bester Uplink-Port</text>
+
+                    <rect x="431" y="255" width="190" height="138" rx="6" fill="#fef9c3" stroke="#eab308" stroke-width="1.5"/>
+                    <text x="526" y="274" text-anchor="middle" font-size="12" font-weight="bold" fill="#713f12">③ Designated Ports</text>
+                    <text x="526" y="292" text-anchor="middle" font-size="11" fill="#854d0e">Pro Netzsegment</text>
+                    <text x="526" y="308" text-anchor="middle" font-size="11" fill="#854d0e">ein Designated Port</text>
+                    <text x="526" y="324" text-anchor="middle" font-size="11" fill="#854d0e">→ leitet Daten weiter</text>
+                    <text x="526" y="340" text-anchor="middle" font-size="11" fill="#854d0e">Root Bridge-Ports</text>
+                    <text x="526" y="356" text-anchor="middle" font-size="11" fill="#854d0e">immer Designated</text>
+                    <text x="526" y="374" text-anchor="middle" font-size="10" fill="#854d0e">→ Forwarding-Zustand</text>
+
+                    <rect x="634" y="255" width="190" height="138" rx="6" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+                    <text x="729" y="274" text-anchor="middle" font-size="12" font-weight="bold" fill="#7f1d1d">④ Ports blockieren</text>
+                    <text x="729" y="292" text-anchor="middle" font-size="11" fill="#991b1b">Alle übrigen Ports</text>
+                    <text x="729" y="308" text-anchor="middle" font-size="11" fill="#991b1b">→ Blocking-Zustand</text>
+                    <text x="729" y="324" text-anchor="middle" font-size="11" fill="#991b1b">Verhindert Schleifen</text>
+                    <text x="729" y="340" text-anchor="middle" font-size="11" fill="#991b1b">Bei Ausfall: Auto-</text>
+                    <text x="729" y="356" text-anchor="middle" font-size="11" fill="#991b1b">matische Aktivierung</text>
+                    <text x="729" y="374" text-anchor="middle" font-size="10" fill="#991b1b">RSTP: &lt; 3 Sekunden!</text>
+                </svg>
+            </div>
+
+            <h3>STP-Varianten im Vergleich</h3>
+            <table>
+                <tr>
+                    <th>Protokoll</th>
+                    <th>Standard</th>
+                    <th>Konvergenzzeit</th>
+                    <th>Verwendung in VT</th>
+                    <th>Vorteile</th>
+                </tr>
+                <tr>
+                    <td><strong>STP</strong><br>(Spanning Tree)</td>
+                    <td>IEEE 802.1D</td>
+                    <td>30-50 Sekunden</td>
+                    <td>❌ Zu langsam für Live-Events</td>
+                    <td>Einfach, universell</td>
+                </tr>
+                <tr>
+                    <td><strong>RSTP</strong><br>(Rapid STP)</td>
+                    <td>IEEE 802.1w</td>
+                    <td>< 3 Sekunden</td>
+                    <td>✅ Standard für VT-Netzwerke</td>
+                    <td>Schnelle Umschaltung, abwärtskompatibel</td>
+                </tr>
+                <tr>
+                    <td><strong>MSTP</strong><br>(Multiple STP)</td>
+                    <td>IEEE 802.1s</td>
+                    <td>< 3 Sekunden</td>
+                    <td>✅ Für große Installationen mit VLANs</td>
+                    <td>VLAN-übergreifend, effizient</td>
+                </tr>
+                <tr>
+                    <td><strong>PVST+</strong><br>(Per-VLAN STP)</td>
+                    <td>Cisco-proprietär</td>
+                    <td>< 5 Sekunden</td>
+                    <td>✅ Bei reinen Cisco-Umgebungen</td>
+                    <td>VLAN-spezifische Optimierung</td>
+                </tr>
+            </table>
+
+            <div class="task">
+                <strong>Arbeitsauftrag 2: Protokoll-Entscheidung treffen</strong>
+                <p><strong>Sozialform:</strong> Einzelarbeit → Plenum</p>
+                <p><strong>Methode:</strong> Fallbeispiel-Analyse</p>
+                <p><strong>Zeit:</strong> 8 Minuten</p>
+                
+                <p><strong>Situation:</strong> Ihnen liegen drei verschiedene Veranstaltungsszenarien vor. Entscheiden Sie für jedes Szenario:</p>
+                <ol>
+                    <li>Welches Redundanz-Protokoll würden Sie einsetzen? (STP, RSTP, MSTP)</li>
+                    <li>Begründen Sie Ihre Entscheidung mit mindestens zwei Argumenten.</li>
+                    <li>Welche Risiken gibt es bei Ihrer Wahl?</li>
+                </ol>
+                
+                <p><strong>Szenarien:</strong></p>
+                <ul>
+                    <li><strong>A) Kleiner Firmen-Event:</strong> 100 Teilnehmer, 2 Switches, 1 VLAN, PowerPoint-Präsentation</li>
+                    <li><strong>B) Theater-Installation:</strong> Festinstallation, 8 Switches, 5 VLANs (Licht, Audio, Video, Management, Gäste-WLAN)</li>
+                    <li><strong>C) Großes Festival:</strong> 3 Tage, 5 Bühnen, 20 Switches, 12 VLANs, Live-Streaming, gemischte Switch-Hersteller</li>
+                </ul>
+            </div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen Phase 3:</strong>
+                <ol>
+                    <li>Warum würde ein klassisches STP bei einem Live-Konzert zu Problemen führen?</li>
+                    <li>Was bedeutet "Konvergenzzeit" und warum ist sie bei RSTP so viel kürzer als bei STP?</li>
+                    <li>In welchen Situationen ist MSTP die bessere Wahl gegenüber RSTP?</li>
+                    <li>Erklären Sie den Begriff "Root Bridge" und warum deren Auswahl wichtig ist.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Interaktives Spiel 2 -->
+        <div class="interactive-game">
+            <h4>🎮 Drag & Drop: STP-Port-Rollen zuordnen</h4>
+            <p>Ziehen Sie die Port-Rollen in die richtigen Boxen:</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px;">
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <h5 style="color: #1d4ed8; margin-bottom: 10px;">Port-Rollen (ziehbar):</h5>
+                    <div id="root-port" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" data-type="root" 
+                         style="background: #e0f2fe; padding: 8px; margin: 5px 0; border-radius: 5px; cursor: move; border: 2px solid #0288d1;">
+                        🔵 Root Port
+                    </div>
+                    <div id="designated-port" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" data-type="designated"
+                         style="background: #c8e6c9; padding: 8px; margin: 5px 0; border-radius: 5px; cursor: move; border: 2px solid #4caf50;">
+                        🟢 Designated Port
+                    </div>
+                    <div id="blocked-port" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" data-type="blocked"
+                         style="background: #ffcdd2; padding: 8px; margin: 5px 0; border-radius: 5px; cursor: move; border: 2px solid #f44336;">
+                        🔴 Blocked Port
+                    </div>
+                </div>
+                
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <h5 style="color: #1d4ed8; margin-bottom: 10px;">Definitionen:</h5>
+                    <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)" data-correct="root"
+                         style="background: #e3f2fd; padding: 12px; margin: 5px 0; border-radius: 5px; min-height: 50px; border: 2px dashed #0288d1;">
+                        <strong>Kürzester Weg zur Root Bridge</strong>
+                    </div>
+                    <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)" data-correct="designated"
+                         style="background: #e3f2fd; padding: 12px; margin: 5px 0; border-radius: 5px; min-height: 50px; border: 2px dashed #0288d1;">
+                        <strong>Forwarding-Port auf einem Segment</strong>
+                    </div>
+                    <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)" data-correct="blocked"
+                         style="background: #e3f2fd; padding: 12px; margin: 5px 0; border-radius: 5px; min-height: 50px; border: 2px dashed #0288d1;">
+                        <strong>Deaktiviert zur Schleifenvermeidung</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 4: Ausführen (15 Min) -->
+        <div class="section">
+            <h2>⚙️ Phase 4: Ausführen - RSTP konfigurieren (15 Minuten)</h2>
+            
+            <h3>Grundkonfiguration von RSTP auf einem Switch</h3>
+            
+            <div class="tech-specs">
+                <h4>🔧 RSTP-Konfiguration Schritt für Schritt</h4>
+                <p><strong>Szenario:</strong> Core-Switch in einem Festival-Netzwerk konfigurieren</p>
+                
+                <p><strong>Schritt 1: Spanning Tree Modus auf RSTP setzen</strong></p>
+                <pre style="background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 8px; overflow-x: auto; position: relative;">
+<span style="color: #94a3b8;">! Wechsel in den Konfigurations-Modus</span>
+Switch> enable
+Switch# configure terminal
+
+<span style="color: #94a3b8;">! RSTP global aktivieren</span>
+Switch(config)# spanning-tree mode rapid-pvst
+
+<span style="color: #94a3b8;">! VLAN für RSTP aktivieren</span>
+Switch(config)# spanning-tree vlan 1-100
+
+<button onclick="copyToClipboard('spanning-tree mode rapid-pvst\nspanning-tree vlan 1-100')" 
+        style="position: absolute; top: 10px; right: 10px; background: #3b82f6; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+    📋 Kopieren
+</button>
+                </pre>
+
+                <p><strong>Schritt 2: Root Bridge festlegen (Core-Switch als Haupt-Bridge)</strong></p>
+                <pre style="background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 8px; overflow-x: auto; position: relative;">
+<span style="color: #94a3b8;">! Priorität setzen (niedrigere Zahl = höhere Priorität)</span>
+<span style="color: #94a3b8;">! Standard: 32768, Root Bridge sollte 0-8192 haben</span>
+Switch(config)# spanning-tree vlan 1-100 priority 4096
+
+<span style="color: #94a3b8;">! Alternative: Root Bridge automatisch setzen</span>
+Switch(config)# spanning-tree vlan 1-100 root primary
+
+<button onclick="copyToClipboard('spanning-tree vlan 1-100 priority 4096')" 
+        style="position: absolute; top: 10px; right: 10px; background: #3b82f6; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+    📋 Kopieren
+</button>
+                </pre>
+
+                <p><strong>Schritt 3: PortFast für Access-Ports (Endgeräte)</strong></p>
+                <pre style="background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 8px; overflow-x: auto; position: relative;">
+<span style="color: #94a3b8;">! PortFast beschleunigt Endgeräte-Verbindungen</span>
+<span style="color: #94a3b8;">! ACHTUNG: Nur für Ports mit Endgeräten, NICHT zwischen Switches!</span>
+Switch(config)# interface range GigabitEthernet1/0/1-24
+Switch(config-if-range)# spanning-tree portfast
+
+<span style="color: #94a3b8;">! BPDU Guard aktivieren (Schutz vor versehentlichen Switch-Anschlüssen)</span>
+Switch(config-if-range)# spanning-tree bpduguard enable
+
+<button onclick="copyToClipboard('interface range GigabitEthernet1/0/1-24\nspanning-tree portfast\nspanning-tree bpduguard enable')" 
+        style="position: absolute; top: 10px; right: 10px; background: #3b82f6; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+    📋 Kopieren
+</button>
+                </pre>
+
+                <p><strong>Schritt 4: Link-Kosten anpassen (Priorisierung)</strong></p>
+                <pre style="background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 8px; overflow-x: auto; position: relative;">
+<span style="color: #94a3b8;">! Uplink zur Root Bridge bevorzugen (niedrigere Kosten)</span>
+Switch(config)# interface TenGigabitEthernet1/0/1
+Switch(config-if)# spanning-tree vlan 1-100 cost 10
+
+<span style="color: #94a3b8;">! Backup-Link höhere Kosten geben</span>
+Switch(config)# interface TenGigabitEthernet1/0/2
+Switch(config-if)# spanning-tree vlan 1-100 cost 20
+
+<button onclick="copyToClipboard('interface TenGigabitEthernet1/0/1\nspanning-tree vlan 1-100 cost 10')" 
+        style="position: absolute; top: 10px; right: 10px; background: #3b82f6; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+    📋 Kopieren
+</button>
+                </pre>
+
+                <p><strong>Schritt 5: Konfiguration überprüfen</strong></p>
+                <pre style="background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 8px; overflow-x: auto; position: relative;">
+<span style="color: #94a3b8;">! Spanning Tree Status anzeigen</span>
+Switch# show spanning-tree
+
+<span style="color: #94a3b8;">! RSTP-spezifische Informationen</span>
+Switch# show spanning-tree summary
+
+<span style="color: #94a3b8;">! Einzelnen Port prüfen</span>
+Switch# show spanning-tree interface GigabitEthernet1/0/1
+
+<button onclick="copyToClipboard('show spanning-tree\nshow spanning-tree summary')" 
+        style="position: absolute; top: 10px; right: 10px; background: #3b82f6; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+    📋 Kopieren
+</button>
+                </pre>
+            </div>
+
+            <div class="question">
+                <strong>💡 Kontrollfragen Phase 4:</strong>
+                <ol>
+                    <li>Warum sollte PortFast NIEMALS auf Ports zwischen Switches aktiviert werden?</li>
+                    <li>Was bewirkt BPDU Guard und warum ist es wichtig?</li>
+                    <li>Wie können Sie manuell festlegen, welcher Pfad von RSTP bevorzugt wird?</li>
+                    <li>Welche Priorität sollte eine Root Bridge typischerweise haben?</li>
+                    <li>Erklären Sie den Unterschied zwischen <code>spanning-tree portfast</code> und <code>spanning-tree mode rapid-pvst</code>.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Phase 5: Kontrollieren & Bewerten (30 Min) -->
+        <div class="section">
+            <h2>🔍 Phase 5 & 6: Kontrollieren & Bewerten - Praxisaufgabe (30 Minuten)</h2>
+            
+            <div class="task" style="border-left: 4px solid #d32f2f; background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);">
+                <strong>🎯 PRAXISAUFGABE: Festival-Netzwerk absichern</strong>
+                <p><strong>Sozialform:</strong> Einzelarbeit</p>
+                <p><strong>Zeit:</strong> 30 Minuten</p>
+                <p><strong>Abgabe:</strong> Dokumentation + Konfigurationsdateien</p>
+                
+                <h4 style="color: #c62828; margin-top: 1rem;">Szenario:</h4>
+                <p>
+                    Sie sind verantwortlich für die Netzwerkinfrastruktur des Festivals „Electro Beats 2026". 
+                    Das Festival findet über 3 Tage statt und es gibt folgende Anforderungen:
+                </p>
+                
+                <h4 style="color: #c62828;">Netzwerk-Topologie:</h4>
+                <ul>
+                    <li><strong>2 Core-Switches:</strong> CORE-SW-01 und CORE-SW-02 (im Technik-Container)</li>
+                    <li><strong>Main Stage Switch:</strong> MAIN-SW-01 (an der Hauptbühne)</li>
+                    <li><strong>Second Stage Switch:</strong> SEC-SW-01</li>
+                    <li><strong>FOH Switch:</strong> FOH-SW-01 (Front of House, Mischpult-Position)</li>
+                    <li><strong>Backstage Switch:</strong> BACK-SW-01</li>
+                </ul>
+                
+                <h4 style="color: #c62828;">VLANs:</h4>
+                <ul>
+                    <li><strong>VLAN 10:</strong> Audio & DMX (höchste Priorität)</li>
+                    <li><strong>VLAN 20:</strong> Video & ArtNet</li>
+                    <li><strong>VLAN 30:</strong> Streaming & Recording</li>
+                    <li><strong>VLAN 40:</strong> Management</li>
+                    <li><strong>VLAN 99:</strong> Gäste-WLAN (niedrigste Priorität)</li>
+                </ul>
+                
+                <h4 style="color: #c62828;">Anforderungen:</h4>
+                <ol>
+                    <li><strong>Redundanz-Design:</strong>
+                        <ul>
+                            <li>Zeichnen Sie eine Netzwerk-Topologie mit allen genannten Switches</li>
+                            <li>Zeigen Sie redundante Verbindungen zwischen Core-Switches und Access-Switches</li>
+                            <li>Markieren Sie die Root Bridge und Backup Root Bridge</li>
+                            <li>Kennzeichnen Sie kritische Pfade (Audio/DMX, Streaming)</li>
+                        </ul>
+                    </li>
+                    <li><strong>RSTP-Konfiguration:</strong>
+                        <ul>
+                            <li>Erstellen Sie vollständige Konfigurationen für CORE-SW-01, CORE-SW-02 und MAIN-SW-01</li>
+                            <li>CORE-SW-01 soll Root Bridge werden (warum?)</li>
+                            <li>MAIN-SW-01 hat 20 Endgeräte-Ports und 2 Uplinks zu den Core-Switches</li>
+                            <li>Priorisieren Sie den Uplink zu CORE-SW-01</li>
+                        </ul>
+                    </li>
+                    <li><strong>Failover-Test:</strong>
+                        <ul>
+                            <li>Beschreiben Sie, was passiert, wenn CORE-SW-01 ausfällt</li>
+                            <li>Wie lange dauert die Umschaltung (Konvergenzzeit)?</li>
+                            <li>Welche VLANs sind betroffen und wie schnell?</li>
+                        </ul>
+                    </li>
+                    <li><strong>Best Practices:</strong>
+                        <ul>
+                            <li>Welche Sicherheitsmaßnahmen sollten Sie noch implementieren?</li>
+                            <li>Wie würden Sie das Netzwerk überwachen?</li>
+                            <li>Welche Backup-Pläne sollten vorhanden sein?</li>
+                        </ul>
+                    </li>
+                    <li><strong>Dokumentation:</strong>
+                        <ul>
+                            <li>Erstellen Sie eine übersichtliche Dokumentation (max. 3 Seiten)</li>
+                            <li>Fügen Sie alle Konfigurationen als separate Textdateien bei</li>
+                            <li>Begründen Sie alle Ihre Entscheidungen</li>
+                        </ul>
+                    </li>
+                </ol>
+                
+                <h4 style="color: #c62828;">Bewertungskriterien:</h4>
+                <table style="margin-top: 1rem;">
+                    <tr>
+                        <th>Kriterium</th>
+                        <th>Punkte</th>
+                        <th>Beschreibung</th>
+                    </tr>
+                    <tr>
+                        <td>Netzwerk-Topologie</td>
+                        <td>20</td>
+                        <td>Vollständigkeit, Korrektheit, Übersichtlichkeit</td>
+                    </tr>
+                    <tr>
+                        <td>RSTP-Konfiguration</td>
+                        <td>30</td>
+                        <td>Syntax, Vollständigkeit, Best Practices</td>
+                    </tr>
+                    <tr>
+                        <td>Failover-Analyse</td>
+                        <td>20</td>
+                        <td>Verständnis der Failover-Mechanismen</td>
+                    </tr>
+                    <tr>
+                        <td>Best Practices</td>
+                        <td>15</td>
+                        <td>Sicherheit, Monitoring, Backup-Strategien</td>
+                    </tr>
+                    <tr>
+                        <td>Dokumentation</td>
+                        <td>15</td>
+                        <td>Struktur, Verständlichkeit, Begründungen</td>
+                    </tr>
+                </table>
+                
+                <p style="margin-top: 1rem; font-weight: bold; color: #c62828;">
+                    ⏱️ Zeit: 30 Minuten | 📊 Gesamtpunktzahl: 100 Punkte
+                </p>
+            </div>
+        </div>
+
+        <!-- Zusammenfassung -->
+        <div class="section">
+            <h2>📋 Zusammenfassung Block 1</h2>
+            
+            <div class="intro">
+                <h4>Was haben Sie gelernt?</h4>
+                <ul>
+                    <li>✅ <strong>Redundanz-Grundlagen:</strong> Arten, Notwendigkeit, Single Points of Failure</li>
+                    <li>✅ <strong>Netzwerk-Topologien:</strong> Ring, Stern, vermascht - Vor- und Nachteile</li>
+                    <li>✅ <strong>Spanning Tree Protokolle:</strong> STP, RSTP, MSTP - Funktionsweise und Unterschiede</li>
+                    <li>✅ <strong>RSTP-Konfiguration:</strong> Praktische Umsetzung auf Switches</li>
+                    <li>✅ <strong>Praxis-Anwendung:</strong> Festival-Netzwerk mit Redundanz geplant</li>
+                </ul>
+                
+                <h4 style="margin-top: 1.5rem;">Nächster Block (Block 2):</h4>
+                <p>
+                    Im zweiten Block vertiefen wir:
+                </p>
+                <ul>
+                    <li>🔄 <strong>Link Aggregation (LACP):</strong> Mehrere Links bündeln</li>
+                    <li>🌐 <strong>VLAN-Redundanz:</strong> VTP, DTP, Private VLANs</li>
+                    <li>🔒 <strong>Gateway-Redundanz:</strong> VRRP, HSRP, GLBP</li>
+                    <li>📡 <strong>Wireless-Redundanz:</strong> Controller-Failover</li>
+                    <li>🎯 <strong>Praxisaufgabe:</strong> Komplettes Redundanz-Konzept für eine Großveranstaltung</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

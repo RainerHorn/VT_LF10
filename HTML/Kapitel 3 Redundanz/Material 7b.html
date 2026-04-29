@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang='de'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Material 7b - RSTP-Ablaufanimation</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: rgba(255, 255, 255, 0.94);
+            --panel-soft: rgba(248, 250, 252, 0.92);
+            --line: #cbd5e1;
+            --ink: #0f172a;
+            --muted: #475569;
+            --accent: #2563eb;
+            --ok: #16a34a;
+            --warn: #d97706;
+            --danger: #dc2626;
+            --shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 14px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(37, 99, 235, 0.28), transparent 32%),
+                radial-gradient(circle at right center, rgba(22, 163, 74, 0.2), transparent 25%),
+                linear-gradient(135deg, #0f172a 0%, #1e293b 45%, #0f172a 100%);
+            overflow: hidden;
+        }
+
+        .activity-description {
+            height: calc(100vh - 28px);
+        }
+
+        .container {
+            max-width: 1460px;
+            height: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 18px;
+            border-radius: 20px;
+            color: #eff6ff;
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.9), rgba(15, 23, 42, 0.92));
+            box-shadow: var(--shadow);
+        }
+
+        .header h1 {
+            font-size: 1.55rem;
+            line-height: 1.2;
+            margin-bottom: 0.2rem;
+        }
+
+        .header p {
+            color: #cbd5e1;
+            font-size: 0.94rem;
+        }
+
+        .header-badge {
+            min-width: 250px;
+            padding: 10px 14px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            text-align: right;
+        }
+
+        .header-badge strong {
+            display: block;
+            color: #bfdbfe;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.2rem;
+        }
+
+        .header-badge span {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .section {
+            flex: 1;
+            min-height: 0;
+            padding: 14px;
+            border-radius: 22px;
+            background: var(--panel);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .sim-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.9fr) 430px;
+            gap: 14px;
+            height: 100%;
+            min-height: 0;
+        }
+
+        .network-pane,
+        .side-pane {
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow: hidden;
+        }
+
+        .network-card,
+        .panel-card {
+            border-radius: 18px;
+            background: var(--panel-soft);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .network-card {
+            flex: 1;
+            min-height: 0;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+        }
+
+        .card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .card-head h2 {
+            color: #1e3a8a;
+            font-size: 1.15rem;
+            margin-bottom: 0.1rem;
+        }
+
+        .card-head p {
+            color: var(--muted);
+            font-size: 0.87rem;
+        }
+
+        .status-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 0.7rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            background: rgba(37, 99, 235, 0.08);
+            color: #1d4ed8;
+            border: 1px solid rgba(37, 99, 235, 0.14);
+        }
+
+        .chip.ok {
+            color: #166534;
+            background: rgba(22, 163, 74, 0.12);
+            border-color: rgba(22, 163, 74, 0.16);
+        }
+
+        .chip.warn {
+            color: #92400e;
+            background: rgba(217, 119, 6, 0.12);
+            border-color: rgba(217, 119, 6, 0.18);
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 0.78rem;
+            color: var(--muted);
+        }
+
+        .legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .legend i {
+            width: 16px;
+            height: 4px;
+            border-radius: 999px;
+            display: inline-block;
+        }
+
+        .legend .idle { background: #94a3b8; }
+        .legend .probe { background: #2563eb; }
+        .legend .active { background: var(--ok); }
+        .legend .blocked { background: var(--warn); }
+        .legend .path { background: #0f766e; }
+        .legend .bpdu { background: #60a5fa; }
+
+        .svg-wrap {
+            flex: 1;
+            min-height: 0;
+            border-radius: 16px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(241, 245, 249, 0.95));
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            overflow: hidden;
+        }
+
+        #network-svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .panel-card {
+            padding: 10px 12px;
+        }
+
+        .state-panel {
+            padding: 12px 14px;
+            flex: 0 0 auto;
+        }
+
+        .state-panel .path-box {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .state-panel .path-line {
+            min-height: 100%;
+        }
+
+        .panel-card h3 {
+            color: #1e3a8a;
+            font-size: 0.92rem;
+            display: block;
+            margin-bottom: 0.35rem;
+        }
+
+        .panel-card p,
+        .panel-card li {
+            color: var(--muted);
+            font-size: 0.78rem;
+            line-height: 1.35;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 6px;
+        }
+
+        button {
+            appearance: none;
+            border: none;
+            border-radius: 12px;
+            padding: 0.65rem 0.72rem;
+            font: inherit;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+        }
+
+        button:hover:not(:disabled) {
+            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.55;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #eff6ff;
+        }
+
+        .btn-soft {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff;
+        }
+
+        .btn-demo {
+            background: linear-gradient(135deg, #14b8a6, #0f766e);
+            color: #ecfeff;
+        }
+
+        .btn-warn {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #fff7ed;
+        }
+
+        .player-btn {
+            min-height: 72px;
+            padding: 0.55rem 0.4rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.22rem;
+            text-align: center;
+        }
+
+        .player-symbol {
+            font-size: 1rem;
+            line-height: 1;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+        }
+
+        .player-label {
+            font-size: 0.63rem;
+            line-height: 1.15;
+        }
+
+        .path-box {
+            display: grid;
+            gap: 6px;
+        }
+
+        .path-line {
+            padding: 0.52rem 0.68rem;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .path-line strong {
+            color: #0f172a;
+        }
+
+        .log-card {
+            flex: 1.9;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+            border: 1px solid rgba(15, 23, 42, 0.3);
+        }
+
+        .log-frame {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .log-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+            background: rgba(15, 23, 42, 0.82);
+        }
+
+        .log-toolbar h3 {
+            margin: 0;
+            color: #e2e8f0;
+            font-size: 1rem;
+        }
+
+        .log-toolbar p {
+            margin: 0.25rem 0 0;
+            color: #94a3b8;
+            font-size: 0.76rem;
+            line-height: 1.35;
+            max-width: 24rem;
+        }
+
+        .log-toolbar-badges {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            flex-shrink: 0;
+        }
+
+        .log-leds {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .log-leds span {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            display: inline-block;
+        }
+
+        .log-leds span:nth-child(1) { background: #ef4444; }
+        .log-leds span:nth-child(2) { background: #f59e0b; }
+        .log-leds span:nth-child(3) { background: #22c55e; }
+
+        .log-counter {
+            padding: 0.36rem 0.6rem;
+            border-radius: 999px;
+            background: rgba(59, 130, 246, 0.16);
+            border: 1px solid rgba(96, 165, 250, 0.22);
+            color: #bfdbfe;
+            font-size: 0.74rem;
+            font-weight: 700;
+        }
+
+        .log-window {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            background:
+                linear-gradient(180deg, rgba(15, 23, 42, 0.12), rgba(15, 23, 42, 0.04)),
+                repeating-linear-gradient(
+                    180deg,
+                    rgba(148, 163, 184, 0.05) 0,
+                    rgba(148, 163, 184, 0.05) 32px,
+                    rgba(148, 163, 184, 0.08) 32px,
+                    rgba(148, 163, 184, 0.08) 33px
+                );
+            scroll-behavior: smooth;
+        }
+
+        .log-entry {
+            padding: 0.62rem 0.75rem;
+            border-radius: 10px;
+            background: rgba(248, 250, 252, 0.96);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            font-size: 0.8rem;
+            line-height: 1.45;
+            color: #334155;
+        }
+
+        .log-entry strong {
+            display: inline-block;
+            min-width: 2.9rem;
+            color: #0f172a;
+        }
+
+        .log-entry.info { border-left: 4px solid #2563eb; }
+        .log-entry.ok { border-left: 4px solid var(--ok); }
+        .log-entry.warn { border-left: 4px solid var(--warn); }
+        .log-entry.danger { border-left: 4px solid var(--danger); }
+
+        .small-note {
+            font-size: 0.7rem;
+            color: #64748b;
+            line-height: 1.28;
+        }
+
+        .domain-label {
+            fill: #1e3a8a;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .domain-sub {
+            fill: #64748b;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .domain-box {
+            fill: rgba(255, 255, 255, 0.5);
+            stroke: rgba(148, 163, 184, 0.35);
+            stroke-width: 1.5;
+            rx: 22;
+            ry: 22;
+        }
+
+        .node-box {
+            rx: 18;
+            ry: 18;
+            stroke-width: 2.2;
+            transition: fill 0.18s ease, stroke 0.18s ease, opacity 0.18s ease;
+        }
+
+        .node-box.switch {
+            fill: #e2e8f0;
+            stroke: #475569;
+        }
+
+        .node-box.device {
+            fill: #e0f2fe;
+            stroke: #0284c7;
+        }
+
+        .node-box.off {
+            fill: #cbd5e1;
+            stroke: #64748b;
+        }
+
+        .node-box.booting {
+            fill: #dbeafe;
+            stroke: #2563eb;
+            filter: drop-shadow(0 0 6px rgba(37, 99, 235, 0.28));
+        }
+
+        .node-box.learning {
+            fill: #fef3c7;
+            stroke: #d97706;
+            filter: drop-shadow(0 0 6px rgba(217, 119, 6, 0.26));
+        }
+
+        .node-box.on {
+            filter: drop-shadow(0 0 8px rgba(22, 163, 74, 0.18));
+        }
+
+        .node-box.root {
+            fill: #dbeafe;
+            stroke: #1d4ed8;
+            filter: drop-shadow(0 0 9px rgba(37, 99, 235, 0.2));
+        }
+
+        .node-label {
+            fill: #0f172a;
+            font-size: 15px;
+            font-weight: 700;
+            text-anchor: middle;
+        }
+
+        .node-sub {
+            fill: #475569;
+            font-size: 11px;
+            text-anchor: middle;
+        }
+
+        .node-state {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            text-anchor: middle;
+        }
+
+        .root-chip rect {
+            fill: #1d4ed8;
+            stroke: rgba(255, 255, 255, 0.4);
+            stroke-width: 1;
+            rx: 10;
+            ry: 10;
+        }
+
+        .root-chip text {
+            fill: white;
+            font-size: 10px;
+            font-weight: 800;
+            text-anchor: middle;
+        }
+
+        .link-hit {
+            stroke: rgba(0, 0, 0, 0);
+            stroke-width: 22;
+            fill: none;
+            pointer-events: none;
+        }
+
+        .link-main {
+            fill: none;
+            stroke-width: 6;
+            stroke-linecap: round;
+            transition: stroke 0.18s ease, opacity 0.18s ease;
+        }
+
+        .link-label {
+            font-size: 11px;
+            font-weight: 700;
+            fill: #334155;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+
+        .link-group[data-state='idle'] .link-main {
+            stroke: #94a3b8;
+            opacity: 0.82;
+        }
+
+        .link-group[data-state='probe'] .link-main {
+            stroke: #2563eb;
+            stroke-dasharray: 10 8;
+        }
+
+        .link-group[data-state='forwarding'] .link-main {
+            stroke: var(--ok);
+        }
+
+        .link-group[data-state='blocked'] .link-main {
+            stroke: var(--warn);
+            stroke-dasharray: 10 8;
+        }
+
+        .link-group[data-state='path'] .link-main {
+            stroke: #0f766e;
+            stroke-width: 8;
+        }
+
+        .role-tag rect {
+            fill: rgba(255, 255, 255, 0.94);
+            stroke: #94a3b8;
+            stroke-width: 1.2;
+            rx: 10;
+            ry: 10;
+        }
+
+        .role-tag text {
+            fill: #0f172a;
+            font-size: 10px;
+            font-weight: 800;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+
+        .role-tag[data-role='RP'] rect {
+            fill: rgba(37, 99, 235, 0.15);
+            stroke: #2563eb;
+        }
+
+        .role-tag[data-role='DP'] rect {
+            fill: rgba(22, 163, 74, 0.15);
+            stroke: #16a34a;
+        }
+
+        .role-tag[data-role='ALT'] rect {
+            fill: rgba(217, 119, 6, 0.16);
+            stroke: #d97706;
+        }
+
+        .role-tag.hidden,
+        .root-chip.hidden {
+            display: none;
+        }
+
+        .bpdu-packet circle {
+            fill: #bfdbfe;
+            stroke: #2563eb;
+            stroke-width: 1.8;
+        }
+
+        .bpdu-packet text {
+            fill: #1d4ed8;
+            font-size: 8px;
+            font-weight: 800;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+
+        .signal-packet circle {
+            fill: #d1fae5;
+            stroke: #0f766e;
+            stroke-width: 2;
+        }
+
+        .signal-packet text {
+            fill: #0f766e;
+            font-size: 8px;
+            font-weight: 800;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+
+        @media (max-width: 1100px) {
+            .sim-layout {
+                grid-template-columns: minmax(0, 1.45fr) 360px;
+            }
+
+            .controls {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .state-panel .path-box {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 820px) {
+            body {
+                overflow: auto;
+            }
+
+            .activity-description {
+                height: auto;
+                min-height: calc(100vh - 28px);
+            }
+
+            .sim-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                overflow: visible;
+            }
+
+            .network-card {
+                min-height: 620px;
+            }
+
+            .side-pane {
+                min-height: 620px;
+            }
+
+            .state-panel .path-box {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 720px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-badge {
+                width: 100%;
+                text-align: left;
+            }
+
+            .controls {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .state-panel .path-box {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class='activity-description'>
+        <div class='container'>
+            <div class='header'>
+                <div>
+                    <h1>Material 7b - RSTP-Ablaufanimation</h1>
+                    <p>Eine Schritt-fuer-Schritt-Visualisierung zeigt, wie RSTP im Hintergrund Root Bridge, Root Ports, Designated Ports und den blockierten Backup-Link bestimmt.</p>
+                </div>
+                <div class='header-badge'>
+                    <strong>Berufsbezogener Kontext</strong>
+                    <span>Ringnetz zwischen Medienserver, vier Switches und Stagebox</span>
+                </div>
+            </div>
+
+            <div class='section'>
+                <div class='sim-layout'>
+                    <div class='network-pane'>
+                        <div class='network-card'>
+                            <div class='card-head'>
+                                <div>
+                                    <h2>RSTP in Zeitlupe</h2>
+                                    <p>Die Animation macht sichtbar, was normalerweise verborgen bleibt: BPDU-Austausch, Root-Wahl, Kostenvergleich und das Blockieren eines redundanten Links, bis nur noch ein schleifenfreier Dienstpfad uebrig bleibt.</p>
+                                </div>
+                                <div class='status-strip' id='status-strip'></div>
+                            </div>
+
+                            <div class='legend'>
+                                <span><i class='idle'></i> Inaktiv / noch offen</span>
+                                <span><i class='probe'></i> BPDU-Austausch</span>
+                                <span><i class='active'></i> Forwarding</span>
+                                <span><i class='blocked'></i> Blockiert</span>
+                                <span><i class='path'></i> Aktiver Dienstpfad</span>
+                                <span><i class='bpdu'></i> BPDU / Steuerinfo</span>
+                            </div>
+
+                            <div class='svg-wrap'>
+                                <svg id='network-svg' viewBox='0 0 1000 620' xmlns='http://www.w3.org/2000/svg' aria-label='RSTP-Ablaufanimation'>
+                                    <defs>
+                                        <filter id='softShadow' x='-20%' y='-20%' width='140%' height='140%'>
+                                            <feDropShadow dx='0' dy='8' stdDeviation='10' flood-color='#0f172a' flood-opacity='0.16'></feDropShadow>
+                                        </filter>
+                                    </defs>
+
+                                    <rect class='domain-box' x='180' y='70' width='640' height='480'></rect>
+                                    <text class='domain-label' x='500' y='52' text-anchor='middle'>RSTP-Domaene</text>
+                                    <text class='domain-sub' x='500' y='574' text-anchor='middle'>Ringstruktur mit einem redundanten Backup-Segment</text>
+
+                                    <g id='links-layer'></g>
+                                    <g id='bpdu-layer'></g>
+                                    <g id='packet-layer'></g>
+                                    <g id='nodes-layer'></g>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class='panel-card state-panel'>
+                            <h3>Aktueller Zustand</h3>
+                            <div class='path-box'>
+                                <div class='path-line'><strong>Schritt:</strong> <span id='step-title'>Bereit</span></div>
+                                <div class='path-line'><strong>Aktion im Hintergrund:</strong> <span id='step-detail'>Starten Sie die Animation, um die versteckten Entscheidungen von RSTP sichtbar zu machen.</span></div>
+                                <div class='path-line'><strong>Root Bridge:</strong> <span id='root-bridge'>noch nicht bestimmt</span></div>
+                                <div class='path-line'><strong>Blockierter Link:</strong> <span id='blocked-link'>noch keiner</span></div>
+                                <div class='path-line'><strong>Aktiver Dienstpfad:</strong> <span id='service-path'>noch kein Pfad aktiv</span></div>
+                                <div class='path-line'><strong>Hinweis:</strong> <span>Die Grafik ist eine reine Visualisierung. Der Ablauf wird nur ueber die Tasten rechts gesteuert.</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <aside class='side-pane'>
+                        <div class='panel-card'>
+                            <h3>Steuerung</h3>
+                            <div class='controls'>
+                                <button class='btn-soft player-btn' id='back-btn'>
+                                    <span class='player-symbol'>&lt;&lt;</span>
+                                    <span class='player-label'>Schritt zurueck</span>
+                                </button>
+                                <button class='btn-primary player-btn' id='play-btn'>
+                                    <span class='player-symbol'>&gt;</span>
+                                    <span class='player-label'>Auto vor</span>
+                                </button>
+                                <button class='btn-warn player-btn' id='pause-btn'>
+                                    <span class='player-symbol'>||</span>
+                                    <span class='player-label'>Pause</span>
+                                </button>
+                                <button class='btn-demo player-btn' id='forward-btn'>
+                                    <span class='player-symbol'>&gt;&gt;</span>
+                                    <span class='player-label'>Schritt vor</span>
+                                </button>
+                                <button class='btn-danger player-btn' id='stop-btn'>
+                                    <span class='player-symbol'>[]</span>
+                                    <span class='player-label'>Stop</span>
+                                </button>
+                            </div>
+                            <p class='small-note' style='margin-top:0.55rem;'>Der Player steuert den Ablauf wie bei einer Demo: automatisch vor, sofort pausieren, schrittweise vor oder zurueck und mit Stop auf Anfang zuruecksetzen.</p>
+                        </div>
+
+                        <div class='panel-card log-card'>
+                            <div class='log-frame'>
+                                <div class='log-toolbar'>
+                                    <div>
+                                        <h3>Live-Log-Fenster</h3>
+                                        <p>Chronologische Ereignisse vom Einschalten bis zum stabilen, schleifenfreien Baum. Das Fenster bleibt scrollbar wie in Material 7a.</p>
+                                    </div>
+                                    <div class='log-toolbar-badges'>
+                                        <div class='log-leds' aria-hidden='true'>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                        <div class='log-counter' id='log-count'>0 Eintraege</div>
+                                    </div>
+                                </div>
+                                <div class='log-window' id='log-window'></div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SVG_NS = 'http://www.w3.org/2000/svg';
+        const SIMULATION_SLOWDOWN = 6;
+
+        function slowedDelay(milliseconds) {
+            return Math.round(milliseconds * SIMULATION_SLOWDOWN);
+        }
+
+        function slowedSpeed(pixelsPerSecond) {
+            return pixelsPerSecond / SIMULATION_SLOWDOWN;
+        }
+
+        const nodes = {
+            server: {
+                id: 'server',
+                label: 'Medienserver',
+                subLabel: 'Quelle der Nutzdaten',
+                x: 90,
+                y: 170,
+                width: 132,
+                height: 74,
+                type: 'device',
+                state: 'on',
+                bridgeId: null,
+                isRoot: false
+            },
+            sw1: {
+                id: 'sw1',
+                label: 'Switch 1',
+                subLabel: 'Bridge-ID 4096',
+                x: 300,
+                y: 170,
+                width: 120,
+                height: 84,
+                type: 'switch',
+                state: 'off',
+                bridgeId: 4096,
+                isRoot: false
+            },
+            sw2: {
+                id: 'sw2',
+                label: 'Switch 2',
+                subLabel: 'Bridge-ID 8192',
+                x: 700,
+                y: 170,
+                width: 120,
+                height: 84,
+                type: 'switch',
+                state: 'off',
+                bridgeId: 8192,
+                isRoot: false
+            },
+            sw3: {
+                id: 'sw3',
+                label: 'Switch 3',
+                subLabel: 'Bridge-ID 16384',
+                x: 700,
+                y: 430,
+                width: 120,
+                height: 84,
+                type: 'switch',
+                state: 'off',
+                bridgeId: 16384,
+                isRoot: false
+            },
+            sw4: {
+                id: 'sw4',
+                label: 'Switch 4',
+                subLabel: 'Bridge-ID 24576',
+                x: 300,
+                y: 430,
+                width: 120,
+                height: 84,
+                type: 'switch',
+                state: 'off',
+                bridgeId: 24576,
+                isRoot: false
+            },
+            stagebox: {
+                id: 'stagebox',
+                label: 'Stagebox',
+                subLabel: 'Ziel der Nutzdaten',
+                x: 910,
+                y: 430,
+                width: 128,
+                height: 74,
+                type: 'device',
+                state: 'on',
+                bridgeId: null,
+                isRoot: false
+            }
+        };
+
+        const links = [
+            { id: 'srv-sw1', from: 'server', to: 'sw1', label: 'Server-Link', cost: 0, switchLink: false, visualState: 'idle', fromRole: '', toRole: '' },
+            { id: 'sw1-sw2', from: 'sw1', to: 'sw2', label: 'Cost 1', cost: 1, switchLink: true, visualState: 'idle', fromRole: '', toRole: '' },
+            { id: 'sw2-sw3', from: 'sw2', to: 'sw3', label: 'Cost 1', cost: 1, switchLink: true, visualState: 'idle', fromRole: '', toRole: '' },
+            { id: 'sw3-sw4', from: 'sw3', to: 'sw4', label: 'Cost 4', cost: 4, switchLink: true, visualState: 'idle', fromRole: '', toRole: '' },
+            { id: 'sw4-sw1', from: 'sw4', to: 'sw1', label: 'Cost 4', cost: 4, switchLink: true, visualState: 'idle', fromRole: '', toRole: '' },
+            { id: 'sw3-stagebox', from: 'sw3', to: 'stagebox', label: 'Stage-Link', cost: 0, switchLink: false, visualState: 'idle', fromRole: '', toRole: '' }
+        ];
+
+        const linkMap = Object.fromEntries(links.map((link) => [link.id, link]));
+        const switchIds = Object.values(nodes).filter((node) => node.type === 'switch').map((node) => node.id);
+        const switchLinkIds = links.filter((link) => link.switchLink).map((link) => link.id);
+
+        const appState = {
+            stepIndex: 0,
+            logCounter: 0,
+            currentTitle: 'Bereit',
+            currentDetail: 'Starten Sie die Animation, um die versteckten Entscheidungen von RSTP sichtbar zu machen.',
+            rootId: null,
+            blockedLinkId: null,
+            servicePath: [],
+            autoRunning: false,
+            autoTimer: null,
+            transientTimers: [],
+            bpduItems: [],
+            bpduFrame: null,
+            bpduInterval: null,
+            bpduLastTick: 0,
+            signalItems: [],
+            signalFrame: null,
+            signalInterval: null,
+            signalRoute: null,
+            signalLastTick: 0
+        };
+
+        function readableNode(nodeId) {
+            return nodes[nodeId]?.label || nodeId;
+        }
+
+        function readableLink(linkId) {
+            const link = linkMap[linkId];
+            if (!link) {
+                return 'unbekannt';
+            }
+            return `${readableNode(link.from)} ↔ ${readableNode(link.to)}`;
+        }
+
+        function pathFromIds(edgeIds) {
+            return edgeIds
+                .map((edgeId) => {
+                    const link = linkMap[edgeId];
+                    return link ? [readableNode(link.from), readableNode(link.to)] : [];
+                })
+                .flat();
+        }
+
+        function compressNodePath(names) {
+            return names.filter((name, index) => index === 0 || name !== names[index - 1]).join(' → ');
+        }
+
+        function clearLogWindow() {
+            const logWindow = document.getElementById('log-window');
+            logWindow.innerHTML = '';
+            appState.logCounter = 0;
+            document.getElementById('log-count').textContent = '0 Eintraege';
+        }
+
+        function addLog(level, text) {
+            appState.logCounter += 1;
+            const logWindow = document.getElementById('log-window');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${level}`;
+            const stamp = String(appState.logCounter).padStart(2, '0');
+            entry.innerHTML = `<strong>${stamp}</strong>${text}`;
+            logWindow.appendChild(entry);
+            document.getElementById('log-count').textContent = `${appState.logCounter} Eintraege`;
+            logWindow.scrollTop = logWindow.scrollHeight;
+        }
+
+        function setManagedTimeout(callback, delay) {
+            let timerId = null;
+            timerId = window.setTimeout(() => {
+                appState.transientTimers = appState.transientTimers.filter((managedId) => managedId !== timerId);
+                callback();
+            }, delay);
+            appState.transientTimers.push(timerId);
+            return timerId;
+        }
+
+        function clearAutoTimer() {
+            if (appState.autoTimer) {
+                window.clearTimeout(appState.autoTimer);
+                appState.autoTimer = null;
+            }
+        }
+
+        function createBpduElement() {
+            const group = document.createElementNS(SVG_NS, 'g');
+            group.setAttribute('class', 'bpdu-packet');
+
+            const circle = document.createElementNS(SVG_NS, 'circle');
+            circle.setAttribute('r', 9);
+            circle.setAttribute('cx', 0);
+            circle.setAttribute('cy', 0);
+            group.appendChild(circle);
+
+            const text = document.createElementNS(SVG_NS, 'text');
+            text.setAttribute('x', 0);
+            text.setAttribute('y', 1);
+            text.textContent = 'B';
+            group.appendChild(text);
+
+            return group;
+        }
+
+        function createSignalElement() {
+            const group = document.createElementNS(SVG_NS, 'g');
+            group.setAttribute('class', 'signal-packet');
+
+            const circle = document.createElementNS(SVG_NS, 'circle');
+            circle.setAttribute('r', 8);
+            circle.setAttribute('cx', 0);
+            circle.setAttribute('cy', 0);
+            group.appendChild(circle);
+
+            const text = document.createElementNS(SVG_NS, 'text');
+            text.setAttribute('x', 0);
+            text.setAttribute('y', 1);
+            text.textContent = 'D';
+            group.appendChild(text);
+
+            return group;
+        }
+
+        function clearLayer(layerId) {
+            const layer = document.getElementById(layerId);
+            if (layer) {
+                layer.innerHTML = '';
+            }
+        }
+
+        function stopBpduFlow() {
+            if (appState.bpduInterval) {
+                window.clearInterval(appState.bpduInterval);
+                appState.bpduInterval = null;
+            }
+
+            if (appState.bpduFrame) {
+                window.cancelAnimationFrame(appState.bpduFrame);
+                appState.bpduFrame = null;
+            }
+
+            appState.bpduItems = [];
+            appState.bpduLastTick = 0;
+            clearLayer('bpdu-layer');
+        }
+
+        function stopSignalFlow() {
+            if (appState.signalInterval) {
+                window.clearInterval(appState.signalInterval);
+                appState.signalInterval = null;
+            }
+
+            if (appState.signalFrame) {
+                window.cancelAnimationFrame(appState.signalFrame);
+                appState.signalFrame = null;
+            }
+
+            appState.signalItems = [];
+            appState.signalRoute = null;
+            appState.signalLastTick = 0;
+            clearLayer('packet-layer');
+        }
+
+        function clearTransientState() {
+            clearAutoTimer();
+            appState.transientTimers.forEach((timerId) => window.clearTimeout(timerId));
+            appState.transientTimers = [];
+            stopBpduFlow();
+            stopSignalFlow();
+        }
+
+        function buildPath(link) {
+            const fromNode = nodes[link.from];
+            const toNode = nodes[link.to];
+            return `M ${fromNode.x} ${fromNode.y} L ${toNode.x} ${toNode.y}`;
+        }
+
+        function positionRoleTag(group, link, isFromSide) {
+            const fromNode = nodes[link.from];
+            const toNode = nodes[link.to];
+            const ratio = isFromSide ? 0.24 : 0.76;
+            const dx = toNode.x - fromNode.x;
+            const dy = toNode.y - fromNode.y;
+            const length = Math.hypot(dx, dy) || 1;
+            const nx = -dy / length;
+            const ny = dx / length;
+            const x = fromNode.x + dx * ratio + nx * 18;
+            const y = fromNode.y + dy * ratio + ny * 18;
+            group.setAttribute('transform', `translate(${x} ${y})`);
+        }
+
+        function createRoleTag(link, isFromSide) {
+            const group = document.createElementNS(SVG_NS, 'g');
+            group.setAttribute('class', 'role-tag hidden');
+            group.dataset.side = isFromSide ? 'from' : 'to';
+
+            const rect = document.createElementNS(SVG_NS, 'rect');
+            rect.setAttribute('x', -18);
+            rect.setAttribute('y', -10);
+            rect.setAttribute('width', 36);
+            rect.setAttribute('height', 20);
+            group.appendChild(rect);
+
+            const text = document.createElementNS(SVG_NS, 'text');
+            text.setAttribute('x', 0);
+            text.setAttribute('y', 1);
+            text.textContent = '';
+            group.appendChild(text);
+
+            positionRoleTag(group, link, isFromSide);
+            return group;
+        }
+
+        function createRootChip(node) {
+            const group = document.createElementNS(SVG_NS, 'g');
+            group.setAttribute('class', 'root-chip hidden');
+
+            const rect = document.createElementNS(SVG_NS, 'rect');
+            rect.setAttribute('x', node.x - 28);
+            rect.setAttribute('y', node.y - node.height / 2 + 8);
+            rect.setAttribute('width', 56);
+            rect.setAttribute('height', 18);
+            group.appendChild(rect);
+
+            const text = document.createElementNS(SVG_NS, 'text');
+            text.setAttribute('x', node.x);
+            text.setAttribute('y', node.y - node.height / 2 + 21);
+            text.textContent = 'ROOT';
+            group.appendChild(text);
+
+            return group;
+        }
+
+        function createNetworkSvg() {
+            const linksLayer = document.getElementById('links-layer');
+            const nodesLayer = document.getElementById('nodes-layer');
+
+            links.forEach((link) => {
+                const fromNode = nodes[link.from];
+                const toNode = nodes[link.to];
+                const group = document.createElementNS(SVG_NS, 'g');
+                group.setAttribute('class', 'link-group');
+                group.dataset.linkId = link.id;
+                group.dataset.state = 'idle';
+
+                const main = document.createElementNS(SVG_NS, 'path');
+                main.setAttribute('class', 'link-main');
+                main.setAttribute('d', buildPath(link));
+                group.appendChild(main);
+
+                const hit = document.createElementNS(SVG_NS, 'path');
+                hit.setAttribute('class', 'link-hit');
+                hit.setAttribute('d', buildPath(link));
+                group.appendChild(hit);
+
+                const label = document.createElementNS(SVG_NS, 'text');
+                label.setAttribute('class', 'link-label');
+                label.setAttribute('x', (fromNode.x + toNode.x) / 2);
+                label.setAttribute('y', (fromNode.y + toNode.y) / 2 - 12);
+                label.textContent = link.label;
+                group.appendChild(label);
+
+                const fromRoleTag = createRoleTag(link, true);
+                fromRoleTag.dataset.roleSide = 'from';
+                group.appendChild(fromRoleTag);
+
+                const toRoleTag = createRoleTag(link, false);
+                toRoleTag.dataset.roleSide = 'to';
+                group.appendChild(toRoleTag);
+
+                linksLayer.appendChild(group);
+            });
+
+            Object.values(nodes).forEach((node) => {
+                const group = document.createElementNS(SVG_NS, 'g');
+                group.dataset.nodeId = node.id;
+                group.setAttribute('filter', 'url(#softShadow)');
+
+                const rect = document.createElementNS(SVG_NS, 'rect');
+                rect.setAttribute('class', `node-box ${node.type}`);
+                rect.setAttribute('x', node.x - node.width / 2);
+                rect.setAttribute('y', node.y - node.height / 2);
+                rect.setAttribute('width', node.width);
+                rect.setAttribute('height', node.height);
+                group.appendChild(rect);
+
+                const label = document.createElementNS(SVG_NS, 'text');
+                label.setAttribute('class', 'node-label');
+                label.setAttribute('x', node.x);
+                label.setAttribute('y', node.y - 8);
+                label.textContent = node.label;
+                group.appendChild(label);
+
+                const subLabel = document.createElementNS(SVG_NS, 'text');
+                subLabel.setAttribute('class', 'node-sub');
+                subLabel.setAttribute('x', node.x);
+                subLabel.setAttribute('y', node.y + 12);
+                subLabel.textContent = node.subLabel;
+                group.appendChild(subLabel);
+
+                const stateLabel = document.createElementNS(SVG_NS, 'text');
+                stateLabel.setAttribute('class', 'node-state');
+                stateLabel.setAttribute('x', node.x);
+                stateLabel.setAttribute('y', node.y + 31);
+                group.appendChild(stateLabel);
+
+                const rootChip = createRootChip(node);
+                group.appendChild(rootChip);
+
+                nodesLayer.appendChild(group);
+            });
+        }
+
+        function getLinkGroup(linkId) {
+            return document.querySelector(`.link-group[data-link-id='${linkId}']`);
+        }
+
+        function updateRoleTag(group, role, side) {
+            const tag = group.querySelector(`.role-tag[data-role-side='${side}']`);
+            if (!tag) {
+                return;
+            }
+
+            if (!role) {
+                tag.classList.add('hidden');
+                tag.dataset.role = '';
+                tag.querySelector('text').textContent = '';
+                return;
+            }
+
+            tag.classList.remove('hidden');
+            tag.dataset.role = role;
+            tag.querySelector('text').textContent = role;
+        }
+
+        function renderTopology() {
+            links.forEach((link) => {
+                const group = getLinkGroup(link.id);
+                if (!group) {
+                    return;
+                }
+
+                group.dataset.state = link.visualState;
+                updateRoleTag(group, link.fromRole, 'from');
+                updateRoleTag(group, link.toRole, 'to');
+            });
+
+            Object.values(nodes).forEach((node) => {
+                const group = document.querySelector(`[data-node-id='${node.id}']`);
+                if (!group) {
+                    return;
+                }
+
+                const rect = group.querySelector('.node-box');
+                const stateText = group.querySelector('.node-state');
+                const rootChip = group.querySelector('.root-chip');
+
+                rect.setAttribute('class', `node-box ${node.type} ${node.state}${node.isRoot ? ' root' : ''}`);
+                stateText.textContent = node.type === 'device'
+                    ? (node.id === 'server' ? 'QUELLE' : 'ZIEL')
+                    : (node.isRoot ? 'ROOT' : ({ off: 'AUS', booting: 'BOOT', learning: 'LEARN', on: 'AKTIV' }[node.state] || 'AKTIV'));
+
+                if (node.isRoot) {
+                    rootChip.classList.remove('hidden');
+                } else {
+                    rootChip.classList.add('hidden');
+                }
+            });
+        }
+
+        function renderStatusStrip() {
+            const chips = [];
+            chips.push(`<span class='chip'>Schritt ${Math.min(appState.stepIndex, steps.length)}/${steps.length}</span>`);
+            chips.push(`<span class='chip ${appState.rootId ? 'ok' : ''}'>Root: ${appState.rootId ? readableNode(appState.rootId) : 'offen'}</span>`);
+            chips.push(`<span class='chip ${appState.blockedLinkId ? 'warn' : ''}'>Backup-Link: ${appState.blockedLinkId ? readableLink(appState.blockedLinkId) : 'noch keiner'}</span>`);
+            if (appState.servicePath.length) {
+                chips.push(`<span class='chip ok'>Dienstpfad aktiv</span>`);
+            }
+            document.getElementById('status-strip').innerHTML = chips.join('');
+        }
+
+        function updatePanels() {
+            document.getElementById('step-title').textContent = appState.currentTitle;
+            document.getElementById('step-detail').textContent = appState.currentDetail;
+            document.getElementById('root-bridge').textContent = appState.rootId ? readableNode(appState.rootId) : 'noch nicht bestimmt';
+            document.getElementById('blocked-link').textContent = appState.blockedLinkId ? readableLink(appState.blockedLinkId) : 'noch keiner';
+            document.getElementById('service-path').textContent = appState.servicePath.length
+                ? compressNodePath(pathFromIds(appState.servicePath))
+                : 'noch kein Pfad aktiv';
+            renderStatusStrip();
+        }
+
+        function hasPlaybackActivity() {
+            return Boolean(
+                appState.autoRunning ||
+                appState.autoTimer ||
+                appState.transientTimers.length ||
+                appState.bpduInterval ||
+                appState.bpduFrame ||
+                appState.signalInterval ||
+                appState.signalFrame
+            );
+        }
+
+        function updateButtons() {
+            const playBtn = document.getElementById('play-btn');
+            const pauseBtn = document.getElementById('pause-btn');
+            const backBtn = document.getElementById('back-btn');
+            const forwardBtn = document.getElementById('forward-btn');
+            const stopBtn = document.getElementById('stop-btn');
+            const activity = hasPlaybackActivity();
+
+            playBtn.disabled = appState.autoRunning;
+            pauseBtn.disabled = !activity;
+            backBtn.disabled = appState.autoRunning || appState.stepIndex === 0;
+            forwardBtn.disabled = appState.autoRunning || appState.stepIndex >= steps.length;
+            stopBtn.disabled = false;
+        }
+
+        function getRouteDescriptor(edgeIds) {
+            const segments = [];
+            let totalLength = 0;
+
+            edgeIds.forEach((edgeId) => {
+                const pathElement = document.querySelector(`.link-group[data-link-id='${edgeId}'] .link-main`);
+                if (!pathElement) {
+                    return;
+                }
+
+                const length = pathElement.getTotalLength();
+                segments.push({ pathElement, length });
+                totalLength += length;
+            });
+
+            return { segments, totalLength };
+        }
+
+        function getPointAlongRoute(route, distance) {
+            if (!route || !route.segments.length) {
+                return { x: nodes.server.x, y: nodes.server.y };
+            }
+
+            let remaining = Math.max(0, Math.min(distance, route.totalLength));
+            for (const segment of route.segments) {
+                if (remaining <= segment.length) {
+                    return segment.pathElement.getPointAtLength(remaining);
+                }
+                remaining -= segment.length;
+            }
+
+            const lastSegment = route.segments[route.segments.length - 1];
+            return lastSegment.pathElement.getPointAtLength(lastSegment.length);
+        }
+
+        function spawnBpdu(linkId, reverse = false) {
+            const pathElement = document.querySelector(`.link-group[data-link-id='${linkId}'] .link-main`);
+            if (!pathElement) {
+                return;
+            }
+
+            const element = createBpduElement();
+            document.getElementById('bpdu-layer').appendChild(element);
+            appState.bpduItems.push({
+                element,
+                pathElement,
+                reverse,
+                progress: 0,
+                length: pathElement.getTotalLength(),
+                speed: slowedSpeed(190)
+            });
+        }
+
+        function stepBpduFlow(timestamp) {
+            if (!appState.bpduItems.length) {
+                appState.bpduFrame = null;
+                return;
+            }
+
+            if (!appState.bpduLastTick) {
+                appState.bpduLastTick = timestamp;
+            }
+
+            const deltaSeconds = (timestamp - appState.bpduLastTick) / 1000;
+            appState.bpduLastTick = timestamp;
+
+            appState.bpduItems = appState.bpduItems.filter((item) => {
+                item.progress += item.speed * deltaSeconds;
+                const distance = item.reverse ? item.length - item.progress : item.progress;
+                const point = item.pathElement.getPointAtLength(Math.max(0, Math.min(item.length, distance)));
+                item.element.setAttribute('transform', `translate(${point.x} ${point.y})`);
+
+                if (item.progress >= item.length) {
+                    item.element.remove();
+                    return false;
+                }
+
+                return true;
+            });
+
+            appState.bpduFrame = window.requestAnimationFrame(stepBpduFlow);
+        }
+
+        function startBpduExchange(duration) {
+            stopBpduFlow();
+            appState.bpduLastTick = 0;
+
+            switchLinkIds.forEach((linkId) => {
+                spawnBpdu(linkId, false);
+                spawnBpdu(linkId, true);
+            });
+
+            appState.bpduInterval = window.setInterval(() => {
+                switchLinkIds.forEach((linkId) => {
+                    spawnBpdu(linkId, false);
+                    spawnBpdu(linkId, true);
+                });
+            }, slowedDelay(620));
+
+            appState.bpduFrame = window.requestAnimationFrame(stepBpduFlow);
+            setManagedTimeout(stopBpduFlow, slowedDelay(duration));
+        }
+
+        function spawnSignalPacket() {
+            if (!appState.signalRoute || !appState.signalRoute.totalLength) {
+                return;
+            }
+
+            const element = createSignalElement();
+            document.getElementById('packet-layer').appendChild(element);
+            appState.signalItems.push({
+                element,
+                progress: 0,
+                speed: slowedSpeed(120 + Math.random() * 24)
+            });
+        }
+
+        function stepSignalFlow(timestamp) {
+            if (!appState.signalRoute || !appState.signalItems.length) {
+                appState.signalFrame = null;
+                return;
+            }
+
+            if (!appState.signalLastTick) {
+                appState.signalLastTick = timestamp;
+            }
+
+            const deltaSeconds = (timestamp - appState.signalLastTick) / 1000;
+            appState.signalLastTick = timestamp;
+
+            appState.signalItems = appState.signalItems.filter((packet) => {
+                packet.progress += packet.speed * deltaSeconds;
+                const point = getPointAlongRoute(appState.signalRoute, packet.progress);
+                packet.element.setAttribute('transform', `translate(${point.x} ${point.y})`);
+
+                if (packet.progress >= appState.signalRoute.totalLength) {
+                    packet.element.remove();
+                    return false;
+                }
+
+                return true;
+            });
+
+            appState.signalFrame = window.requestAnimationFrame(stepSignalFlow);
+        }
+
+        function startSignalFlow(edgeIds) {
+            stopSignalFlow();
+            appState.signalRoute = getRouteDescriptor(edgeIds);
+            if (!appState.signalRoute.totalLength) {
+                return;
+            }
+
+            appState.signalLastTick = 0;
+            spawnSignalPacket();
+            appState.signalInterval = window.setInterval(spawnSignalPacket, slowedDelay(950));
+            appState.signalFrame = window.requestAnimationFrame(stepSignalFlow);
+        }
+
+        function resetLinkStates(defaultState = 'idle') {
+            links.forEach((link) => {
+                link.visualState = defaultState;
+                link.fromRole = '';
+                link.toRole = '';
+            });
+        }
+
+        function scheduleNextStep(delay) {
+            clearAutoTimer();
+            appState.autoTimer = window.setTimeout(() => {
+                advanceStep();
+            }, delay);
+        }
+
+        function applyForwardingSet(edgeIds) {
+            links.forEach((link) => {
+                if (edgeIds.includes(link.id)) {
+                    link.visualState = 'forwarding';
+                } else if (link.switchLink) {
+                    link.visualState = 'idle';
+                }
+            });
+        }
+
+        function runBootStep(options = {}) {
+            const { instant = false } = options;
+            switchIds.forEach((nodeId) => {
+                nodes[nodeId].state = 'off';
+            });
+            renderTopology();
+            addLog('info', 'Die Switches starten nacheinander. Alle Ports bleiben zunaechst im Discarding-Zustand.');
+
+            if (instant) {
+                switchIds.forEach((nodeId) => {
+                    nodes[nodeId].state = 'booting';
+                    addLog('info', `${readableNode(nodeId)} initialisiert CPU, Ports und Bridge-ID.`);
+                    nodes[nodeId].state = 'learning';
+                    addLog('ok', `${readableNode(nodeId)} ist online und wartet auf BPDUs aus dem Nachbarsegment.`);
+                });
+                renderTopology();
+                return;
+            }
+
+            switchIds.forEach((nodeId, index) => {
+                const bootDelay = slowedDelay(index * 260);
+                setManagedTimeout(() => {
+                    nodes[nodeId].state = 'booting';
+                    renderTopology();
+                    addLog('info', `${readableNode(nodeId)} initialisiert CPU, Ports und Bridge-ID.`);
+                }, bootDelay);
+
+                setManagedTimeout(() => {
+                    nodes[nodeId].state = 'learning';
+                    renderTopology();
+                    addLog('ok', `${readableNode(nodeId)} ist online und wartet auf BPDUs aus dem Nachbarsegment.`);
+                }, bootDelay + slowedDelay(720));
+            });
+        }
+
+        function runBpduStep(options = {}) {
+            const { instant = false } = options;
+            switchIds.forEach((nodeId) => {
+                nodes[nodeId].state = 'learning';
+            });
+            resetLinkStates('idle');
+            switchLinkIds.forEach((linkId) => {
+                linkMap[linkId].visualState = 'probe';
+            });
+            renderTopology();
+            addLog('info', 'Alle Switches senden Hello-BPDUs. Anfangs haelt sich jeder selbst fuer die moegliche Root Bridge.');
+            addLog('info', 'Mit jeder BPDU werden Bridge-ID, Root-Informationen und Pfadkosten weitergereicht.');
+            if (!instant) {
+                startBpduExchange(2200);
+            }
+        }
+
+        function runRootElectionStep() {
+            appState.rootId = 'sw1';
+            Object.values(nodes).forEach((node) => {
+                if (node.type === 'switch') {
+                    node.state = 'learning';
+                    node.isRoot = node.id === 'sw1';
+                }
+            });
+            renderTopology();
+            addLog('ok', 'Switch 1 gewinnt die Root-Wahl, weil seine Bridge-ID 4096 niedriger ist als bei allen anderen Switches.');
+            addLog('warn', 'Ab jetzt muessen alle anderen Switches den guenstigsten Weg hin zur Root Bridge finden.');
+        }
+
+        function runRootPortStep() {
+            Object.values(nodes).forEach((node) => {
+                if (node.type === 'switch') {
+                    node.state = 'on';
+                }
+            });
+
+            resetLinkStates('idle');
+            linkMap['sw1-sw2'].visualState = 'forwarding';
+            linkMap['sw1-sw2'].toRole = 'RP';
+
+            linkMap['sw2-sw3'].visualState = 'forwarding';
+            linkMap['sw2-sw3'].toRole = 'RP';
+
+            linkMap['sw4-sw1'].visualState = 'forwarding';
+            linkMap['sw4-sw1'].fromRole = 'RP';
+
+            renderTopology();
+            addLog('ok', 'Switch 2 waehlt den direkten Port zu Switch 1 als Root Port (Kosten 1).');
+            addLog('ok', 'Switch 4 waehlt ebenfalls den direkten Weg zur Root Bridge, allerdings mit Kosten 4.');
+            addLog('ok', 'Switch 3 vergleicht zwei Wege: ueber Switch 2 kostet es 2, ueber Switch 4 kostet es 8. Deshalb wird der Port zu Switch 2 Root Port.');
+        }
+
+        function runDesignatedStep() {
+            resetLinkStates('idle');
+
+            linkMap['sw1-sw2'].visualState = 'forwarding';
+            linkMap['sw1-sw2'].fromRole = 'DP';
+            linkMap['sw1-sw2'].toRole = 'RP';
+
+            linkMap['sw2-sw3'].visualState = 'forwarding';
+            linkMap['sw2-sw3'].fromRole = 'DP';
+            linkMap['sw2-sw3'].toRole = 'RP';
+
+            linkMap['sw4-sw1'].visualState = 'forwarding';
+            linkMap['sw4-sw1'].fromRole = 'RP';
+            linkMap['sw4-sw1'].toRole = 'DP';
+
+            linkMap['sw3-sw4'].visualState = 'blocked';
+            linkMap['sw3-sw4'].fromRole = 'DP';
+            linkMap['sw3-sw4'].toRole = 'ALT';
+
+            appState.blockedLinkId = 'sw3-sw4';
+            renderTopology();
+            addLog('warn', 'Auf dem Segment Switch 3 ↔ Switch 4 darf nur eine Seite weiterleiten. Switch 3 hat die geringeren Root-Kosten und wird Designated Port.');
+            addLog('warn', 'Der Port von Switch 4 auf diesem Segment verliert den Vergleich und geht als Alternate Port in den Discarding-Zustand. Damit ist die Schleife aufgetrennt.');
+        }
+
+        function runStableTreeStep(options = {}) {
+            const { instant = false } = options;
+            applyForwardingSet(['sw1-sw2', 'sw2-sw3', 'sw4-sw1']);
+            linkMap['sw1-sw2'].fromRole = 'DP';
+            linkMap['sw1-sw2'].toRole = 'RP';
+            linkMap['sw2-sw3'].fromRole = 'DP';
+            linkMap['sw2-sw3'].toRole = 'RP';
+            linkMap['sw4-sw1'].fromRole = 'RP';
+            linkMap['sw4-sw1'].toRole = 'DP';
+            linkMap['sw3-sw4'].visualState = 'blocked';
+            linkMap['sw3-sw4'].fromRole = 'DP';
+            linkMap['sw3-sw4'].toRole = 'ALT';
+            linkMap['srv-sw1'].visualState = 'path';
+            linkMap['sw1-sw2'].visualState = 'path';
+            linkMap['sw2-sw3'].visualState = 'path';
+            linkMap['sw3-stagebox'].visualState = 'path';
+
+            appState.blockedLinkId = 'sw3-sw4';
+            appState.servicePath = ['srv-sw1', 'sw1-sw2', 'sw2-sw3', 'sw3-stagebox'];
+
+            renderTopology();
+            if (!instant) {
+                startSignalFlow(appState.servicePath);
+            }
+            addLog('ok', 'RSTP hat jetzt einen stabilen, schleifenfreien Baum aufgebaut. Fuer den Dienstpfad bleibt von Medienserver zur Stagebox nur noch ein aktiver Weg uebrig.');
+            addLog('ok', 'Der blockierte Backup-Link bleibt fuer einen spaeteren Failover bereit, leitet im Normalbetrieb aber keine Nutzdaten weiter.');
+        }
+
+        const steps = [
+            {
+                title: '1/6 Switches booten',
+                detail: 'Alle Ports starten in Discarding und leiten noch keine Nutzdaten weiter.',
+                duration: 2300,
+                run: runBootStep
+            },
+            {
+                title: '2/6 BPDUs austauschen',
+                detail: 'Jetzt senden alle Switches Steuerinformationen und vergleichen Root-Kandidaten.',
+                duration: 2500,
+                run: runBpduStep
+            },
+            {
+                title: '3/6 Root Bridge waehlen',
+                detail: 'Die niedrigste Bridge-ID gewinnt und wird zum Referenzpunkt fuer alle Pfadkosten.',
+                duration: 2200,
+                run: runRootElectionStep
+            },
+            {
+                title: '4/6 Root Ports bestimmen',
+                detail: 'Jeder Nicht-Root-Switch waehlt genau einen Port mit den geringsten Root-Kosten.',
+                duration: 2600,
+                run: runRootPortStep
+            },
+            {
+                title: '5/6 Designated und Alternate Ports setzen',
+                detail: 'Pro Segment bleibt nur eine weiterleitende Richtung aktiv. Der Verlierer wird blockiert.',
+                duration: 2600,
+                run: runDesignatedStep
+            },
+            {
+                title: '6/6 Schleifenfreien Baum aktivieren',
+                detail: 'Jetzt bleibt nur noch der aktive Dienstpfad sichtbar, waehrend der Backup-Link blockiert bleibt.',
+                duration: 3200,
+                run: runStableTreeStep
+            }
+        ];
+
+        function executeStep(stepIndex, options = {}) {
+            const { instant = false } = options;
+            const step = steps[stepIndex];
+            if (!step) {
+                return false;
+            }
+
+            appState.currentTitle = step.title;
+            appState.currentDetail = step.detail;
+            step.run({ instant });
+            appState.stepIndex = stepIndex + 1;
+            renderTopology();
+            updatePanels();
+            return true;
+        }
+
+        function advanceStep() {
+            if (appState.stepIndex >= steps.length) {
+                appState.autoRunning = false;
+                updateButtons();
+                return;
+            }
+
+            clearAutoTimer();
+            clearTransientState();
+
+            const currentIndex = appState.stepIndex;
+            const step = steps[currentIndex];
+            executeStep(currentIndex);
+            updateButtons();
+
+            if (appState.autoRunning && appState.stepIndex < steps.length) {
+                scheduleNextStep(slowedDelay(step.duration));
+            } else if (appState.stepIndex >= steps.length) {
+                appState.autoRunning = false;
+                updateButtons();
+            }
+        }
+
+        function resetSimulation(options = {}) {
+            const { addIntroLog = true } = options;
+            clearTransientState();
+            appState.stepIndex = 0;
+            appState.rootId = null;
+            appState.blockedLinkId = null;
+            appState.servicePath = [];
+            appState.currentTitle = 'Bereit';
+            appState.currentDetail = 'Starten Sie die Animation, um die versteckten Entscheidungen von RSTP sichtbar zu machen.';
+            appState.autoRunning = false;
+            resetLinkStates('idle');
+
+            Object.values(nodes).forEach((node) => {
+                node.isRoot = false;
+                if (node.type === 'switch') {
+                    node.state = 'off';
+                }
+            });
+
+            clearLogWindow();
+            if (addIntroLog) {
+                addLog('info', 'RSTP-Ablaufdemo bereit. Nutzen Sie Start oder gehen Sie Schritt fuer Schritt vor.');
+            }
+            renderTopology();
+            updatePanels();
+            updateButtons();
+        }
+
+        function jumpToStep(stepCount) {
+            const bounded = Math.max(0, Math.min(stepCount, steps.length));
+            resetSimulation({ addIntroLog: true });
+
+            for (let index = 0; index < bounded; index += 1) {
+                executeStep(index, { instant: true });
+            }
+
+            updateButtons();
+        }
+
+        function playAutoplay() {
+            if (appState.stepIndex >= steps.length) {
+                resetSimulation();
+            } else if (hasPlaybackActivity() && !appState.autoRunning) {
+                jumpToStep(appState.stepIndex);
+            }
+
+            if (appState.stepIndex >= steps.length) {
+                return;
+            }
+
+            appState.autoRunning = true;
+            updateButtons();
+            advanceStep();
+        }
+
+        function pausePlayback() {
+            if (!hasPlaybackActivity()) {
+                return;
+            }
+
+            jumpToStep(appState.stepIndex);
+        }
+
+        function stepBackward() {
+            if (appState.autoRunning) {
+                return;
+            }
+
+            jumpToStep(Math.max(0, appState.stepIndex - 1));
+        }
+
+        function stepForward() {
+            if (appState.autoRunning) {
+                return;
+            }
+
+            if (hasPlaybackActivity()) {
+                jumpToStep(appState.stepIndex);
+            }
+
+            if (appState.stepIndex < steps.length) {
+                advanceStep();
+            }
+        }
+
+        function bindControls() {
+            document.getElementById('play-btn').addEventListener('click', playAutoplay);
+            document.getElementById('pause-btn').addEventListener('click', pausePlayback);
+            document.getElementById('back-btn').addEventListener('click', stepBackward);
+            document.getElementById('forward-btn').addEventListener('click', stepForward);
+            document.getElementById('stop-btn').addEventListener('click', resetSimulation);
+        }
+
+        createNetworkSvg();
+        bindControls();
+        resetSimulation();
+    </script>
+
+    <script type='module'>
+        try {
+            const { MMBBSBOT } = await import('https://dev.mm-bbs.de:8085/mmbbs-bot.js');
+            const htmlContent = document.querySelector('.container')?.innerHTML || '';
+
+            new MMBBSBOT({
+                host: 'dev.mm-bbs.de',
+                protocol: 'https',
+                port: 8085,
+                opener: 'Hallo! Ich unterstuetze Sie bei Fragen zu RSTP und Redundanz. Was moechten Sie erklaert haben?',
+                chat_icon: '',
+                chat_icon_style: 'border-radius: 50%; width: 40px; height: 40px;',
+                title: 'VT GPT',
+                task: htmlContent,
+                hints: 'Sie erklaeren im Fach Veranstaltungstechnik die Funktionsweise von RSTP, Root Bridge, Root Port, Designated Port und Alternate Port in didaktisch knapper Form.',
+                cookie: document.cookie
+            });
+        } catch (error) {
+            console.error('Fehler beim Laden des Chatbots:', error);
+        }
+    </script>
+</body>
+</html>
