@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Material 7a - Redundanz-Simulator</title>
-    <style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const style = document.createElement("style");
+            style.innerHTML = `
         :root {
             --bg: #0f172a;
             --panel: rgba(255, 255, 255, 0.94);
@@ -481,6 +484,10 @@
             line-height: 1.28;
         }
 
+        .small-note-spaced {
+            margin-top: 0.55rem;
+        }
+
         .tier-label {
             fill: #1e3a8a;
             font-size: 18px;
@@ -693,7 +700,10 @@
                 grid-template-columns: 1fr;
             }
         }
-    </style>
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
 </head>
 <body>
     <div class="activity-description">
@@ -762,7 +772,7 @@
                                 <button class="btn-soft" id="restore-btn">Alle Leitungen herstellen</button>
                                 <button class="btn-danger" id="reset-btn">Komplett zurucksetzen</button>
                             </div>
-                            <p class="small-note" style="margin-top:0.55rem;">Leitungen sind direkt im Netzwerkbild anklickbar. Ein Klick auf einen Switch schaltet das Gerat aus oder wieder ein. Wahrend Boot oder Re-Konvergenz sind Eingriffe gesperrt.</p>
+                            <p class="small-note small-note-spaced">Leitungen sind direkt im Netzwerkbild anklickbar. Ein Klick auf einen Switch schaltet das Gerat aus oder wieder ein. Wahrend Boot oder Re-Konvergenz sind Eingriffe gesperrt.</p>
                         </div>
 
                         <div class="panel-card">

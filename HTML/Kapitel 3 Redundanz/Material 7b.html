@@ -4,7 +4,10 @@
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>Material 7b - RSTP-Ablaufanimation</title>
-    <style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const style = document.createElement('style');
+            style.innerHTML = `
         :root {
             --bg: #0f172a;
             --panel: rgba(255, 255, 255, 0.94);
@@ -482,6 +485,10 @@
             line-height: 1.28;
         }
 
+        .small-note-spaced {
+            margin-top: 0.55rem;
+        }
+
         .domain-label {
             fill: #1e3a8a;
             font-size: 18px;
@@ -756,7 +763,10 @@
                 grid-template-columns: 1fr;
             }
         }
-    </style>
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
 </head>
 <body>
     <div class='activity-description'>
@@ -851,7 +861,7 @@
                                     <span class='player-label'>Stop</span>
                                 </button>
                             </div>
-                            <p class='small-note' style='margin-top:0.55rem;'>Der Player steuert den Ablauf wie bei einer Demo: automatisch vor, sofort pausieren, schrittweise vor oder zurueck und mit Stop auf Anfang zuruecksetzen.</p>
+                            <p class='small-note small-note-spaced'>Der Player steuert den Ablauf wie bei einer Demo: automatisch vor, sofort pausieren, schrittweise vor oder zurueck und mit Stop auf Anfang zuruecksetzen.</p>
                         </div>
 
                         <div class='panel-card log-card'>
@@ -1242,7 +1252,7 @@
                 label.setAttribute('class', 'link-label');
                 label.setAttribute('x', (fromNode.x + toNode.x) / 2);
                 label.setAttribute('y', (fromNode.y + toNode.y) / 2 - 12);
-                label.textContent = link.label;
+                label.textContent = getLinkLabelText(link);
                 group.appendChild(label);
 
                 const fromRoleTag = createRoleTag(link, true);
@@ -1318,6 +1328,14 @@
             tag.querySelector('text').textContent = role;
         }
 
+        function getLinkLabelText(link) {
+            if (link.switchLink && appState.stepIndex === 0) {
+                return '';
+            }
+
+            return link.label;
+        }
+
         function renderTopology() {
             links.forEach((link) => {
                 const group = getLinkGroup(link.id);
@@ -1325,7 +1343,10 @@
                     return;
                 }
 
+                const label = group.querySelector('.link-label');
+
                 group.dataset.state = link.visualState;
+                label.textContent = getLinkLabelText(link);
                 updateRoleTag(group, link.fromRole, 'from');
                 updateRoleTag(group, link.toRole, 'to');
             });

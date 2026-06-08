@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redundanz in der Veranstaltungstechnik - Block 2 Lehrerversion</title>
-    <style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const style = document.createElement('style');
+            style.innerHTML = `
         * {
             margin: 0;
             padding: 0;
@@ -193,7 +196,10 @@
                 font-size: 1.35rem;
             }
         }
-    </style>
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
 </head>
 <body>
     <div class="container">
