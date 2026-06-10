@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VT LF10 – Dante Audio Netzwerke · LEHRERVERSION</title>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ── CSS INJECTION ──────────────────────────────────────────────
+        const style = document.createElement('style');
+        style.textContent = `
+            html { font-size: 26px; }
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef1f6; color: #1a2030; line-height: 1.5; }
+            .container { max-width: 960px; margin: 0 auto; padding: 0.5rem 0.6rem 1.5rem; }
+
+            /* Header – Lehrerversion: dunkles Lila */
+            .header { background: linear-gradient(135deg, #2d0850 0%, #4a1280 55%, #6a2098 100%); color: white; padding: 0.6rem 0.9rem; border-radius: 8px; margin-bottom: 0.5rem; box-shadow: 0 3px 12px rgba(0,0,0,0.3); }
+            .header h1 { font-size: 1.0rem; margin-bottom: 0.1rem !important; }
+            .header p  { font-size: 0.6rem; opacity: 0.88; }
+            .header-meta { display: flex; gap: 0.7rem; margin-top: 0.25rem; flex-wrap: wrap; }
+            .hmeta-tag { background: rgba(255,255,255,0.18); border-radius: 3px; padding: 0.08rem 0.35rem; font-size: 0.52rem; }
+            .teacher-badge { display: inline-block; background: #c02020; color: white; padding: 0.1rem 0.45rem; border-radius: 4px; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.08em; margin-left: 0.4rem; vertical-align: middle; }
+
+            /* Content */
+            .content { display: flex; flex-direction: column; gap: 0.5rem; }
+
+            /* Section */
+            .section { background: white; border-radius: 7px; padding: 0.65rem 0.8rem; border-left: 4px solid #c8d4e0; box-shadow: 0 1px 5px rgba(0,0,0,0.07); }
+            .section > h2 { font-size: 0.78rem !important; color: #18283a; border-bottom: 1px solid #e4eaf2; padding-bottom: 0.22rem; margin-bottom: 0.35rem !important; }
+            .section > h3 { font-size: 0.68rem !important; color: #2a3a50; margin-top: 0.35rem; margin-bottom: 0.1rem !important; }
+            .section > h4 { font-size: 0.62rem !important; color: #384858; margin-bottom: 0.1rem !important; }
+            p  { font-size: 0.62rem; margin-bottom: 0.28rem; }
+            ul, ol { font-size: 0.62rem; padding-left: 1.1rem; margin-bottom: 0.28rem; }
+            li { margin-bottom: 0.08rem; }
+            strong { font-weight: 700; }
+            hr { border: none; border-top: 1px solid #e4eaf2; margin: 0.4rem 0; }
+
+            /* Table base */
+            table { width: 100%; border-collapse: collapse; font-size: 0.58rem; margin: 0.3rem 0; }
+            th { background: #e8eef6; padding: 0.22rem 0.4rem; text-align: left; border-bottom: 2px solid #b8cce0; font-weight: 700; color: #1a3050; }
+            td { padding: 0.18rem 0.4rem; border-bottom: 1px solid #edf0f6; vertical-align: top; }
+            tr:nth-child(even) td { background: #f6f8fc; }
+
+            /* Intro */
+            .intro { background: #f2f6fb; border: 1px solid #c8d8ec; border-radius: 6px; padding: 0.5rem 0.65rem; font-size: 0.62rem; }
+
+            /* Task */
+            .task { background: #f0faf0; border: 1px solid #88c888; border-radius: 6px; padding: 0.45rem 0.65rem; margin: 0.35rem 0; }
+            .task > .task-title { color: #186018; font-size: 0.66rem; font-weight: 700; display: block; margin-bottom: 0.18rem !important; }
+            .task .meta { font-size: 0.56rem; color: #388038; margin-bottom: 0.15rem; }
+
+            /* Teacher solution – red boxes */
+            .teacher-solution { background: #fff5f5; border: 1px solid #e09090; border-radius: 6px; padding: 0.45rem 0.65rem; margin: 0.35rem 0; border-left: 4px solid #c03030; }
+            .teacher-solution h4 { color: #800000 !important; font-size: 0.64rem !important; margin-bottom: 0.18rem !important; }
+            .teacher-solution p, .teacher-solution li { font-size: 0.6rem; }
+            .teacher-solution table th { background: #f5e0e0; border-bottom-color: #d09090; color: #5a0000; }
+            .ts-correct { color: #208020; font-weight: 700; }
+            .ts-wrong   { color: #a02020; }
+
+            /* Question */
+            .question { background: #fffae8; border: 1px solid #d0b050; border-radius: 6px; padding: 0.45rem 0.65rem; margin: 0.35rem 0; }
+            .question > strong:first-child { color: #6a4808; font-size: 0.64rem; display: block; margin-bottom: 0.15rem !important; }
+
+            /* Tech-specs */
+            .tech-specs { background: #e8f2fc; border: 1px solid #88b8e0; border-radius: 6px; padding: 0.45rem 0.65rem; margin: 0.35rem 0; }
+            .tech-specs h4 { color: #154070 !important; font-size: 0.64rem !important; margin-bottom: 0.15rem !important; }
+
+            /* Phases */
+            .phases { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.3rem; margin: 0.35rem 0; }
+            @media (max-width: 700px) { .phases { grid-template-columns: repeat(3, 1fr); } }
+            .phase { background: #f8fafc; border: 1px solid #c8d8e8; border-radius: 6px; padding: 0.35rem 0.4rem; text-align: center; }
+            .phase .ph-emoji { font-size: 1.0rem; display: block; margin-bottom: 0.05rem; }
+            .phase .ph-num   { font-size: 0.44rem; color: #6888a8; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+            .phase .ph-title { font-size: 0.6rem; color: #1a2838; font-weight: 700; margin: 0.05rem 0; }
+            .phase .ph-time  { font-size: 0.5rem; color: #e87020; font-weight: 700; }
+
+            /* Didactic boxes */
+            .didactic { background: #f4e8ff; border: 1px solid #c090e0; border-radius: 6px; padding: 0.45rem 0.65rem; margin: 0.35rem 0; border-left: 4px solid #8030c0; }
+            .didactic h4 { color: #4a0880 !important; font-size: 0.64rem !important; margin-bottom: 0.15rem !important; }
+
+            /* Bloom taxonomy */
+            .bloom-row { display: flex; gap: 0.3rem; margin: 0.3rem 0; flex-wrap: wrap; }
+            .bloom-tag { padding: 0.1rem 0.4rem; border-radius: 3px; font-size: 0.5rem; font-weight: 700; }
+            .bloom-1 { background: #d0e8ff; color: #103060; }
+            .bloom-2 { background: #d0f0d0; color: #103010; }
+            .bloom-3 { background: #fff0c0; color: #503000; }
+            .bloom-4 { background: #ffe0d0; color: #5a2010; }
+            .bloom-5 { background: #f0d0ff; color: #3a0060; }
+            .bloom-6 { background: #ffd0d0; color: #600000; }
+
+            .badge-dante { display: inline-block; background: #e87020; color: white; padding: 0.06rem 0.3rem; border-radius: 3px; font-size: 0.5rem; font-weight: 700; letter-spacing: 0.05em; vertical-align: middle; }
+            .badge-ptp   { display: inline-block; background: #3060b0; color: white; padding: 0.06rem 0.3rem; border-radius: 3px; font-size: 0.5rem; font-weight: 700; vertical-align: middle; }
+
+            code { background: #e8eef6; padding: 0.05rem 0.28rem; border-radius: 3px; font-size: 0.58rem; font-family: 'Courier New', monospace; color: #184060; }
+            .calc { font-family: 'Courier New', monospace; font-size: 0.6rem; background: #f0f8ff; padding: 0.3rem 0.5rem; border-radius: 4px; border: 1px solid #a0c0e0; color: #0a3060; line-height: 1.9; }
+
+            /* Comparison table */
+            .comparison-table { overflow-x: auto; }
+            .comparison-table table { min-width: 500px; }
+            .ct-dante { background: #fff4ec !important; }
+
+            /* Info-box */
+            .info-box { background: #fdf6e8; border: 1px solid #d8b870; border-radius: 5px; padding: 0.35rem 0.55rem; margin: 0.28rem 0; font-size: 0.58rem; }
+            .info-box .ib-head { font-weight: 700; color: #7a5010; font-size: 0.62rem; margin-bottom: 0.08rem; }
+
+            /* Diff marker */
+            .diff-add { background: #e0ffe0; color: #187020; padding: 0.05rem 0.3rem; border-radius: 3px; font-weight: 700; }
+            .diff-del { background: #ffe0e0; color: #901010; padding: 0.05rem 0.3rem; border-radius: 3px; text-decoration: line-through; }
+        `;
+        document.head.appendChild(style);
+
+        // ── VT GPT CHATBOT ────────────────────────────────────────────
+        (function () {
+            const s = document.createElement('script');
+            s.src = 'https://dev.mm-bbs.de:8085/mmbbs-bot.js';
+            s.setAttribute('data-host', 'dev.mm-bbs.de');
+            s.setAttribute('data-port', '8085');
+            s.setAttribute('data-title', 'VT GPT');
+            s.setAttribute('data-fachbereich', 'Veranstaltungstechnik');
+            s.setAttribute('data-zielgruppe', '3. Ausbildungsjahr – Fachkraft für Veranstaltungstechnik');
+            document.head.appendChild(s);
+        })();
+
+    }); // DOMContentLoaded
+    </script>
+</head>
+<body>
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>🎵 Dante Audio Netzwerke – Planung und Konfiguration
+            <span class="teacher-badge">LEHRERVERSION</span>
+        </h1>
+        <p>Lernfeld 10 · Kapitel 5 · Netzwerkbasierte Audioübertragung – Erwartungshorizonte und Lösungen</p>
+        <div class="header-meta">
+            <span class="hmeta-tag">⏱ 90 Minuten</span>
+            <span class="hmeta-tag">🎯 5 Arbeitsaufträge</span>
+            <span class="hmeta-tag">📡 Protokoll, IP, PTP, QoS</span>
+            <span class="hmeta-tag">🔐 Nur für Lehrpersonen</span>
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- DIDAKTISCHE HINWEISE -->
+        <div class="section">
+            <h2>🎓 Didaktische Hinweise und Lernziele</h2>
+
+            <div class="didactic">
+                <h4>📚 Lernziele (Bloom-Taxonomie)</h4>
+                <div class="bloom-row">
+                    <span class="bloom-1">Erinnern</span>
+                    <span class="bloom-2">Verstehen</span>
+                    <span class="bloom-3">Anwenden</span>
+                    <span class="bloom-4">Analysieren</span>
+                    <span class="bloom-5">Bewerten</span>
+                </div>
+                <ul style="margin-top:0.25rem;">
+                    <li><span class="bloom-2">Verstehen</span>: Dante-Protokollaufbau, Ports und PTP-Rollen erklären</li>
+                    <li><span class="bloom-3">Anwenden</span>: IP-Adressierung planen und Bandbreite berechnen</li>
+                    <li><span class="bloom-4">Analysieren</span>: Fehler in Switch-Konfigurationen identifizieren</li>
+                    <li><span class="bloom-5">Bewerten</span>: Situationsgerechte Latenzentscheidungen treffen und begründen</li>
+                </ul>
+            </div>
+
+            <div class="didactic">
+                <h4>🗓 Zeitplanung und Methodik</h4>
+                <table>
+                    <thead><tr><th>Phase</th><th>Zeit</th><th>Methode</th><th>Medien</th></tr></thead>
+                    <tbody>
+                        <tr><td>1 – Informieren</td><td>15 min</td><td>Lehrgespräch, Textlektüre</td><td>HTML-Seite, Protokolltabelle, Netzwerkdiagramm</td></tr>
+                        <tr><td>2 – Planen (AA 1+2)</td><td>20 min</td><td>Einzelarbeit, Structured Problem Solving</td><td>IP-Tabelle zum Ausfüllen, Formelblatt</td></tr>
+                        <tr><td>3 – Ausführen (AA 3–5)</td><td>30 min</td><td>Think-Pair-Share, Fallanalyse, Tandem-Audit</td><td>PTP-Tabelle, Latenz-Szenarios, Config-Tabelle</td></tr>
+                        <tr><td>4 – Kontrollieren</td><td>15 min</td><td>Selbstkontrolle (digitales Quiz)</td><td>Interaktives Quiz in Schülerversion</td></tr>
+                        <tr><td>5 – Bewerten</td><td>10 min</td><td>Plenum, Reflexionsgespräch</td><td>Reflexionsfragen, Vergleichstabelle</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="didactic">
+                <h4>💡 Hinweise zur Durchführung</h4>
+                <ul>
+                    <li><strong>Vorkenntnisse:</strong> Schüler sollten IP-Adressierung (Kapitel 2) beherrschen. Subnetzmaske /24 wird vorausgesetzt.</li>
+                    <li><strong>Verknüpfung:</strong> Direkt anschließend empfiehlt sich die Arbeit am Dante_Simulator (interaktive Routing-Matrix, Kompressor, Netzwerkansicht).</li>
+                    <li><strong>Differenzierung:</strong> Aufgabe 5 (Switch-Audit) kann als Binnendifferenzierung für fortgeschrittene Schüler erweitert werden (z. B. VLAN-Planung).</li>
+                    <li><strong>Querverbindung ArtNet:</strong> In Phase 5 explizit auf die Unterschiede zu ArtNet/DMX eingehen – beide werden in LF10 behandelt.</li>
+                    <li><strong>Simulator:</strong> Dante_Simulator.html öffnen und live zeigen – besonders die Netzwerk-Tab mit dynamischer Bandbreitenberechnung.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SECTION 1: PHASEN -->
+        <div class="section">
+            <h2>📋 Ablaufplanung – 90 Minuten</h2>
+            <div class="phases">
+                <div class="phase"><span class="ph-emoji">🔍</span><div class="ph-num">Phase 1</div><div class="ph-title">Informieren</div><div class="ph-time">15 min</div></div>
+                <div class="phase"><span class="ph-emoji">📐</span><div class="ph-num">Phase 2</div><div class="ph-title">Planen</div><div class="ph-time">20 min</div></div>
+                <div class="phase"><span class="ph-emoji">⚙️</span><div class="ph-num">Phase 3</div><div class="ph-title">Ausführen</div><div class="ph-time">30 min</div></div>
+                <div class="phase"><span class="ph-emoji">✅</span><div class="ph-num">Phase 4</div><div class="ph-title">Kontrollieren</div><div class="ph-time">15 min</div></div>
+                <div class="phase"><span class="ph-emoji">💬</span><div class="ph-num">Phase 5</div><div class="ph-title">Bewerten</div><div class="ph-time">10 min</div></div>
+            </div>
+        </div>
+
+        <!-- ERWARTUNGSHORIZONT AA 1 -->
+        <div class="section">
+            <h2>📐 Erwartungshorizonte – Phase 2</h2>
+
+            <div class="task">
+                <span class="task-title">🔧 Arbeitsauftrag 1 – IP-Adressierung</span>
+                <p class="meta">Einzelarbeit · Structured Problem Solving · 12 min</p>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartungshorizont – AA 1</h4>
+
+                <p><strong>1a) Subnetzwahl:</strong></p>
+                <ul>
+                    <li>Empfohlen: <code>192.168.1.0 /24</code> (Subnetzmaske <code>255.255.255.0</code>)</li>
+                    <li>Unterstützte Hosts: 254 (2⁸ − 2 = 254 adressierbare Geräte)</li>
+                    <li>Akzeptiert auch: <code>10.0.0.0/24</code> oder <code>172.16.0.0/24</code> – alle privaten Bereiche zulässig, solange /24 oder größer</li>
+                </ul>
+
+                <p style="margin-top:0.3rem;"><strong>1b) IP-Adresstabelle (Musterlösung):</strong></p>
+                <table>
+                    <thead><tr><th>Gerät</th><th>Typ</th><th>TX</th><th>RX</th><th class="ts-correct">Musterlösung IP</th><th>Begründung</th></tr></thead>
+                    <tbody>
+                        <tr><td>Core Switch</td><td>Infrastruktur</td><td>–</td><td>–</td><td class="ts-correct">192.168.1.1</td><td>Gateway/Management, niedrige Adresse</td></tr>
+                        <tr><td>Yamaha CL5 (FOH)</td><td>Konsole</td><td>16</td><td>64</td><td class="ts-correct">192.168.1.10</td><td>Konsolen: .10–.19</td></tr>
+                        <tr><td>Yamaha QL5 (Monitor)</td><td>Konsole</td><td>16</td><td>32</td><td class="ts-correct">192.168.1.11</td><td>Konsolen: .10–.19</td></tr>
+                        <tr><td>Stage Box A (Rio3224)</td><td>I/O-Node</td><td>32</td><td>16</td><td class="ts-correct">192.168.1.20</td><td>Stage-Nodes: .20–.29</td></tr>
+                        <tr><td>Stage Box B (Rio1608)</td><td>I/O-Node</td><td>16</td><td>8</td><td class="ts-correct">192.168.1.21</td><td>Stage-Nodes: .20–.29</td></tr>
+                        <tr><td>IEM TX 1</td><td>Senke</td><td>0</td><td>2</td><td class="ts-correct">192.168.1.40</td><td>IEM-Geräte: .40–.49</td></tr>
+                        <tr><td>IEM TX 2</td><td>Senke</td><td>0</td><td>2</td><td class="ts-correct">192.168.1.41</td><td></td></tr>
+                        <tr><td>IEM TX 3</td><td>Senke</td><td>0</td><td>2</td><td class="ts-correct">192.168.1.42</td><td></td></tr>
+                        <tr><td>DAW / Nuendo (DVS)</td><td>Aufnahme</td><td>32</td><td>32</td><td class="ts-correct">192.168.1.60</td><td>Recording: .60–.69; Boundary Clock</td></tr>
+                    </tbody>
+                </table>
+
+                <p style="margin-top:0.3rem;"><strong>1c) Begründung dediziertes Netzwerk (2 Sätze):</strong></p>
+                <p>
+                    Ein dediziertes Netzwerk verhindert, dass anderer IT-Traffic (z. B. Videostreaming,
+                    Internet-Broadcasts) die zeitkritischen Dante-Audiopakete verdrängt oder verzögert.
+                    Multicast-Traffic aus anderen Netzwerken kann außerdem die IGMP-Snooping-Funktionen
+                    überlasten und zu unkontrollierten Audiounterbrechungen führen.
+                </p>
+                <p><em>Auch akzeptiert: Sicherheitsargument (kein Fremdzugriff auf Audiomatrix) oder VLAN-Trennung als Alternative zu physischer Trennung.</em></p>
+            </div>
+
+            <div class="task">
+                <span class="task-title">🔢 Arbeitsauftrag 2 – Bandbreitenberechnung</span>
+                <p class="meta">Einzelarbeit · Formelrechnung · 8 min</p>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartungshorizont – AA 2</h4>
+
+                <p><strong>2a) Gesamtbandbreite TX-Kanäle:</strong></p>
+                <div class="calc">
+Gesamt TX = 32 (SBx A) + 16 (SBx B) + 16 (CL5) + 16 (QL5) + 32 (DAW) = 112 Kanäle
+
+BW = 112 × 48.000 Hz × 24 bit × 1,05
+   = 112 × 1.209.600 bit/s
+   = 135.475.200 bit/s
+   ≈ <strong>135,5 Mbit/s</strong>
+                </div>
+
+                <p><strong>2b) Reicht 1 GbE?</strong><br>
+                <span class="ts-correct">Ja, 1 GbE reicht aus.</span>
+                135,5 Mbit/s ≈ 13,6 % der 1.000 Mbit/s verfügbaren Bandbreite.
+                Durch Vollduplex-Betrieb (TX und RX gleichzeitig) wäre die tatsächliche Last etwa
+                doppelt so hoch (~27 %), bleibt aber weit unter der Kapazitätsgrenze.
+                Ein 10-GbE-Backbone (Core Switch) ist für professionelle Großproduktionen dennoch empfehlenswert.</p>
+
+                <p><strong>2c) Maximale Kanalzahl @ 1 GbE (48 kHz/24 bit):</strong></p>
+                <div class="calc">
+1.000.000.000 bit/s ÷ (48.000 × 24 × 1,05)
+= 1.000.000.000 ÷ 1.209.600
+≈ <strong>826 Kanäle</strong> (unidirektional)
+
+Praxiswert laut Audinate: ca. <strong>512 Kanäle</strong> bei empfohlener Auslastung ≤ 60%
+                </div>
+
+                <p><strong>2d) Faktor bei 96 kHz/32 bit:</strong></p>
+                <div class="calc">
+Faktor Abtastrate: 96 kHz ÷ 48 kHz = 2,0
+Faktor Bittiefe:   32 bit ÷ 24 bit ≈ 1,33
+
+Gesamtfaktor: 2,0 × 1,33 ≈ <strong>2,67-fache Bandbreite</strong>
+
+112 Kanäle @ 96 kHz/32 bit:
+135,5 Mbit/s × 2,67 ≈ <strong>361,8 Mbit/s</strong>
+→ Immer noch in 1 GbE möglich, aber 1,5× Reserve weniger.
+                </div>
+
+                <div class="info-box">
+                    <div class="ib-head">💡 Lehrhinweis</div>
+                    Schüler neigen dazu, nur die Stage-Box-Kanäle zu zählen. Explizit darauf hinweisen,
+                    dass Konsolen (CL5, QL5) und die DAW ebenfalls Transmit-Kanäle senden. Im Dante Controller
+                    ist jede Route eine bidirektionale Verbindung.
+                </div>
+            </div>
+        </div>
+
+        <!-- ERWARTUNGSHORIZONT AA 3–5 -->
+        <div class="section">
+            <h2>⚙️ Erwartungshorizonte – Phase 3</h2>
+
+            <div class="task">
+                <span class="task-title">🕐 Arbeitsauftrag 3 – PTP-Rollen zuweisen</span>
+                <p class="meta">Tandemarbeit · Think-Pair-Share · 10 min</p>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartungshorizont – AA 3</h4>
+
+                <p><strong>3a) PTP-Rollenzuweisung:</strong></p>
+                <table>
+                    <thead><tr><th>Gerät</th><th class="ts-correct">PTP-Rolle</th><th>Begründung</th></tr></thead>
+                    <tbody>
+                        <tr><td>Stage Box A (Rio3224-D2)</td><td class="ts-correct">Grandmaster (GM)</td><td>Stabilstes Gerät am Netzwerk; nah am Core Switch; hohe PTP-Priorität konfigurieren (Priority 1: 128, Priority 2: 128)</td></tr>
+                        <tr><td>Stage Box B (Rio1608-D2)</td><td class="ts-correct">Preferred Master</td><td>Fallback-GM bei Ausfall der Stage Box A; Priority 1: 128, Priority 2: 129</td></tr>
+                        <tr><td>Yamaha CL5 (FOH)</td><td class="ts-correct">Ordinary Clock (Follower)</td><td>Konsole synchronisiert sich mit GM; keine GM-Rolle nötig</td></tr>
+                        <tr><td>Yamaha QL5 (Monitor)</td><td class="ts-correct">Ordinary Clock (Follower)</td><td>Wie CL5; Follower-Modus ist Standard</td></tr>
+                        <tr><td>DAW / Dante Virtual Soundcard</td><td class="ts-correct">Boundary Clock</td><td>PC hat ggf. mehrere Netzwerkinterfaces; Boundary Clock isoliert PTP-Fehler des PCs vom Audio-Netzwerk</td></tr>
+                        <tr><td>IEM TX 1, 2, 3</td><td class="ts-correct">Ordinary Clock (Follower)</td><td>Reine Senken; synchronisieren sich passiv zum GM</td></tr>
+                    </tbody>
+                </table>
+
+                <p style="margin-top:0.3rem;"><strong>3b) Ausfall des Grandmasters:</strong><br>
+                Der BMCA-Algorithmus erkennt den Ausfall des GM durch ausbleibende Announce-Messages
+                (Timeout: standardmäßig 3 × 2 s = 6 s). Anschließend wählt der Algorithmus nach
+                Priority 1, Priority 2 und Clock Quality den besten verfügbaren Kandidaten – im
+                konfigurierten Fall Stage Box B (Preferred Master). Während der Umschaltung kann es
+                zu kurzen Knacksern oder einem Aussetzer von &lt;1 s kommen.</p>
+
+                <p style="margin-top:0.2rem;"><strong>3c) Warum Boundary Clock für DAW?</strong><br>
+                Ein DAW-PC unter Windows/macOS hat keine deterministischen Zeitgeber. Würde der PC GM
+                oder Preferred Master sein, könnte ein Systemereignis (Treiber, Update-Background-Task)
+                die PTP-Genauigkeit kurzfristig verschlechtern. Als Boundary Clock isoliert er seinen
+                eigenen schlechten Systemtakt vom restlichen Netzwerk.</p>
+            </div>
+
+            <div class="task">
+                <span class="task-title">⏱ Arbeitsauftrag 4 – Latenzentscheidung</span>
+                <p class="meta">Gruppenarbeit (3–4 Personen) · Fallanalyse · 10 min</p>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartungshorizont – AA 4</h4>
+                <table>
+                    <thead><tr><th>#</th><th>Situation</th><th class="ts-correct">Empfehlung</th><th>Begründung</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>A</strong></td>
+                            <td>Rock-Konzert, professionell, managed Switch, Yamaha</td>
+                            <td class="ts-correct">1 ms</td>
+                            <td>Standard für Live-Produktionen. Managed Switch + QoS gewährleisten stabile Laufzeiten. 0,25 ms wäre auch möglich, aber unnötig riskant für FOH-Monitoring auf großer Bühne.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>B</strong></td>
+                            <td>Theater, 120 m Kabel, zwei unmanaged Switches</td>
+                            <td class="ts-correct">5 ms (mind.)</td>
+                            <td>Unmanaged Switches haben keine QoS-Priorisierung. Durch zwei Hop-Points und 120 m Kabel summieren sich Verzögerungen. 5 ms gibt ausreichend Puffer für Jitter.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>C</strong></td>
+                            <td>Rundfunk, Direktverbindung, On-Air-Monitoring, stabiles Netz</td>
+                            <td class="ts-correct">0,25 ms</td>
+                            <td>Direktverbindung ohne Netzwerk-Hops. Broadcast-Monitoring erfordert minimale Latenz. Professionelle Hardware + stabile Infrastruktur lassen 0,25 ms sicher zu.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="info-box">
+                    <div class="ib-head">💡 Diskussionspunkt</div>
+                    Latenz in Dante wirkt sich auf die gesamte Signalkette aus: Auch 1 ms Systemlatenz summiert
+                    sich mit Verstärkerlatenz, Laufzeitverzögerung (ca. 3 ms/m bei Schall) und A/D-D/A-Wandlung.
+                    Bei Monitor-Mischungen auf der Bühne (IEM) sollte die Gesamtlatenz unter 10–15 ms bleiben.
+                </div>
+            </div>
+
+            <div class="task">
+                <span class="task-title">🔍 Arbeitsauftrag 5 – Switch-Konfiguration prüfen und korrigieren</span>
+                <p class="meta">Tandemarbeit · Fehleranalyse / Audit · 10 min</p>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartungshorizont – AA 5</h4>
+                <table>
+                    <thead><tr><th>Einstellung</th><th>Aktuell</th><th class="ts-correct">Korrekte Einstellung</th><th>Begründung</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td>Flow Control (802.3x)</td>
+                            <td class="ts-wrong">AKTIV ❌</td>
+                            <td class="ts-correct">DEAKTIVIERT</td>
+                            <td>PAUSE-Frames des Flow Controls unterbrechen den gleichmäßigen Dante-Datenstrom; führt zu Audioaussetzern (Dropouts)</td>
+                        </tr>
+                        <tr>
+                            <td>QoS / DSCP</td>
+                            <td class="ts-wrong">DEAKTIVIERT ❌</td>
+                            <td class="ts-correct">AKTIV · DSCP EF = 46</td>
+                            <td>Ohne QoS werden Dante-Pakete wie normaler IT-Traffic behandelt; bei Netzwerklast werden Audiopakete verworfen</td>
+                        </tr>
+                        <tr>
+                            <td>EEE / Green Ethernet</td>
+                            <td class="ts-wrong">AKTIV ❌</td>
+                            <td class="ts-correct">DEAKTIVIERT</td>
+                            <td>EEE versetzt inaktive Port-Leitungen in Schlafmodus; beim Aufwachen entstehen variable Latenzen von 10–30 µs → Jitter → Dropouts</td>
+                        </tr>
+                        <tr>
+                            <td>IGMP Snooping</td>
+                            <td class="ts-wrong">DEAKTIVIERT ❌</td>
+                            <td class="ts-correct">AKTIV</td>
+                            <td>Ohne IGMP Snooping werden Dante-Multicast-Pakete an alle Ports geflutet → unnötige Last; mit IGMP werden Pakete nur an registrierte Empfänger gesendet</td>
+                        </tr>
+                        <tr>
+                            <td>Spanning Tree (RSTP)</td>
+                            <td class="ts-correct">AKTIV (RSTP) ✅</td>
+                            <td class="ts-correct">RSTP beibehalten</td>
+                            <td>RSTP ist korrekt; Standard STP (802.1D) hat Konvergenzzeiten von 30–50 s → inakzeptabel für Audio</td>
+                        </tr>
+                        <tr>
+                            <td>Jumbo Frames</td>
+                            <td class="ts-correct">DEAKTIVIERT ✅</td>
+                            <td class="ts-correct">Standard (MTU 1500)</td>
+                            <td>Dante verwendet kleine Pakete; Jumbo Frames bringen keinen Vorteil und können bei inkompatiblen Geräten Probleme verursachen</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p style="margin-top:0.3rem;"><strong>Zusatzfrage – DSCP:</strong><br>
+                DSCP-Wert: <strong>46 (Dezimal)</strong> = <strong>101110 (Binär)</strong><br>
+                Klartextname: <strong>EF – Expedited Forwarding</strong><br>
+                Vorgesehen für: „Real-time, lowest latency" – zeitkritische Anwendungen wie VoIP, Audiotransport</p>
+
+                <div class="info-box">
+                    <div class="ib-head">💡 Lehrhinweis – häufige Fehler bei Schülern</div>
+                    Schüler verwechseln häufig „IGMP deaktivieren" mit „kein Multicast". Klarmachen:
+                    Dante sendet IMMER Multicast-Pakete (auch bei Unicast-Routing). Ohne IGMP Snooping
+                    landen diese Pakete auf ALLEN Ports – das überlastet Endgeräte und den Switch.
+                </div>
+            </div>
+
+            <div class="question">
+                <strong>Musterantworten – Kontrollfragen Phase 3:</strong>
+                <ol>
+                    <li><strong>GM vs. Preferred Master:</strong> GM ist die aktive Zeitquelle. Preferred Master ist ein vorkonfigurierter Kandidat, der bei GM-Ausfall automatisch übernimmt. Nur ein GM pro Netzwerk aktiv; Preferred Master wartet passiv.</li>
+                    <li><strong>Drei kritische Switch-Einstellungen:</strong> Flow Control DEAKTIVIEREN; QoS/DSCP AKTIVIEREN (EF=46); EEE/Green Ethernet DEAKTIVIEREN.</li>
+                    <li><strong>EEE schädlich:</strong> EEE versetzt den PHY (physikalische Schicht) in LPI-Modus (Low Power Idle) bei Inaktivität. Beim Aufwachen entstehen Latenzschwankungen von 10–30 µs, die zu Jitter im Audiosignal führen.</li>
+                    <li><strong>0,25 ms überall problematisch:</strong> Auf instabilen Netzwerken ohne QoS führt 0,25 ms-Latenz fast sicher zu Dropouts, da der Empfangspuffer zu klein für auftretenden Netzwerkjitter ist. Nur bei stabiler, direkter Verbindung sinnvoll.</li>
+                    <li><strong>DSCP EF:</strong> Differentiated Services Code Point, Expedited Forwarding. Markiert Pakete für höchste Priorität auf Layer-3-Ebene. Im Switch wird diese Markierung ausgelesen und entsprechend priorisiert weitergeleitet.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- QUIZ-LÖSUNGEN -->
+        <div class="section">
+            <h2>✅ Quizlösungen – Phase 4</h2>
+            <div class="teacher-solution">
+                <h4>🎯 Richtige Antworten im Überblick</h4>
+                <table>
+                    <thead><tr><th>#</th><th>Frage (Kurzform)</th><th class="ts-correct">Richtige Antwort</th><th>Lernziel</th></tr></thead>
+                    <tbody>
+                        <tr><td>1</td><td>Discovery-Port von Dante</td><td class="ts-correct">UDP 4440 (DDPM)</td><td>Protokollwissen</td></tr>
+                        <tr><td>2</td><td>Uhrsynchronisations-Protokoll</td><td class="ts-correct">IEEE 1588v2 (PTP)</td><td>Protokollwissen</td></tr>
+                        <tr><td>3</td><td>DSCP-Markierung für Audio</td><td class="ts-correct">EF (46)</td><td>QoS-Konfiguration</td></tr>
+                        <tr><td>4</td><td>Warum Flow Control deaktivieren?</td><td class="ts-correct">Dante verwaltet Datenfluss selbst; PAUSE-Frames → Dropouts</td><td>Switch-Konfiguration</td></tr>
+                        <tr><td>5</td><td>Max. Kanäle @ 1 GbE, 48 kHz/24 bit</td><td class="ts-correct">ca. 512 Kanäle</td><td>Bandbreitenrechnung</td></tr>
+                        <tr><td>6</td><td>Standardlatenz Live-Rock-Konzert</td><td class="ts-correct">1 ms</td><td>Latenzentscheidung</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VERGLEICHSTABELLE (identisch Schülerversion, ohne Lösung nötig) -->
+        <div class="section">
+            <h2>🔄 Vergleich: Dante – AES67 – AVB/Milan</h2>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr><th>Merkmal</th><th>🟠 Dante</th><th>AES67</th><th>AVB / Milan</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Entwickler / Standard</td>
+                            <td class="ct-dante">Audinate (proprietär)</td>
+                            <td>AES (offener Standard)</td>
+                            <td>IEEE 802.1 (AVB) / AVNU (Milan)</td>
+                        </tr>
+                        <tr>
+                            <td>Netzwerktransport</td>
+                            <td class="ct-dante">UDP/IP, Layer 3</td>
+                            <td>RTP/UDP/IP, Layer 3</td>
+                            <td>Ethernet, Layer 2 (kein IP nötig)</td>
+                        </tr>
+                        <tr>
+                            <td>Mindestlatenz</td>
+                            <td class="ct-dante">0,25 ms</td>
+                            <td>ca. 1 ms</td>
+                            <td>ca. 2 ms</td>
+                        </tr>
+                        <tr>
+                            <td>Interoperabilität</td>
+                            <td class="ct-dante">Dante-Ökosystem + AES67-Bridge</td>
+                            <td>Offen, herstellerübergreifend</td>
+                            <td>Offen, Milan-zertifiziert</td>
+                        </tr>
+                        <tr>
+                            <td>Switch-Anforderung</td>
+                            <td class="ct-dante">Managed (QoS, IGMP)</td>
+                            <td>Managed (QoS, PTP-aware)</td>
+                            <td><strong>AVB-fähiger Switch</strong> (zwingend)</td>
+                        </tr>
+                        <tr>
+                            <td>Marktverbreitung VT</td>
+                            <td class="ct-dante" style="color:#186018;font-weight:700;">✓✓ Sehr hoch</td>
+                            <td style="color:#806010;">△ Mittel (Broadcast)</td>
+                            <td style="color:#801010;">✗ Gering in VT</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="teacher-solution">
+                <h4>🎯 Erwartete Reflexionsantworten (Phase 5)</h4>
+                <ol>
+                    <li><strong>Kompetenzeinschätzung:</strong> Offene Antwort; Lehrkraft nutzt für Differenzierungsmaßnahmen. Typisch: IP-Adressierung sicher, PTP-Rollen und DSCP-Details unsicher.</li>
+                    <li><strong>Praxistransfer:</strong> Akzeptiert werden alle plausiblen Szenarien: falsche Latenz → Dropouts; Flow Control aktiv → Knackser; falscher Switch → Totalausfall.</li>
+                    <li>
+                        <strong>Unterschiede Dante vs. ArtNet:</strong>
+                        <ul>
+                            <li>Dante transportiert Audiodaten (bis 96 kHz, 24–32 bit) über UDP/IP; ArtNet transportiert DMX512-Steuerdaten für Licht über UDP/IP</li>
+                            <li>Dante erfordert zwingend QoS/DSCP und deaktivierten Flow Control; ArtNet ist toleranter gegenüber Switch-Fehlkonfigurationen</li>
+                            <li>Dante nutzt PTP-Uhrsynchronisation (IEEE 1588v2); ArtNet hat kein vergleichbares Synchronisationsprotokoll</li>
+                            <li>Dante erfordert dediziertes Netzwerk; ArtNet kann theoretisch im gemeinsamen Netzwerk betrieben werden</li>
+                        </ul>
+                    </li>
+                    <li><strong>Dante Domain Manager (DDM):</strong> Zentrales Management-Tool für große Dante-Installationen. Ermöglicht Benutzerverwaltung, Gerätegruppen, Audit-Logs und zentrale Konfigurationsspeicherung. Geeignet für feste Installationen in Theatern, Rundfunkanstalten und großen Veranstaltungszentren.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- MATERIAL-REFERENZEN -->
+        <div class="section">
+            <h2>📎 Materialreferenzen und weiterführende Quellen</h2>
+            <div class="tech-specs">
+                <h4>🔧 Quellen für Lehrkräfte</h4>
+                <ul>
+                    <li><strong>Audinate Knowledge Base:</strong> <code>audinate.com/learn</code> – offizielle Dante-Dokumentation, Deployment Guide, Best Practices</li>
+                    <li><strong>Dante Certification Program:</strong> <code>audinate.com/dante-certification</code> – kostenlose Online-Zertifizierung Level 1–3</li>
+                    <li><strong>Yamaha Dante Application Guide:</strong> Freies PDF unter Yamaha Pro Audio – spezifisch für CL/QL/Rio-Systeme</li>
+                    <li><strong>IEEE 1588-2008 (PTP v2):</strong> Offizieller Standard; vereinfachte Erklärungen bei NIST und AVnu Alliance</li>
+                    <li><strong>AES67-2018:</strong> AES Standard for networked audio – frei zugängliche Zusammenfassung bei aes.org</li>
+                    <li><strong>Dante_Simulator.html:</strong> Gleicher Kursordner – live demonstrieren: Routing-Matrix, Netzwerkkarten, Bandbreitenrechner</li>
+                </ul>
+            </div>
+        </div>
+
+    </div><!-- /content -->
+</div><!-- /container -->
+</body>
+</html>

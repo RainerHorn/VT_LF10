@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dante Audio Network Simulator – VT LF10</title>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ============================================================
+        // CSS INJECTION
+        // ============================================================
+        const style = document.createElement('style');
+        style.textContent = `
+            html { font-size: 26px; }
+            *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background: #06080e;
+                min-height: 100vh;
+                color: #b0c8e8;
+                display: flex;
+                flex-direction: column;
+                height: 100vh;
+                overflow: hidden;
+            }
+
+            /* ── Header ── */
+            .da-header {
+                background: linear-gradient(135deg, #08101e 0%, #101e38 100%);
+                border-bottom: 2px solid #162440;
+                padding: 8px 14px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                flex-shrink: 0;
+                flex-wrap: wrap;
+            }
+            .da-logo {
+                background: linear-gradient(135deg, #e06818, #f08038);
+                color: #fff;
+                font-weight: 900;
+                font-size: 0.68rem;
+                padding: 4px 10px;
+                border-radius: 4px;
+                letter-spacing: 0.06em;
+                font-family: 'Arial Black', sans-serif;
+                flex-shrink: 0;
+            }
+            .da-title { color: #4a6888; font-size: 0.72rem; flex: 1; }
+            .da-setting-row { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+            .da-setting-label { font-size: 0.56rem; color: #344858; letter-spacing: 0.06em; }
+            .da-select {
+                background: #0c1624;
+                border: 1px solid #1a2e48;
+                color: #7090b0;
+                padding: 2px 7px;
+                border-radius: 4px;
+                font-size: 0.6rem;
+                cursor: pointer;
+            }
+            .da-select:focus { outline: none; border-color: #3870b0; }
+            .dante-status {
+                display: flex; align-items: center; gap: 5px;
+                font-size: 0.58rem; color: #2a4050;
+            }
+            .dante-dot {
+                width: 7px; height: 7px; border-radius: 50%;
+                background: #00c870; box-shadow: 0 0 5px #00c870;
+                animation: dpulse 2s infinite;
+            }
+            @keyframes dpulse { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+
+            /* ── 3-column main ── */
+            .da-main {
+                display: grid;
+                grid-template-columns: 190px 1fr 180px;
+                flex: 1;
+                min-height: 0;
+                overflow: hidden;
+            }
+
+            /* ── Source panel ── */
+            .da-panel {
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                border-right: 1px solid #0e1824;
+            }
+            .da-panel.right { border-right: none; border-left: 1px solid #0e1824; }
+            .panel-title {
+                font-size: 0.56rem;
+                font-weight: 700;
+                letter-spacing: 0.15em;
+                color: #e06818;
+                padding: 5px 8px 3px;
+                background: #050810;
+                border-bottom: 1px solid #0e1824;
+                flex-shrink: 0;
+                text-transform: uppercase;
+            }
+            .panel-scroll { overflow-y: auto; flex: 1; background: #05080f; }
+            .panel-scroll::-webkit-scrollbar { width: 4px; }
+            .panel-scroll::-webkit-scrollbar-thumb { background: #14223a; border-radius: 3px; }
+
+            .dev-hdr {
+                font-size: 0.52rem; font-weight: 700; letter-spacing: 0.1em;
+                color: #283848; padding: 4px 8px 2px;
+                background: #060a14; border-bottom: 1px solid #0c1622;
+                text-transform: uppercase;
+            }
+
+            /* ── Source channel ── */
+            .src-ch {
+                display: flex; align-items: center; gap: 4px;
+                padding: 3px 6px 3px 8px;
+                border-bottom: 1px solid #07101a;
+                cursor: pointer;
+                min-height: 32px;
+                transition: background 0.1s;
+            }
+            .src-ch:hover { background: #081018; }
+            .src-ch.sel   { background: #0c1a2c; border-left: 3px solid #e06818; padding-left: 5px; }
+            .src-ico  { font-size: 0.7rem; flex-shrink: 0; }
+            .src-info { flex: 1; min-width: 0; }
+            .src-name { font-size: 0.58rem; color: #7090b8; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .src-sub  { font-size: 0.5rem;  color: #233040; }
+            .src-chnum{ font-size: 0.48rem; color: #182840; font-family: monospace; width: 12px; flex-shrink: 0; }
+
+            /* ── VU meter ── */
+            .vu-wrap {
+                width: 20px; height: 26px;
+                background: #030609;
+                border: 1px solid #0c1828;
+                border-radius: 2px;
+                display: flex; align-items: flex-end;
+                justify-content: center; padding: 1px;
+                position: relative; flex-shrink: 0;
+            }
+            .vu-bar {
+                width: 100%;
+                border-radius: 1px;
+                background: linear-gradient(to top, #00c840 0%, #80e020 60%, #e0b000 82%, #e02000 96%);
+                min-height: 1px;
+            }
+            .vu-peak {
+                position: absolute; left: 1px; right: 1px; height: 1px;
+                background: #80ff40;
+            }
+
+            /* ── Routing Matrix ── */
+            .da-matrix { display: flex; flex-direction: column; overflow: hidden; min-width: 0; background: #060810; }
+            .matrix-bar {
+                display: flex; align-items: center; gap: 5px;
+                padding: 4px 8px; background: #040710;
+                border-bottom: 1px solid #0e1824; flex-shrink: 0; flex-wrap: wrap;
+            }
+            .mbar-btn {
+                padding: 2px 9px;
+                background: #09121e; border: 1px solid #162230;
+                color: #3a5870; border-radius: 3px; font-size: 0.56rem;
+                cursor: pointer; transition: all 0.1s;
+            }
+            .mbar-btn:hover { border-color: #2a4870; color: #70a0c8; }
+            .matrix-scroll { flex: 1; overflow: auto; }
+            .matrix-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+            .matrix-scroll::-webkit-scrollbar-track { background: #03060c; }
+            .matrix-scroll::-webkit-scrollbar-thumb { background: #122030; border-radius: 3px; }
+
+            .m-table { border-collapse: collapse; }
+
+            .m-th-corner { background: #040710; position: sticky; top: 0; left: 0; z-index: 20; min-width: 70px; border-right: 2px solid #0e1824; border-bottom: 2px solid #0e1824; padding: 3px 5px; font-size: 0.48rem; color: #1a3040; }
+            .m-th {
+                background: #040710; position: sticky; top: 0; z-index: 10;
+                padding: 3px; min-width: 42px; max-width: 42px;
+                text-align: center; border-right: 1px solid #0a1520;
+                border-bottom: 2px solid #0e1824;
+                vertical-align: bottom;
+            }
+            .m-th-inner {
+                writing-mode: vertical-rl; transform: rotate(180deg);
+                font-size: 0.48rem; color: #2a5070; white-space: nowrap;
+                line-height: 1.2; letter-spacing: 0.03em;
+            }
+            .m-th-inner.pa  { color: #c05818; }
+            .m-th-inner.iem { color: #2880b8; }
+            .m-th-inner.hp  { color: #4a9030; }
+
+            .m-row-hdr {
+                position: sticky; left: 0; z-index: 5;
+                background: #040710 !important;
+                border-right: 2px solid #0e1824;
+                padding: 2px 6px;
+                font-size: 0.52rem; color: #2a5070;
+                white-space: nowrap; cursor: pointer;
+                min-width: 70px;
+            }
+            .m-row-hdr:hover { color: #70a0c8; }
+            .m-row-hdr.sel  { color: #e06818; background: #090f1c !important; }
+
+            .m-tr:nth-child(odd)  td.m-td { background: #060810; }
+            .m-tr:nth-child(even) td.m-td { background: #050710; }
+            .m-tr:hover td { background: #09111c !important; }
+            .m-tr.sel-row td { background: #0b1628 !important; }
+            .m-tr.dev-sep td { background: #040810 !important; padding: 3px 8px; font-size: 0.48rem; color: #1e3848; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 1px solid #0c1828; }
+
+            .m-td {
+                border-right: 1px solid #09121c; border-bottom: 1px solid #09121c;
+                text-align: center; min-width: 42px; max-width: 42px; height: 32px;
+                cursor: pointer; padding: 0;
+            }
+            .m-cell { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+            .m-dot {
+                width: 18px; height: 18px; border-radius: 50%;
+                border: 2px solid #162030;
+                background: transparent;
+                transition: all 0.1s;
+            }
+            .m-dot.on      { background: #00c870; border-color: #008850; box-shadow: 0 0 7px rgba(0,200,112,0.55); }
+            .m-dot.on.pa   { background: #d06020; border-color: #a04010; box-shadow: 0 0 7px rgba(208,96,32,0.55); }
+            .m-dot.on.iem  { background: #3888d0; border-color: #1858a0; box-shadow: 0 0 7px rgba(56,136,208,0.55); }
+            .m-dot.on.hp   { background: #70b030; border-color: #488010; box-shadow: 0 0 7px rgba(112,176,48,0.55); }
+
+            /* ── Sink panel ── */
+            .sink-ch {
+                display: flex; align-items: center; gap: 5px;
+                padding: 3px 8px; border-bottom: 1px solid #07101a;
+                min-height: 32px;
+            }
+            .sink-ico  { font-size: 0.7rem; flex-shrink: 0; }
+            .sink-info { flex: 1; min-width: 0; }
+            .sink-name-t { font-size: 0.58rem; color: #6888a8; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .sink-sub  { font-size: 0.48rem; color: #1e3040; }
+            .sink-led  {
+                width: 7px; height: 7px; border-radius: 50%;
+                background: #0e1828; flex-shrink: 0;
+                transition: background 0.1s, box-shadow 0.1s;
+            }
+            .sink-led.on      { background: #00c870; box-shadow: 0 0 5px #00c870; }
+            .sink-led.on.pa   { background: #d06020; box-shadow: 0 0 5px #d06020; }
+            .sink-led.on.iem  { background: #3888d0; box-shadow: 0 0 5px #3888d0; }
+            .sink-led.on.hp   { background: #70b030; box-shadow: 0 0 5px #70b030; }
+            /* connected count badge */
+            .sink-count { font-size: 0.46rem; color: #1e3040; font-family: monospace; margin-left: 1px; }
+
+            /* ── Bottom area ── */
+            .da-bottom {
+                border-top: 2px solid #0e1824;
+                flex-shrink: 0;
+                height: 246px;
+                display: flex;
+                flex-direction: column;
+                background: #04060e;
+            }
+            .da-tab-nav {
+                display: flex; background: #030510;
+                border-bottom: 1px solid #0e1824; flex-shrink: 0; overflow-x: auto;
+            }
+            .da-tab-btn {
+                padding: 5px 12px; border: none; background: transparent;
+                color: #283848; cursor: pointer; font-size: 0.58rem;
+                border-bottom: 2px solid transparent; white-space: nowrap;
+                transition: all 0.15s;
+            }
+            .da-tab-btn:hover { color: #70a0c8; }
+            .da-tab-btn.active { color: #e06818; border-bottom-color: #e06818; }
+            .da-tab-content { display: none; flex: 1; padding: 8px 12px; overflow: hidden; }
+            .da-tab-content.active { display: flex; gap: 14px; }
+            .da-tab-content::-webkit-scrollbar { width: 4px; }
+            .da-tab-content::-webkit-scrollbar-thumb { background: #122030; }
+
+            /* ── Compressor ── */
+            .comp-canvas {
+                display: block; border: 1px solid #0c1c2e;
+                border-radius: 5px; background: #020409; flex-shrink: 0;
+            }
+            .comp-controls { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; overflow-y: auto; }
+            .comp-ctrl-title { font-size: 0.6rem; color: #3a6080; font-weight: 700; margin-bottom: 1px; }
+            .comp-row { display: flex; align-items: center; gap: 5px; }
+            .comp-lbl { font-size: 0.54rem; color: #2a4060; width: 58px; flex-shrink: 0; text-align: right; }
+            .comp-slider {
+                flex: 1; height: 3px; -webkit-appearance: none; appearance: none;
+                background: #0e1c2e; border-radius: 2px; cursor: pointer; outline: none;
+            }
+            .comp-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 11px; height: 11px; border-radius: 50%; background: #e06818; cursor: pointer; }
+            .comp-val { font-size: 0.54rem; color: #4a7090; font-family: monospace; width: 46px; text-align: right; }
+            .comp-enb {
+                padding: 2px 10px; border-radius: 3px; border: 1px solid #162030;
+                background: #08101c; color: #2a4060; font-size: 0.56rem; cursor: pointer; transition: all 0.1s;
+            }
+            .comp-enb.on { background: #0e2010; border-color: #206020; color: #60b030; }
+            .gr-wrap { display: flex; flex-direction: column; align-items: center; gap: 3px; flex-shrink: 0; }
+            .gr-label { font-size: 0.5rem; color: #283848; letter-spacing: 0.06em; }
+            .gr-track {
+                width: 12px; height: 180px;
+                background: #030509; border: 1px solid #0e1828;
+                border-radius: 2px; display: flex; align-items: flex-end; padding: 1px; overflow: hidden;
+            }
+            .gr-bar { width: 100%; background: linear-gradient(to top, #d02000, #e09000); border-radius: 1px; min-height: 1px; }
+
+            /* ── Recorder ── */
+            .rec-body { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 0; overflow: hidden; }
+            .rec-transport { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+            .rec-btn {
+                width: 28px; height: 28px; border-radius: 50%;
+                border: 2px solid #152030; background: #080f18;
+                color: #3a6080; font-size: 0.62rem; cursor: pointer;
+                display: flex; align-items: center; justify-content: center;
+                transition: all 0.12s;
+            }
+            .rec-btn:hover { border-color: #2a5080; }
+            .rec-btn.rec-on { background: #200808; border-color: #c02020; color: #d05050; animation: rblink 1s infinite; }
+            .rec-btn.play-on{ background: #081808; border-color: #20a030; color: #40c050; }
+            @keyframes rblink { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+            .rec-time { font-family: monospace; font-size: 0.78rem; color: #4a7890; letter-spacing: 0.08em; }
+            .rec-stat { font-size: 0.55rem; color: #1e3848; min-width: 60px; }
+            .da-btn-sm {
+                padding: 2px 9px; border: 1px solid #142030; background: #080f18;
+                color: #2a4860; border-radius: 3px; font-size: 0.54rem; cursor: pointer; transition: all 0.1s;
+            }
+            .da-btn-sm:hover { border-color: #2a5080; color: #70a8d0; }
+            .rec-tracks { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 2px; }
+            .rec-tracks::-webkit-scrollbar { width: 4px; }
+            .rec-tracks::-webkit-scrollbar-thumb { background: #122030; }
+            .rec-track {
+                display: flex; align-items: center; gap: 5px;
+                padding: 2px 6px; border-radius: 3px;
+                background: #05080f; border: 1px solid #0c1420;
+            }
+            .arm-btn {
+                width: 13px; height: 13px; border-radius: 50%;
+                border: 1px solid #1e2840; background: #080f18; cursor: pointer; flex-shrink: 0; transition: all 0.1s;
+            }
+            .arm-btn.armed { background: #a01818; border-color: #d02828; box-shadow: 0 0 4px #a01818; }
+            .rt-name { font-size: 0.5rem; color: #2a4868; width: 54px; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+            .rt-lvl-wrap { flex: 1; height: 7px; background: #030609; border-radius: 2px; overflow: hidden; }
+            .rt-lvl-bar { height: 100%; width: 0%; background: linear-gradient(to right, #00c840, #c0e020, #e08020, #e02020); transition: width 0.06s; border-radius: 2px; }
+            .rt-wave { width: 100px; height: 14px; background: #030609; border-radius: 2px; overflow: hidden; flex-shrink: 0; }
+            canvas.wvs { display: block; }
+
+            /* ── Network ── */
+            .net-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 5px; align-content: start; width: 280px; flex-shrink: 0; }
+            .net-card { background: #060a14; border: 1px solid #0e1828; border-radius: 5px; padding: 6px 8px; }
+            .nc-label { font-size: 0.48rem; color: #1e3040; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1px; }
+            .nc-val   { font-size: 0.66rem; color: #6888a8; font-family: monospace; font-weight: 700; }
+            .nc-sub   { font-size: 0.46rem; color: #162030; margin-top: 1px; }
+            .net-tbl  { width: 100%; border-collapse: collapse; font-size: 0.5rem; }
+            .net-tbl th { background: #060a14; color: #1e3848; padding: 3px 7px; text-align: left; border-bottom: 1px solid #0e1828; font-weight: 600; letter-spacing: 0.06em; }
+            .net-tbl td { padding: 3px 7px; border-bottom: 1px solid #070b14; color: #3a6080; }
+            .net-tbl tr:hover td { background: #070c16; }
+            .ptp-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 3px; vertical-align: middle; }
+            .ptp-gm  { background: #00c870; box-shadow: 0 0 3px #00c870; }
+            .ptp-bc  { background: #3888d0; box-shadow: 0 0 3px #3888d0; }
+            .ptp-pm  { background: #70b030; box-shadow: 0 0 3px #70b030; }
+            .ptp-fl  { background: #505050; }
+            .bw-bar-wrap { height: 5px; background: #060a14; border-radius: 3px; margin-top: 2px; overflow: hidden; }
+            .bw-bar  { height: 100%; background: linear-gradient(to right, #00c870, #e06818); border-radius: 3px; transition: width 0.4s; }
+
+            /* ── Toast ── */
+            .toast {
+                position: fixed; bottom: 14px; right: 14px;
+                background: #0c1828; color: #7090b8;
+                border: 1px solid #182e48; padding: 5px 12px;
+                border-radius: 6px; font-size: 0.66rem; z-index: 9999;
+                box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+                animation: tfade 2.4s forwards;
+            }
+            @keyframes tfade {
+                0%   { opacity:0; transform:translateY(6px); }
+                15%  { opacity:1; transform:translateY(0); }
+                80%  { opacity:1; }
+                100% { opacity:0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // ============================================================
+        // SOURCES & SINKS
+        // ============================================================
+        const SOURCES = [
+            { id: 0,  dev: 'Stage Box A', ch: 1, name: 'Voc 1',    sub: 'SM58',    type: 'mic',  ico: '🎤', base: 0.55, freq: 0.9  },
+            { id: 1,  dev: 'Stage Box A', ch: 2, name: 'Voc 2',    sub: 'SM58',    type: 'mic',  ico: '🎤', base: 0.48, freq: 0.75 },
+            { id: 2,  dev: 'Stage Box A', ch: 3, name: 'Voc 3',    sub: 'SM58',    type: 'mic',  ico: '🎤', base: 0.38, freq: 0.8  },
+            { id: 3,  dev: 'Stage Box A', ch: 4, name: 'Kick',     sub: 'Beta52A', type: 'mic',  ico: '🥁', base: 0.88, freq: 2.2  },
+            { id: 4,  dev: 'Stage Box A', ch: 5, name: 'Snare',    sub: 'SM57',    type: 'mic',  ico: '🥁', base: 0.78, freq: 2.2  },
+            { id: 5,  dev: 'Stage Box A', ch: 6, name: 'OH L',     sub: 'KM184',   type: 'mic',  ico: '🎵', base: 0.48, freq: 1.6  },
+            { id: 6,  dev: 'Stage Box A', ch: 7, name: 'OH R',     sub: 'KM184',   type: 'mic',  ico: '🎵', base: 0.48, freq: 1.6  },
+            { id: 7,  dev: 'Stage Box A', ch: 8, name: 'Bass DI',  sub: 'DI',      type: 'inst', ico: '🎸', base: 0.65, freq: 0.55 },
+            { id: 8,  dev: 'Stage Box B', ch: 1, name: 'Guitar 1', sub: 'DI',      type: 'inst', ico: '🎸', base: 0.55, freq: 0.65 },
+            { id: 9,  dev: 'Stage Box B', ch: 2, name: 'Guitar 2', sub: 'DI',      type: 'inst', ico: '🎸', base: 0.45, freq: 0.6  },
+            { id: 10, dev: 'Stage Box B', ch: 3, name: 'Keys L',   sub: 'Line',    type: 'inst', ico: '🎹', base: 0.60, freq: 0.5  },
+            { id: 11, dev: 'Stage Box B', ch: 4, name: 'Keys R',   sub: 'Line',    type: 'inst', ico: '🎹', base: 0.60, freq: 0.5  },
+            { id: 12, dev: 'Stage Box B', ch: 5, name: 'Perc',     sub: 'SM57',    type: 'mic',  ico: '🪘', base: 0.55, freq: 1.9  },
+            { id: 13, dev: 'Stage Box B', ch: 6, name: 'Aux In',   sub: 'Line',    type: 'inst', ico: '🔌', base: 0.28, freq: 0.4  },
+        ];
+
+        const SINKS = [
+            { id: 0,  dev: 'FOH PA',   ch: 1, name: 'Main L',   type: 'pa',  ico: '🔊' },
+            { id: 1,  dev: 'FOH PA',   ch: 2, name: 'Main R',   type: 'pa',  ico: '🔊' },
+            { id: 2,  dev: 'Sub PA',   ch: 1, name: 'Sub L',    type: 'pa',  ico: '🔉' },
+            { id: 3,  dev: 'Sub PA',   ch: 2, name: 'Sub R',    type: 'pa',  ico: '🔉' },
+            { id: 4,  dev: 'IEM TX 1', ch: 1, name: 'IEM-1 L',  type: 'iem', ico: '🎧' },
+            { id: 5,  dev: 'IEM TX 1', ch: 2, name: 'IEM-1 R',  type: 'iem', ico: '🎧' },
+            { id: 6,  dev: 'IEM TX 2', ch: 1, name: 'IEM-2 L',  type: 'iem', ico: '🎧' },
+            { id: 7,  dev: 'IEM TX 2', ch: 2, name: 'IEM-2 R',  type: 'iem', ico: '🎧' },
+            { id: 8,  dev: 'HP Amp',   ch: 1, name: 'HP Mon 1', type: 'hp',  ico: '🎧' },
+            { id: 9,  dev: 'HP Amp',   ch: 2, name: 'HP Mon 2', type: 'hp',  ico: '🎧' },
+            { id: 10, dev: 'HP Amp',   ch: 3, name: 'HP Mon 3', type: 'hp',  ico: '🎧' },
+            { id: 11, dev: 'HP Amp',   ch: 4, name: 'HP Mon 4', type: 'hp',  ico: '🎧' },
+        ];
+
+        // ============================================================
+        // STATE
+        // ============================================================
+        const NS = SOURCES.length, NK = SINKS.length;
+        const routing = Array(NS).fill(null).map(() => new Array(NK).fill(false));
+
+        const DEFAULT = [
+            [0,0],[0,1],[0,4],[0,5],
+            [1,0],[1,1],[1,6],[1,7],
+            [2,0],[2,1],
+            [3,0],[3,1],[3,2],[3,3],[3,8],
+            [4,0],[4,1],[4,8],
+            [5,0],[5,8],   [6,1],[6,8],
+            [7,0],[7,1],[7,2],[7,3],[7,9],
+            [8,0],[8,1],[8,9],[8,10],
+            [9,0],[9,1],[9,9],[9,10],
+            [10,0],[10,10],[11,1],[11,10],
+            [12,0],[12,1],[12,8],
+            [13,0],[13,1],[13,11],
+        ];
+        DEFAULT.forEach(([s,d]) => routing[s][d] = true);
+
+        const vuState = SOURCES.map(s => ({ lvl: s.base * 0.5, peak: 0, peakHold: 0, t: Math.random() * 6.28 }));
+
+        const comp = SOURCES.map(() => ({
+            on: false, threshold: -18, ratio: 4,
+            attack: 10, release: 100, gain: 3, knee: 6, gr: 0
+        }));
+        let selSrc = 0;
+
+        const recArmed = new Array(NS).fill(false);
+        let recRunning = false, recPaused = false, recSec = 0, recIntv = null;
+        const waveCvs = [];
+
+        let netSR = 48000, netBD = 24, netLat = 1.0;
+
+        // ============================================================
+        // HEADER
+        // ============================================================
+        function buildHeader() {
+            document.getElementById('daHeader').innerHTML = `
+                <div class="da-logo">Dante</div>
+                <span class="da-title">Audio Network Simulator · VT LF10 · ${NS} TX · ${NK} RX · Multicast</span>
+                <div class="da-setting-row">
+                    <span class="da-setting-label">SR</span>
+                    <select class="da-select" onchange="setSR(this.value)">
+                        <option value="44100">44.1 kHz</option>
+                        <option value="48000" selected>48 kHz</option>
+                        <option value="88200">88.2 kHz</option>
+                        <option value="96000">96 kHz</option>
+                    </select>
+                    <span class="da-setting-label">Bit</span>
+                    <select class="da-select" onchange="setBD(this.value)">
+                        <option value="16">16</option>
+                        <option value="24" selected>24</option>
+                        <option value="32">32</option>
+                    </select>
+                    <span class="da-setting-label">Latenz</span>
+                    <select class="da-select" onchange="setLat(this.value)">
+                        <option value="0.25">0.25 ms</option>
+                        <option value="0.5">0.5 ms</option>
+                        <option value="1" selected>1 ms</option>
+                        <option value="5">5 ms</option>
+                        <option value="10">10 ms</option>
+                    </select>
+                </div>
+                <div class="dante-status">
+                    <div class="dante-dot"></div>
+                    PTP Sync OK · IEEE 1588v2
+                </div>
+            `;
+        }
+        window.setSR  = v => { netSR  = +v; refreshNet(); toast(`Sample Rate: ${(+v/1000).toFixed(1)} kHz`); };
+        window.setBD  = v => { netBD  = +v; refreshNet(); toast(`Bit Depth: ${v} bit`); };
+        window.setLat = v => { netLat = +v; refreshNet(); toast(`Latenz: ${v} ms`); };
+
+        // ============================================================
+        // SOURCE PANEL
+        // ============================================================
+        function buildSrcPanel() {
+            let h = `<div class="panel-title">🎤 Quellen (TX)</div><div class="panel-scroll" id="srcScroll">`;
+            let dev = null;
+            SOURCES.forEach(s => {
+                if (s.dev !== dev) { dev = s.dev; h += `<div class="dev-hdr">${s.dev}</div>`; }
+                h += `<div class="src-ch${selSrc===s.id?' sel':''}" id="srch-${s.id}" onclick="selSource(${s.id})">
+                    <span class="src-chnum">${s.ch}</span>
+                    <span class="src-ico">${s.ico}</span>
+                    <div class="src-info"><div class="src-name">${s.name}</div><div class="src-sub">${s.sub}</div></div>
+                    <div class="vu-wrap" id="vu-${s.id}">
+                        <div class="vu-bar" id="vub-${s.id}" style="height:30%;"></div>
+                        <div class="vu-peak" id="vup-${s.id}" style="bottom:30%;"></div>
+                    </div>
+                </div>`;
+            });
+            h += `</div>`;
+            document.getElementById('daSrc').innerHTML = h;
+        }
+
+        window.selSource = function(id) {
+            selSrc = id;
+            document.querySelectorAll('.src-ch').forEach(e => e.classList.remove('sel'));
+            document.querySelectorAll('.m-row-hdr').forEach(e => e.classList.remove('sel'));
+            document.querySelectorAll('.m-tr').forEach(e => e.classList.remove('sel-row'));
+            document.getElementById(`srch-${id}`)?.classList.add('sel');
+            document.querySelector(`.m-row-hdr[data-s="${id}"]`)?.classList.add('sel');
+            document.querySelector(`.m-tr[data-s="${id}"]`)?.classList.add('sel-row');
+            refreshComp();
+        };
+
+        // ============================================================
+        // ROUTING MATRIX
+        // ============================================================
+        function buildMatrix() {
+            document.getElementById('daMatrix').innerHTML = `
+                <div class="matrix-bar">
+                    <button class="mbar-btn" onclick="clearAll()">⬛ Alle trennen</button>
+                    <button class="mbar-btn" onclick="loadDefault()">↺ Standard-Patch</button>
+                    <button class="mbar-btn" onclick="allToFOH()">🔊 Alle → FOH</button>
+                    <button class="mbar-btn" onclick="allToRec()">⏺ Alle → REC-Bus</button>
+                    <span style="flex:1;"></span>
+                    <span style="font-size:0.46rem;color:#18303e;">
+                        🟠=PA &nbsp; 🔵=IEM &nbsp; 🟢=HP-Mon
+                    </span>
+                </div>
+                <div class="matrix-scroll"><table class="m-table" id="mTbl"></table></div>
+            `;
+            renderMatrix();
+        }
+
+        function renderMatrix() {
+            const tbl = document.getElementById('mTbl');
+            if (!tbl) return;
+            let h = `<thead><tr><th class="m-th-corner">Quelle / Senke</th>`;
+            SINKS.forEach(k => {
+                h += `<th class="m-th"><div class="m-th-inner ${k.type}">${k.dev}<br>${k.name}</div></th>`;
+            });
+            h += `</tr></thead><tbody>`;
+            let dev = null;
+            SOURCES.forEach(s => {
+                if (s.dev !== dev) {
+                    dev = s.dev;
+                    h += `<tr class="m-tr dev-sep"><td colspan="${NK+1}">${dev}</td></tr>`;
+                }
+                h += `<tr class="m-tr${selSrc===s.id?' sel-row':''}" data-s="${s.id}">`;
+                h += `<td class="m-row-hdr${selSrc===s.id?' sel':''}" data-s="${s.id}" onclick="selSource(${s.id})">${s.ico} ${s.name}</td>`;
+                SINKS.forEach(k => {
+                    const on = routing[s.id][k.id];
+                    h += `<td class="m-td" onclick="toggleRoute(${s.id},${k.id})">
+                        <div class="m-cell">
+                            <div class="m-dot${on?' on '+k.type:''}" id="dot-${s.id}-${k.id}"></div>
+                        </div>
+                    </td>`;
+                });
+                h += `</tr>`;
+            });
+            h += `</tbody>`;
+            tbl.innerHTML = h;
+        }
+
+        window.toggleRoute = function(s, k) {
+            routing[s][k] = !routing[s][k];
+            const dot = document.getElementById(`dot-${s}-${k}`);
+            if (dot) dot.className = `m-dot${routing[s][k] ? ' on '+SINKS[k].type : ''}`;
+            updateSinkLEDs();
+            toast(`${SOURCES[s].name} → ${SINKS[k].name}: ${routing[s][k] ? 'verbunden' : 'getrennt'}`);
+        };
+
+        window.clearAll   = () => { SOURCES.forEach((_,s) => SINKS.forEach((_,k) => { routing[s][k]=false; })); renderMatrix(); updateSinkLEDs(); toast('Alle Verbindungen getrennt'); };
+        window.loadDefault= () => { clearAll(); DEFAULT.forEach(([s,k]) => { routing[s][k]=true; }); renderMatrix(); updateSinkLEDs(); toast('Standard-Patch geladen'); };
+        window.allToFOH   = () => { SOURCES.forEach((_,s) => { routing[s][0]=true; routing[s][1]=true; }); renderMatrix(); updateSinkLEDs(); toast('Alle Quellen → FOH Main L/R'); };
+        window.allToRec   = () => { toast('REC-Bus: Alle Spuren armed – Recorder starten'); armAll(); showBottomTab('recorder'); };
+
+        // ============================================================
+        // SINK PANEL
+        // ============================================================
+        function buildSinkPanel() {
+            let h = `<div class="panel-title">🔊 Senken (RX)</div><div class="panel-scroll">`;
+            let dev = null;
+            SINKS.forEach(k => {
+                if (k.dev !== dev) { dev = k.dev; h += `<div class="dev-hdr">${k.dev}</div>`; }
+                const cnt = SOURCES.filter(s => routing[s.id][k.id]).length;
+                h += `<div class="sink-ch" id="sinkch-${k.id}">
+                    <span class="sink-ico">${k.ico}</span>
+                    <div class="sink-info"><div class="sink-name-t">${k.name}</div><div class="sink-sub">${k.dev}</div></div>
+                    <span class="sink-count" id="scnt-${k.id}">${cnt}</span>
+                    <div class="sink-led${cnt>0?' on '+k.type:''}" id="sled-${k.id}"></div>
+                </div>`;
+            });
+            h += `</div>`;
+            document.getElementById('daSink').innerHTML = h;
+        }
+
+        function updateSinkLEDs() {
+            SINKS.forEach(k => {
+                const cnt = SOURCES.filter(s => routing[s.id][k.id]).length;
+                const led = document.getElementById(`sled-${k.id}`);
+                const cntEl = document.getElementById(`scnt-${k.id}`);
+                if (led)  led.className  = `sink-led${cnt>0?' on '+k.type:''}`;
+                if (cntEl) cntEl.textContent = cnt || '';
+            });
+        }
+
+        // ============================================================
+        // VU ANIMATION
+        // ============================================================
+        function animVU(ts) {
+            const t = ts / 1000;
+            SOURCES.forEach((s, i) => {
+                const st = vuState[i];
+                let tgt = 0;
+                if (s.name === 'Kick') {
+                    const ph = (t * 2.2) % 1;
+                    tgt = ph < 0.06 ? 0.94 - ph * 8 : Math.max(0, 0.94 - (ph - 0.06) * 3.5);
+                    tgt += (Math.random() - 0.5) * 0.04;
+                } else if (s.name === 'Snare') {
+                    const ph = (t * 2.2 + 0.5) % 1;
+                    tgt = ph < 0.05 ? 0.82 - ph * 10 : Math.max(0, 0.82 - (ph - 0.05) * 4.5);
+                    tgt += (Math.random() - 0.5) * 0.04;
+                } else {
+                    st.t += 0.016 * s.freq * (0.7 + Math.random() * 0.6);
+                    tgt = s.base + Math.sin(st.t * 6.28) * s.base * 0.35 + (Math.random() - 0.5) * 0.08;
+                    tgt = Math.max(0, Math.min(1, tgt));
+                }
+                st.lvl = st.lvl * 0.62 + tgt * 0.38;
+                if (st.lvl > st.peak) { st.peak = st.lvl; st.peakHold = 55; }
+                else if (st.peakHold > 0) st.peakHold--;
+                else st.peak = Math.max(0, st.peak - 0.004);
+
+                const pct  = Math.min(100, st.lvl * 100);
+                const ppct = Math.min(100, st.peak * 100);
+                const b = document.getElementById(`vub-${i}`);
+                const p = document.getElementById(`vup-${i}`);
+                if (b) b.style.height = pct + '%';
+                if (p) p.style.bottom = ppct + '%';
+
+                // Gain reduction
+                if (comp[i].on) {
+                    const dbIn = -60 + st.lvl * 54;
+                    const thr  = comp[i].threshold;
+                    if (dbIn > thr) comp[i].gr = Math.min(24, (dbIn - thr) * (1 - 1 / comp[i].ratio));
+                    else comp[i].gr = Math.max(0, comp[i].gr - 0.4);
+                } else {
+                    comp[i].gr = 0;
+                }
+            });
+
+            // GR meter
+            const grBar = document.getElementById('grBar');
+            const grVal = document.getElementById('grVal');
+            if (grBar) grBar.style.height = Math.min(100, comp[selSrc].gr / 24 * 100) + '%';
+            if (grVal) grVal.textContent  = `-${comp[selSrc].gr.toFixed(1)} dB`;
+            drawCompCurve();
+
+            // Recorder level bars + waveform
+            if (recRunning && !recPaused) {
+                SOURCES.forEach((_, i) => {
+                    const bl = document.getElementById(`rlvl-${i}`);
+                    if (bl) bl.style.width = (vuState[i].lvl * 100) + '%';
+                    const cv = waveCvs[i];
+                    if (cv && recArmed[i]) {
+                        const cx = cv.getContext('2d');
+                        const W = cv.width, H = cv.height;
+                        const img = cx.getImageData(2, 0, W-2, H);
+                        cx.putImageData(img, 0, 0);
+                        cx.clearRect(W-2, 0, 2, H);
+                        cx.fillStyle = comp[i].on ? '#30904a' : '#1860a0';
+                        const bh = Math.max(1, vuState[i].lvl * H);
+                        cx.fillRect(W-2, (H-bh)/2, 2, bh);
+                    }
+                });
+            } else {
+                SOURCES.forEach((_, i) => {
+                    const bl = document.getElementById(`rlvl-${i}`);
+                    if (bl) bl.style.width = (vuState[i].lvl * 18) + '%'; // quieter preview
+                });
+            }
+
+            requestAnimationFrame(animVU);
+        }
+        requestAnimationFrame(animVU);
+
+        // ============================================================
+        // COMPRESSOR
+        // ============================================================
+        function buildComp() {
+            document.getElementById('tab-compressor').innerHTML = `
+                <canvas class="comp-canvas" id="compCvs" width="180" height="180"></canvas>
+                <div class="comp-controls" id="compCtrl"></div>
+                <div class="gr-wrap">
+                    <div class="gr-label">GR</div>
+                    <div class="gr-track"><div class="gr-bar" id="grBar" style="height:0%;"></div></div>
+                    <div class="gr-label" id="grVal">0 dB</div>
+                </div>
+            `;
+            refreshComp();
+        }
+
+        function refreshComp() {
+            const ctrl = document.getElementById('compCtrl');
+            if (!ctrl) return;
+            const c = comp[selSrc], s = SOURCES[selSrc];
+            const sl = (id, lbl, val, mn, mx, step, unit) => `
+                <div class="comp-row">
+                    <span class="comp-lbl">${lbl}</span>
+                    <input type="range" class="comp-slider" id="csl-${id}" min="${mn}" max="${mx}" step="${step}" value="${val}">
+                    <span class="comp-val" id="cvl-${id}">${val}${unit}</span>
+                </div>`;
+            ctrl.innerHTML = `
+                <div class="comp-ctrl-title">${s.ico} ${s.name} – ${s.dev} CH${s.ch}</div>
+                <div style="display:flex;gap:6px;align-items:center;margin-bottom:3px;">
+                    <button class="comp-enb${c.on?' on':''}" id="cEnb" onclick="toggleComp()">
+                        ${c.on ? '✔ AN' : '○ AUS'}
+                    </button>
+                    <span style="font-size:0.5rem;color:#283848;">${c.on ? 'Kompressor aktiv' : 'Bypass'}</span>
+                </div>
+                ${sl('thr', 'Threshold', c.threshold, -60, 0,    1,   ' dBFS')}
+                ${sl('rat', 'Ratio',     c.ratio,       1, 20,  0.5,   ':1')}
+                ${sl('atk', 'Attack',    c.attack,    0.1,200,  0.5,   ' ms')}
+                ${sl('rel', 'Release',   c.release,    10,2000,  10,   ' ms')}
+                ${sl('gn',  'Makeup Gn', c.gain,        0, 24,  0.5,   ' dB')}
+                ${sl('kne', 'Knee',      c.knee,         0, 12,   1,   ' dB')}
+            `;
+            const map = { thr:'threshold', rat:'ratio', atk:'attack', rel:'release', gn:'gain', kne:'knee' };
+            const units = { thr:' dBFS', rat:':1', atk:' ms', rel:' ms', gn:' dB', kne:' dB' };
+            Object.entries(map).forEach(([id, key]) => {
+                const sl = document.getElementById(`csl-${id}`);
+                const vl = document.getElementById(`cvl-${id}`);
+                if (!sl) return;
+                sl.addEventListener('input', () => {
+                    const v = parseFloat(sl.value);
+                    comp[selSrc][key] = v;
+                    if (vl) vl.textContent = v + units[id];
+                    drawCompCurve();
+                });
+            });
+            drawCompCurve();
+        }
+
+        function drawCompCurve() {
+            const cvs = document.getElementById('compCvs');
+            if (!cvs) return;
+            const ctx = cvs.getContext('2d');
+            const W = cvs.width, H = cvs.height;
+            const pad = 16, w = W-pad*2, h = H-pad*2;
+            const c = comp[selSrc];
+            ctx.fillStyle = '#020409'; ctx.fillRect(0,0,W,H);
+
+            // Grid
+            ctx.strokeStyle = '#0a1420'; ctx.lineWidth = 1;
+            for (let db = -60; db <= 0; db += 15) {
+                const x = pad + (db+60)/60*w, y = H-pad-(db+60)/60*h;
+                ctx.beginPath(); ctx.moveTo(x,pad); ctx.lineTo(x,H-pad); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(W-pad,y); ctx.stroke();
+            }
+            // 1:1
+            ctx.strokeStyle = '#122030'; ctx.setLineDash([3,4]);
+            ctx.beginPath(); ctx.moveTo(pad,H-pad); ctx.lineTo(W-pad,pad); ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Curve
+            ctx.strokeStyle = c.on ? '#e06818' : '#2a4060';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let xi = 0; xi <= w; xi++) {
+                const inDb  = -60 + (xi/w)*60;
+                let outDb   = inDb;
+                if (c.on) {
+                    const thr = c.threshold, kn = c.knee, rt = c.ratio;
+                    if (inDb < thr - kn/2)            { outDb = inDb; }
+                    else if (inDb <= thr + kn/2)      { const d = inDb-thr+kn/2; outDb = inDb + (1/rt-1)*d*d/(2*kn); }
+                    else                               { outDb = thr + (inDb-thr)/rt; }
+                    outDb = Math.min(0, outDb + c.gain);
+                }
+                const x = pad + xi, y = H - pad - ((outDb+60)/60)*h;
+                xi===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+            }
+            ctx.stroke();
+
+            // Current signal dot
+            const lv = vuState[selSrc].lvl;
+            const inDb  = -60 + lv * 52;
+            let outDb   = inDb;
+            if (c.on) {
+                const thr = c.threshold, kn = c.knee, rt = c.ratio;
+                if (inDb >= thr - kn/2 && inDb <= thr + kn/2) { const d = inDb-thr+kn/2; outDb = inDb + (1/rt-1)*d*d/(2*kn); }
+                else if (inDb > thr + kn/2) { outDb = thr + (inDb-thr)/rt; }
+                outDb = Math.min(0, outDb + c.gain);
+            }
+            ctx.fillStyle = c.on ? '#ff8030' : '#3070c0';
+            ctx.beginPath();
+            ctx.arc(pad+((inDb+60)/60)*w, H-pad-((outDb+60)/60)*h, 4, 0, Math.PI*2);
+            ctx.fill();
+
+            // Labels
+            ctx.fillStyle = '#182838'; ctx.font = '8px monospace'; ctx.textAlign = 'center';
+            ctx.fillText('-60', pad, H-2); ctx.fillText('0', W-pad, H-2);
+            ctx.fillStyle = c.on ? '#6a4020' : '#1a2e40'; ctx.textAlign = 'left';
+            ctx.fillText(c.on ? `${c.threshold}dBFS  ${c.ratio}:1` : 'Bypass', pad+2, pad+9);
+        }
+
+        window.toggleComp = function() {
+            comp[selSrc].on = !comp[selSrc].on;
+            refreshComp();
+            toast(`Kompressor ${SOURCES[selSrc].name}: ${comp[selSrc].on ? 'AN' : 'AUS'}`);
+        };
+
+        // ============================================================
+        // RECORDER
+        // ============================================================
+        function buildRecorder() {
+            document.getElementById('tab-recorder').innerHTML = `
+                <div class="rec-body">
+                    <div class="rec-transport">
+                        <button class="rec-btn" id="recBtn"  onclick="toggleRec()" title="Aufnahme">⏺</button>
+                        <button class="rec-btn" id="playBtn" onclick="togglePlay()" title="Wiedergabe" style="font-size:0.56rem;">▶</button>
+                        <button class="rec-btn" onclick="stopRec()" title="Stopp">⏹</button>
+                        <span class="rec-time" id="recTime">00:00:00</span>
+                        <span class="rec-stat" id="recStat">Gestoppt</span>
+                        <button class="da-btn-sm" onclick="armAll()">Alle ARM</button>
+                        <button class="da-btn-sm" onclick="disarmAll()">Disarm</button>
+                        <button class="da-btn-sm" id="recBW" style="font-size:0.48rem;color:#1e3848;"></button>
+                    </div>
+                    <div class="rec-tracks" id="recTracks"></div>
+                </div>
+            `;
+            buildRecTracks();
+            updateRecBW();
+        }
+
+        function buildRecTracks() {
+            const wrap = document.getElementById('recTracks');
+            if (!wrap) return;
+            waveCvs.length = 0;
+            wrap.innerHTML = '';
+            SOURCES.forEach((s, i) => {
+                const div = document.createElement('div');
+                div.className = 'rec-track';
+                div.innerHTML = `
+                    <div class="arm-btn${recArmed[i]?' armed':''}" id="arm-${i}" onclick="toggleArm(${i})" title="ARM"></div>
+                    <span class="rt-name" title="${s.name}">${s.ico} ${s.name}</span>
+                    <div class="rt-lvl-wrap"><div class="rt-lvl-bar" id="rlvl-${i}"></div></div>
+                    <div class="rt-wave"><canvas class="wvs" id="rwvs-${i}" width="100" height="14"></canvas></div>
+                `;
+                wrap.appendChild(div);
+                const cv = document.getElementById(`rwvs-${i}`);
+                waveCvs.push(cv);
+                if (cv) { const cx = cv.getContext('2d'); cx.fillStyle='#030609'; cx.fillRect(0,0,100,14); }
+            });
+        }
+
+        function updateRecBW() {
+            const arms = recArmed.filter(Boolean).length;
+            const bpsCh = netSR * netBD / 8;
+            const mb = ((arms * bpsCh * 1.02) / 1e6).toFixed(1);
+            const el = document.getElementById('recBW');
+            if (el) el.textContent = `${arms} Spur${arms!==1?'en':''} · ~${mb} MB/s`;
+        }
+
+        window.toggleArm = function(i) {
+            recArmed[i] = !recArmed[i];
+            document.getElementById(`arm-${i}`)?.setAttribute('class', `arm-btn${recArmed[i]?' armed':''}`);
+            updateRecBW();
+        };
+        window.armAll    = () => { SOURCES.forEach((_,i) => { recArmed[i]=true;  document.getElementById(`arm-${i}`)?.setAttribute('class','arm-btn armed'); }); updateRecBW(); };
+        window.disarmAll = () => { SOURCES.forEach((_,i) => { recArmed[i]=false; document.getElementById(`arm-${i}`)?.setAttribute('class','arm-btn'); }); updateRecBW(); };
+
+        window.toggleRec = function() {
+            if (!recRunning) {
+                recRunning=true; recPaused=false;
+                recIntv = setInterval(() => {
+                    recSec++;
+                    document.getElementById('recTime').textContent = fmtTime(recSec);
+                }, 1000);
+                document.getElementById('recBtn').className = 'rec-btn rec-on';
+                document.getElementById('recStat').textContent = '● REC';
+                waveCvs.forEach(c => { if(c){ const cx=c.getContext('2d'); cx.fillStyle='#030609'; cx.fillRect(0,0,c.width,c.height); } });
+                toast(`Aufnahme gestartet – ${recArmed.filter(Boolean).length} Spuren`);
+            } else if (!recPaused) {
+                recPaused = true; clearInterval(recIntv);
+                document.getElementById('recBtn').className = 'rec-btn';
+                document.getElementById('recStat').textContent = '⏸ Pause';
+                toast('Aufnahme pausiert');
+            } else {
+                recPaused = false;
+                recIntv = setInterval(() => { recSec++; document.getElementById('recTime').textContent = fmtTime(recSec); }, 1000);
+                document.getElementById('recBtn').className = 'rec-btn rec-on';
+                document.getElementById('recStat').textContent = '● REC';
+                toast('Aufnahme fortgesetzt');
+            }
+        };
+        window.stopRec   = function() {
+            if (recSec > 0) toast(`Aufnahme gestoppt – ${fmtTime(recSec)}`);
+            recRunning=false; recPaused=false; clearInterval(recIntv);
+            document.getElementById('recBtn')?.setAttribute('class','rec-btn');
+            document.getElementById('recStat').textContent = 'Gestoppt';
+        };
+        window.togglePlay = function() {
+            const b = document.getElementById('playBtn');
+            if (b.classList.contains('play-on')) { b.classList.remove('play-on'); document.getElementById('recStat').textContent='Gestoppt'; toast('Wiedergabe gestoppt'); }
+            else { b.classList.add('play-on'); document.getElementById('recStat').textContent='▶ Play'; toast('Wiedergabe simuliert'); }
+        };
+
+        function fmtTime(s) {
+            return [Math.floor(s/3600),Math.floor((s%3600)/60),s%60].map(n=>String(n).padStart(2,'0')).join(':');
+        }
+
+        // ============================================================
+        // NETWORK
+        // ============================================================
+        function buildNet() {
+            document.getElementById('tab-network').innerHTML = `<div id="netInner" style="display:flex;gap:12px;flex:1;overflow:auto;"></div>`;
+            refreshNet();
+        }
+
+        function refreshNet() {
+            const wrap = document.getElementById('netInner');
+            if (!wrap) return;
+            const bwPCh = netSR * netBD / 8 * 1.05;
+            const totalBw = (NS * bwPCh / 1e6).toFixed(1);
+            const maxCh   = Math.floor(1000e6 / bwPCh);
+            const bwPct   = Math.min(100, NS / maxCh * 100).toFixed(0);
+            wrap.innerHTML = `
+                <div class="net-grid">
+                    <div class="net-card"><div class="nc-label">Protokoll</div><div class="nc-val">Dante 4</div><div class="nc-sub">Audinate Pty Ltd</div></div>
+                    <div class="net-card"><div class="nc-label">Transport</div><div class="nc-val">UDP/IP</div><div class="nc-sub">Multicast + Unicast</div></div>
+                    <div class="net-card"><div class="nc-label">Sample Rate</div><div class="nc-val">${(netSR/1000).toFixed(1)} kHz</div><div class="nc-sub">IEEE 1588 PTP Sync</div></div>
+                    <div class="net-card"><div class="nc-label">Bit Depth</div><div class="nc-val">${netBD} bit</div><div class="nc-sub">PCM Linear</div></div>
+                    <div class="net-card"><div class="nc-label">Latenz</div><div class="nc-val">${netLat} ms</div><div class="nc-sub">0.25 / 1 / 5 / 10 ms</div></div>
+                    <div class="net-card"><div class="nc-label">Multicast</div><div class="nc-val" style="font-size:0.54rem;">239.255.x.x</div><div class="nc-sub">pro Kanal / Device</div></div>
+                    <div class="net-card"><div class="nc-label">Discovery</div><div class="nc-val">DDPM</div><div class="nc-sub">UDP Port 4440</div></div>
+                    <div class="net-card"><div class="nc-label">Control</div><div class="nc-val">TCP/UDP</div><div class="nc-sub">Port 8800–8809</div></div>
+                    <div class="net-card"><div class="nc-label">Bandbreite</div><div class="nc-val">${totalBw} Mbit</div>
+                        <div class="nc-sub">1 GbE: max ${maxCh} CH</div>
+                        <div class="bw-bar-wrap"><div class="bw-bar" style="width:${bwPct}%;"></div></div>
+                    </div>
+                    <div class="net-card"><div class="nc-label">Kanäle</div><div class="nc-val">${NS} TX / ${NK} RX</div><div class="nc-sub">+ ${NS} rec tracks</div></div>
+                </div>
+                <div style="flex:1;min-width:240px;overflow:auto;">
+                    <table class="net-tbl">
+                        <thead><tr><th>Gerät</th><th>Typ</th><th>IP</th><th>TX/RX</th><th>PTP</th></tr></thead>
+                        <tbody>
+                            <tr><td>grandMA3 Pult</td><td>Controller</td><td style="font-family:monospace;">192.168.1.10</td><td>0/0</td><td><span class="ptp-dot ptp-fl"></span>Follower</td></tr>
+                            <tr><td>Stage Box A</td><td>TX Node</td><td style="font-family:monospace;">192.168.1.20</td><td>8 TX/0</td><td><span class="ptp-dot ptp-gm"></span>Grand Master</td></tr>
+                            <tr><td>Stage Box B</td><td>TX Node</td><td style="font-family:monospace;">192.168.1.21</td><td>6 TX/0</td><td><span class="ptp-dot ptp-pm"></span>Pref. Master</td></tr>
+                            <tr><td>FOH PA</td><td>RX Node</td><td style="font-family:monospace;">192.168.1.30</td><td>0/2 RX</td><td><span class="ptp-dot ptp-fl"></span>Follower</td></tr>
+                            <tr><td>Sub PA</td><td>RX Node</td><td style="font-family:monospace;">192.168.1.31</td><td>0/2 RX</td><td><span class="ptp-dot ptp-fl"></span>Follower</td></tr>
+                            <tr><td>IEM TX 1</td><td>RX Node</td><td style="font-family:monospace;">192.168.1.40</td><td>0/2 RX</td><td><span class="ptp-dot ptp-fl"></span>Follower</td></tr>
+                            <tr><td>IEM TX 2</td><td>RX Node</td><td style="font-family:monospace;">192.168.1.41</td><td>0/2 RX</td><td><span class="ptp-dot ptp-fl"></span>Follower</td></tr>
+                            <tr><td>HP Amp</td><td>RX Node</td><td style="font-family:monospace;">192.168.1.50</td><td>0/4 RX</td><td><span class="ptp-dot ptp-fl"></span>Follower</td></tr>
+                            <tr><td>DAW (Recorder)</td><td>TX+RX</td><td style="font-family:monospace;">192.168.1.60</td><td>${NS}/${NS}</td><td><span class="ptp-dot ptp-bc"></span>Boundary Clk</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // ============================================================
+        // TABS
+        // ============================================================
+        window.showBottomTab = function(name) {
+            document.querySelectorAll('.da-tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.da-tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tab-${name}`)?.classList.add('active');
+            document.querySelector(`.da-tab-btn[data-tab="${name}"]`)?.classList.add('active');
+            if (name === 'compressor') { refreshComp(); drawCompCurve(); }
+        };
+
+        // ============================================================
+        // TOAST
+        // ============================================================
+        function toast(msg) {
+            document.querySelectorAll('.toast').forEach(t => t.remove());
+            const el = document.createElement('div');
+            el.className = 'toast'; el.textContent = msg;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 2600);
+        }
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        buildHeader();
+        buildSrcPanel();
+        buildMatrix();
+        buildSinkPanel();
+        buildComp();
+        buildRecorder();
+        buildNet();
+        updateSinkLEDs();
+        selSource(0);
+
+    }); // DOMContentLoaded
+    </script>
+</head>
+<body>
+
+<div class="da-header" id="daHeader"></div>
+
+<div class="da-main">
+    <div class="da-panel" id="daSrc"></div>
+    <div class="da-matrix" id="daMatrix"></div>
+    <div class="da-panel right" id="daSink"></div>
+</div>
+
+<div class="da-bottom">
+    <nav class="da-tab-nav">
+        <button class="da-tab-btn active" data-tab="compressor" onclick="showBottomTab('compressor')">🎚️ Kompressor</button>
+        <button class="da-tab-btn"        data-tab="recorder"   onclick="showBottomTab('recorder')">⏺ Aufnahme</button>
+        <button class="da-tab-btn"        data-tab="network"    onclick="showBottomTab('network')">📡 Dante Netzwerk</button>
+    </nav>
+    <div id="tab-compressor" class="da-tab-content active"></div>
+    <div id="tab-recorder"   class="da-tab-content"></div>
+    <div id="tab-network"    class="da-tab-content"></div>
+</div>
+
+</body>
+</html>

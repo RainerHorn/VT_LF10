@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtNet Simulator – VT LF10 Kapitel 4</title>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // URL zur Pult-Datei (bei Bedarf manuell anpassen)
+        window.ARTNET_PULT_URL = 'Artnet_Pult.html';
+
+        // ============================================================
+        // CSS INJECTION (Moodle-kompatibel – kein <style>-Block nötig)
+        // ============================================================
+        const style = document.createElement('style');
+        style.textContent = `
+            html { font-size: 26px; }
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(135deg, #080810 0%, #101828 100%);
+                min-height: 100vh;
+                color: #dce8f8;
+            }
+            .container { max-width: 1500px; margin: 0 auto; padding: 14px; }
+
+            .header {
+                background: linear-gradient(135deg, #13213a, #1e3560);
+                border-radius: 12px;
+                padding: 18px 24px;
+                margin-bottom: 14px;
+                border: 1px solid #2a4070;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            }
+            .header h1 { color: #7dc0ff; font-size: 1.7rem; margin-bottom: 2px; }
+            .header p  { color: #8098b8; font-size: 0.88rem; }
+
+            /* ── Layout ── */
+            .main-layout {
+                display: grid;
+                grid-template-columns: 1fr 400px;
+                gap: 14px;
+                align-items: start;
+            }
+            @media (max-width: 1020px) { .main-layout { grid-template-columns: 1fr; } }
+
+            /* ── Stage ── */
+            .stage-section {
+                background: #07070f;
+                border-radius: 12px;
+                padding: 14px;
+                border: 1px solid #1e2e4a;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+            }
+            .stage-header {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 10px;
+                flex-wrap: wrap;
+            }
+            .stage-header h2 { color: #7dc0ff; font-size: 1rem; flex: 1; }
+            .playback-info-bar {
+                font-size: 0.78rem;
+                color: #4a8060;
+                background: #0a1a10;
+                border: 1px solid #1a3020;
+                padding: 4px 10px;
+                border-radius: 20px;
+                min-width: 120px;
+                text-align: center;
+            }
+            #stageCanvas {
+                width: 100%;
+                display: block;
+                border-radius: 8px;
+                background: #000;
+                cursor: crosshair;
+            }
+            .stage-legend {
+                display: flex;
+                gap: 14px;
+                margin-top: 8px;
+                flex-wrap: wrap;
+            }
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                font-size: 0.76rem;
+                color: #4a6080;
+            }
+            .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+            /* ── Right panel (tabs) ── */
+            .right-col {
+                background: #0b1020;
+                border-radius: 12px;
+                border: 1px solid #1e2e4a;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+                display: flex;
+                flex-direction: column;
+                max-height: 82vh;
+                overflow: hidden;
+            }
+            .tab-nav {
+                display: flex;
+                background: #070b14;
+                border-bottom: 1px solid #1e2e4a;
+                flex-shrink: 0;
+                overflow-x: auto;
+            }
+            .tab-btn {
+                padding: 9px 14px;
+                border: none;
+                background: transparent;
+                color: #5070a0;
+                cursor: pointer;
+                font-size: 0.82rem;
+                border-bottom: 2px solid transparent;
+                white-space: nowrap;
+                transition: all 0.2s;
+            }
+            .tab-btn:hover { color: #90b8e0; }
+            .tab-btn.active { color: #7dc0ff; border-bottom-color: #7dc0ff; }
+            .tab-content { display: none; padding: 12px; overflow-y: auto; flex: 1; }
+            .tab-content.active { display: block; }
+
+            /* ── Fixture cards ── */
+            .fixture-card {
+                background: #10182a;
+                border-radius: 8px;
+                padding: 10px;
+                margin-bottom: 8px;
+                border: 1px solid #1e2e4a;
+                cursor: pointer;
+                transition: border-color 0.15s;
+            }
+            .fixture-card:hover { border-color: #3a6090; }
+            .fixture-card.selected { border-color: #7dc0ff; background: #162038; }
+            .fixture-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 7px;
+            }
+            .fixture-name { color: #b0d0f0; font-weight: 600; font-size: 0.85rem; }
+            .fixture-type-badge {
+                font-size: 0.68rem;
+                background: #162040;
+                color: #6090c0;
+                padding: 2px 6px;
+                border-radius: 10px;
+            }
+            .fixture-addr { font-size: 0.68rem; color: #3a5070; }
+            .fixture-color-row {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                margin-bottom: 5px;
+            }
+            .color-dot {
+                width: 14px;
+                height: 14px;
+                border-radius: 50%;
+                background: #111;
+                border: 1px solid #2a3a5a;
+                flex-shrink: 0;
+                transition: background 0.1s;
+            }
+            .color-text { font-size: 0.68rem; color: #3a5070; }
+
+            /* ── Channel sliders ── */
+            .ch-row {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                margin-bottom: 4px;
+            }
+            .ch-label {
+                font-size: 0.68rem;
+                color: #4a6080;
+                width: 38px;
+                flex-shrink: 0;
+                text-align: right;
+            }
+            .ch-slider {
+                flex: 1;
+                height: 3px;
+                -webkit-appearance: none;
+                appearance: none;
+                background: #162040;
+                border-radius: 2px;
+                outline: none;
+                cursor: pointer;
+            }
+            .ch-slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: #5090d0;
+                cursor: pointer;
+            }
+            .ch-slider.r-slider::-webkit-slider-thumb { background: #d05050; }
+            .ch-slider.g-slider::-webkit-slider-thumb { background: #50c050; }
+            .ch-slider.b-slider::-webkit-slider-thumb { background: #5080f0; }
+            .ch-val {
+                font-size: 0.68rem;
+                color: #6080a0;
+                width: 28px;
+                text-align: right;
+                flex-shrink: 0;
+                font-family: monospace;
+            }
+
+            /* ── Buttons ── */
+            .btn {
+                padding: 6px 13px;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 0.82rem;
+                font-weight: 500;
+                transition: all 0.15s;
+            }
+            .btn-primary  { background: #1d4ed8; color: #fff; }
+            .btn-primary:hover  { background: #2563eb; }
+            .btn-success  { background: #166534; color: #c0f0c0; }
+            .btn-success:hover  { background: #1a7a40; }
+            .btn-danger   { background: #7f1d1d; color: #fca5a5; }
+            .btn-danger:hover   { background: #991b1b; }
+            .btn-warning  { background: #78350f; color: #fde68a; }
+            .btn-warning:hover  { background: #92400e; }
+            .btn-secondary{ background: #1e293b; color: #94a3b8; border: 1px solid #334155; }
+            .btn-secondary:hover{ background: #273548; }
+            .btn-sm { padding: 3px 9px; font-size: 0.74rem; }
+            .btn-xs { padding: 2px 7px; font-size: 0.7rem; }
+
+            /* ── Toolbar ── */
+            .toolbar {
+                display: flex;
+                gap: 6px;
+                flex-wrap: wrap;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+            .text-input {
+                background: #0f1a2e;
+                border: 1px solid #1e2e4a;
+                color: #c0d8f0;
+                padding: 5px 10px;
+                border-radius: 6px;
+                font-size: 0.82rem;
+            }
+            .text-input:focus { outline: none; border-color: #5090d0; }
+
+            /* ── Cue list ── */
+            .cue-list { margin-top: 8px; }
+            .cue-row {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 10px;
+                background: #0f1a2e;
+                border-radius: 6px;
+                margin-bottom: 5px;
+                border: 1px solid #1e2e4a;
+                transition: border-color 0.15s;
+            }
+            .cue-row.playing {
+                border-color: #2a8050;
+                background: #0a1810;
+            }
+            .cue-row.active-cue { border-color: #3060a0; }
+            .cue-num {
+                width: 26px;
+                height: 26px;
+                border-radius: 50%;
+                background: #162040;
+                color: #6090c0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.7rem;
+                font-weight: 700;
+                flex-shrink: 0;
+            }
+            .cue-name-cell { flex: 1; color: #a0c0e8; font-size: 0.82rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+            .fade-label { font-size: 0.7rem; color: #3a5070; white-space: nowrap; }
+            .fade-inp {
+                background: #070b14;
+                border: 1px solid #1e2e4a;
+                color: #7090b0;
+                padding: 2px 5px;
+                border-radius: 4px;
+                font-size: 0.74rem;
+                width: 48px;
+            }
+
+            /* ── Saved sequences ── */
+            .saved-list {
+                display: flex;
+                gap: 6px;
+                flex-wrap: wrap;
+                margin-top: 8px;
+            }
+            .saved-chip {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                background: #0f1a2e;
+                border: 1px solid #1e2e4a;
+                color: #80a0c0;
+                padding: 4px 10px;
+                border-radius: 20px;
+                font-size: 0.78rem;
+                cursor: pointer;
+                transition: all 0.15s;
+            }
+            .saved-chip:hover { border-color: #5090d0; color: #c0e0ff; }
+            .chip-del { color: #7a2020; cursor: pointer; font-weight: bold; padding: 0 2px; }
+            .chip-del:hover { color: #f04040; }
+
+            /* ── Preset grid ── */
+            .preset-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 7px;
+                margin-bottom: 12px;
+            }
+            .preset-btn {
+                padding: 10px 8px;
+                background: linear-gradient(135deg, #0f1a2e, #162038);
+                border: 1px solid #1e2e4a;
+                color: #90aac8;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 0.78rem;
+                text-align: center;
+                transition: all 0.15s;
+            }
+            .preset-btn:hover { border-color: #5090d0; color: #c0e0ff; background: #1a2840; }
+            .preset-icon { font-size: 1.3rem; display: block; margin-bottom: 3px; }
+
+            /* ── ArtNet monitor ── */
+            .artnet-stats {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 8px;
+                margin-bottom: 12px;
+            }
+            .stat-card {
+                background: #0f1a2e;
+                border-radius: 6px;
+                padding: 8px;
+                border: 1px solid #1e2e4a;
+            }
+            .stat-label { font-size: 0.68rem; color: #3a5070; margin-bottom: 2px; }
+            .stat-value { font-size: 1.1rem; color: #7dc0ff; font-weight: 700; font-family: monospace; }
+            .artnet-packet-header {
+                background: #050a14;
+                border: 1px solid #1a2a4a;
+                border-radius: 6px;
+                padding: 8px 10px;
+                font-family: monospace;
+                font-size: 0.72rem;
+                color: #40a040;
+                margin-bottom: 10px;
+                line-height: 1.6;
+            }
+            .univ-tabs { display: flex; gap: 6px; margin-bottom: 8px; }
+            .univ-tab {
+                padding: 4px 12px;
+                background: #0f1a2e;
+                border: 1px solid #1e2e4a;
+                color: #4a6080;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 0.78rem;
+            }
+            .univ-tab.active { background: #162040; color: #7dc0ff; border-color: #5090d0; }
+            .dmx-grid {
+                display: grid;
+                grid-template-columns: repeat(16, 1fr);
+                gap: 2px;
+                font-size: 0.58rem;
+                font-family: monospace;
+            }
+            .dmx-cell {
+                background: #07080f;
+                border-radius: 2px;
+                padding: 2px 0;
+                text-align: center;
+                color: #1a2a4a;
+                border: 1px solid #0f1828;
+                transition: background 0.08s, color 0.08s;
+            }
+            .dmx-cell.used  { background: #0f2040; color: #5080c0; border-color: #1a3060; }
+            .dmx-cell.mid   { background: #162860; color: #80b0e0; border-color: #2a4080; }
+            .dmx-cell.full  { background: #1a40a0; color: #c0e0ff; border-color: #3060c0; }
+            .dmx-ch  { font-size: 0.5rem; color: inherit; opacity: 0.6; display: block; }
+
+            /* ── Toast ── */
+            .toast {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #162040;
+                color: #a0c8f0;
+                border: 1px solid #2a4070;
+                padding: 8px 16px;
+                border-radius: 8px;
+                font-size: 0.82rem;
+                z-index: 9999;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+                animation: fadeInOut 2.5s forwards;
+            }
+            @keyframes fadeInOut {
+                0%   { opacity: 0; transform: translateY(10px); }
+                15%  { opacity: 1; transform: translateY(0); }
+                80%  { opacity: 1; }
+                100% { opacity: 0; }
+            }
+
+            h3 { color: #5080a0; font-size: 0.9rem; margin: 10px 0 6px; font-weight: 600; }
+            hr { border: none; border-top: 1px solid #1a2a4a; margin: 10px 0; }
+            small { color: #3a5070; font-size: 0.72rem; }
+
+            /* Scrollbar */
+            ::-webkit-scrollbar { width: 6px; height: 6px; }
+            ::-webkit-scrollbar-track { background: #07080f; }
+            ::-webkit-scrollbar-thumb { background: #1e3060; border-radius: 3px; }
+            ::-webkit-scrollbar-thumb:hover { background: #2a4080; }
+        `;
+        document.head.appendChild(style);
+
+        // ============================================================
+        // FIXTURE DEFINITIONS
+        // ============================================================
+        const TYPES = {
+            MH: {
+                name: 'Moving Head 7CH',
+                short: 'MH',
+                channels: [
+                    { n: 'Dimmer', s: 'DIM', cls: '' },
+                    { n: 'Rot',    s: 'R',   cls: 'r-slider' },
+                    { n: 'Grün',   s: 'G',   cls: 'g-slider' },
+                    { n: 'Blau',   s: 'B',   cls: 'b-slider' },
+                    { n: 'Pan',    s: 'PAN', cls: '' },
+                    { n: 'Tilt',   s: 'TLT', cls: '' },
+                    { n: 'Strobe', s: 'STB', cls: '' },
+                ]
+            },
+            PAR: {
+                name: 'PAR LED 5CH',
+                short: 'PAR',
+                channels: [
+                    { n: 'Dimmer', s: 'DIM', cls: '' },
+                    { n: 'Rot',    s: 'R',   cls: 'r-slider' },
+                    { n: 'Grün',   s: 'G',   cls: 'g-slider' },
+                    { n: 'Blau',   s: 'B',   cls: 'b-slider' },
+                    { n: 'Strobe', s: 'STB', cls: '' },
+                ]
+            }
+        };
+
+        const FIXTURES = [
+            { id:  0, name: 'MH 1',  type: 'MH',  universe: 0, address:   1 },
+            { id:  1, name: 'MH 2',  type: 'MH',  universe: 0, address:   8 },
+            { id:  2, name: 'MH 3',  type: 'MH',  universe: 0, address:  15 },
+            { id:  3, name: 'MH 4',  type: 'MH',  universe: 0, address:  22 },
+            { id:  4, name: 'MH 5',  type: 'MH',  universe: 0, address:  29 },
+            { id:  5, name: 'MH 6',  type: 'MH',  universe: 0, address:  36 },
+            { id:  6, name: 'PAR 1', type: 'PAR', universe: 0, address: 101 },
+            { id:  7, name: 'PAR 2', type: 'PAR', universe: 0, address: 106 },
+            { id:  8, name: 'PAR 3', type: 'PAR', universe: 0, address: 111 },
+            { id:  9, name: 'PAR 4', type: 'PAR', universe: 0, address: 116 },
+            { id: 10, name: 'PAR 5', type: 'PAR', universe: 0, address: 121 },
+            { id: 11, name: 'PAR 6', type: 'PAR', universe: 0, address: 126 },
+        ];
+
+        // ============================================================
+        // STATE
+        // ============================================================
+        const DMX = {
+            0: new Uint8Array(512),
+            1: new Uint8Array(512),
+        };
+
+        let artPktCount    = 0;
+        let selectedFix    = null;
+        let monitorUniv    = 0;
+
+        // Playback
+        let cues           = [];
+        let seqName        = 'Neue Sequenz';
+        let isPlaying      = false;
+        let isLooping      = false;
+        let curCueIdx      = -1;
+        let rafHandle      = null;
+
+        // Saved sequences (localStorage)
+        let saved = [];
+        try { saved = JSON.parse(localStorage.getItem('artnet_seqs') || '[]'); } catch(e) {}
+
+        // ============================================================
+        // BROADCAST CHANNEL  (Kopplung mit grandMA3-Pult)
+        // ============================================================
+        let bc = null;
+        let pultConnected = false;
+        try { bc = new BroadcastChannel('artnet_vt_link'); } catch(e) {}
+
+        function broadcastDMX() {
+            if (!bc) return;
+            artPktCount++;
+            bc.postMessage({
+                type: 'dmx_state',
+                u0: Array.from(DMX[0]),
+                u1: Array.from(DMX[1]),
+            });
+        }
+
+        function setPultConnected(on) {
+            pultConnected = on;
+            const dot = document.getElementById('pultDot');
+            const lbl = document.getElementById('pultLabel');
+            if (dot) dot.style.background = on ? '#00c840' : '#333';
+            if (lbl) lbl.textContent = on ? 'Pult verbunden' : 'Pult nicht verbunden';
+        }
+
+        if (bc) {
+            bc.onmessage = function(evt) {
+                const m = evt.data;
+                switch (m.type) {
+                    case 'ping':
+                        setPultConnected(true);
+                        bc.postMessage({
+                            type: 'pong',
+                            seqs: saved.map(s => s.name),
+                        });
+                        broadcastDMX();
+                        break;
+                    case 'preset':
+                        const p = PRESETS.find(p => p.n === m.name);
+                        if (p) { p.fn(); }
+                        break;
+                    case 'group_dim':
+                        applyGroupDim(m.group, m.value);
+                        break;
+                    case 'dmx_set':
+                        applyDmxSet(m.fid, m.ch, m.value);
+                        break;
+                    case 'seq_play':
+                        loadAndPlaySeq(m.name);
+                        break;
+                    case 'seq_stop':
+                        stopSeq();
+                        break;
+                    case 'seq_loop':
+                        isLooping = !!m.loop;
+                        const lb = document.getElementById('loopBtn');
+                        if (lb) lb.textContent = `🔁 ${isLooping ? 'ON' : 'OFF'}`;
+                        break;
+                }
+            };
+        }
+
+        function applyGroupDim(group, value) {
+            FIXTURES.forEach(f => {
+                if (group === 'GRAND' || group === 'ALL' ||
+                    (group === 'MH'  && f.type === 'MH') ||
+                    (group === 'PAR' && f.type === 'PAR')) {
+                    sv(f.id, 0, value);
+                }
+            });
+            syncSliders(); drawStage(); refreshDMXMonitor(); broadcastDMX();
+        }
+
+        function applyDmxSet(fid, ch, value) {
+            if (fid < 0 || fid >= FIXTURES.length) return;
+            sv(fid, ch, value);
+            const slEl = document.getElementById(`sl-${fid}-${ch}`);
+            const svEl = document.getElementById(`sv-${fid}-${ch}`);
+            if (slEl) slEl.value = value;
+            if (svEl) svEl.textContent = value;
+            refreshColorDot(fid);
+            drawStage(); refreshDMXMonitor(); broadcastDMX();
+        }
+
+        function loadAndPlaySeq(name) {
+            const s = saved.find(x => x.name === name);
+            if (!s) return;
+            cues    = JSON.parse(JSON.stringify(s.cues));
+            seqName = s.name;
+            const inp = document.getElementById('seqNameInp');
+            if (inp) inp.value = name;
+            renderCueList();
+            startSeq();
+        }
+
+        // ============================================================
+        // DMX HELPERS
+        // ============================================================
+        function gv(fid, ch) {
+            const f = FIXTURES[fid];
+            return DMX[f.universe][f.address - 1 + ch];
+        }
+
+        function sv(fid, ch, val) {
+            const f = FIXTURES[fid];
+            DMX[f.universe][f.address - 1 + ch] = Math.max(0, Math.min(255, Math.round(val)));
+            artPktCount++;
+        }
+
+        function snapDMX() {
+            return { 0: Array.from(DMX[0]), 1: Array.from(DMX[1]) };
+        }
+
+        function restoreDMX(snap) {
+            [0, 1].forEach(u => {
+                if (snap[u]) snap[u].forEach((v, i) => { DMX[u][i] = v; });
+            });
+        }
+
+        function fixColor(fid) {
+            const d = gv(fid, 0) / 255;
+            const r = Math.round(gv(fid, 1) * d);
+            const g = Math.round(gv(fid, 2) * d);
+            const b = Math.round(gv(fid, 3) * d);
+            return { r, g, b, d, css: `rgb(${r},${g},${b})` };
+        }
+
+        // ============================================================
+        // CANVAS STAGE
+        // ============================================================
+        const canvas = document.getElementById('stageCanvas');
+        const ctx    = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            const W = Math.min(canvas.parentElement.clientWidth - 28, 1400);
+            canvas.width  = W;
+            canvas.height = Math.round(W * 0.44);
+            drawStage();
+        }
+
+        function drawStage() {
+            const W = canvas.width;
+            const H = canvas.height;
+            ctx.clearRect(0, 0, W, H);
+
+            // Background
+            const bg = ctx.createLinearGradient(0, 0, 0, H);
+            bg.addColorStop(0, '#04040a');
+            bg.addColorStop(1, '#080810');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, W, H);
+
+            // Stage floor
+            ctx.fillStyle = '#0c0c18';
+            ctx.fillRect(0, H * 0.84, W, H * 0.16);
+            ctx.strokeStyle = '#18182a';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, H * 0.84);
+            ctx.lineTo(W, H * 0.84);
+            ctx.stroke();
+
+            // Truss
+            const ty = H * 0.10;
+            const th = H * 0.045;
+            const trussGrd = ctx.createLinearGradient(0, ty, 0, ty + th);
+            trussGrd.addColorStop(0, '#303844');
+            trussGrd.addColorStop(1, '#1a2030');
+            ctx.fillStyle = trussGrd;
+            ctx.fillRect(W * 0.04, ty, W * 0.92, th);
+
+            // Truss diagonal struts
+            ctx.strokeStyle = '#222a38';
+            ctx.lineWidth = 1;
+            for (let x = W * 0.04; x < W * 0.96; x += 24) {
+                ctx.beginPath(); ctx.moveTo(x, ty); ctx.lineTo(x + 12, ty + th); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(x + 12, ty); ctx.lineTo(x, ty + th); ctx.stroke();
+            }
+
+            // Truss bolts
+            ctx.fillStyle = '#252d3a';
+            for (let x = W * 0.06; x < W * 0.96; x += 48) {
+                ctx.beginPath(); ctx.arc(x, ty + th / 2, 3, 0, Math.PI * 2); ctx.fill();
+            }
+
+            // ── Draw beams (behind fixtures) ──
+            for (let i = 0; i < 6; i++) {
+                const x = W * 0.10 + (i / 5) * W * 0.80;
+                const y = ty + th + 10;
+                drawMHBeam(i, x, y, W, H);
+            }
+            for (let i = 0; i < 6; i++) {
+                const fid = 6 + i;
+                const x = W * 0.07 + (i / 5) * W * 0.86;
+                const y = H * 0.84 - 10;
+                drawPARBeam(fid, x, y, W, H);
+            }
+
+            // ── Draw fixture bodies ──
+            for (let i = 0; i < 6; i++) {
+                const x = W * 0.10 + (i / 5) * W * 0.80;
+                const y = ty + th + 10;
+                drawMHBody(i, x, y);
+            }
+            for (let i = 0; i < 6; i++) {
+                const fid = 6 + i;
+                const x = W * 0.07 + (i / 5) * W * 0.86;
+                const y = H * 0.84 - 10;
+                drawPARBody(fid, x, y);
+            }
+
+            // ── Labels ──
+            ctx.font = `${Math.max(8, Math.round(W * 0.009))}px Segoe UI`;
+            ctx.textAlign = 'center';
+            for (let i = 0; i < 6; i++) {
+                const x = W * 0.10 + (i / 5) * W * 0.80;
+                ctx.fillStyle = selectedFix === i ? '#5090d0' : '#2a3a4a';
+                ctx.fillText(`MH ${i + 1}`, x, ty - 3);
+            }
+            for (let i = 0; i < 6; i++) {
+                const fid = 6 + i;
+                const x = W * 0.07 + (i / 5) * W * 0.86;
+                ctx.fillStyle = selectedFix === fid ? '#5090d0' : '#2a3a4a';
+                ctx.fillText(`PAR ${i + 1}`, x, H * 0.84 + 13);
+            }
+
+            // ArtNet info overlay
+            ctx.textAlign = 'left';
+            ctx.font = '10px monospace';
+            ctx.fillStyle = '#1a3a1a';
+            ctx.fillText(`ArtNet4 | UDP 6454 | Uni 0–1 | Pakete: ${artPktCount}`, 8, H - 6);
+        }
+
+        function drawMHBeam(fid, hx, hy, W, H) {
+            const dim  = gv(fid, 0) / 255;
+            if (dim < 0.01) return;
+            const r    = gv(fid, 1);
+            const g    = gv(fid, 2);
+            const b    = gv(fid, 3);
+            const pan  = gv(fid, 4);
+            const tilt = gv(fid, 5);
+            const strb = gv(fid, 6);
+
+            // Strobe flash
+            if (strb > 8 && (Math.floor(Date.now() / Math.max(30, 400 - strb * 1.5)) % 2 === 0)) return;
+
+            // Pan:  0=far left, 127=center, 255=far right  (±65°)
+            const panA  = ((pan - 127) / 127) * 65 * (Math.PI / 180);
+            // Tilt: 0=nearly pointing up, 127=straight down, 255=near horizontal
+            const tiltA = (tilt / 255) * 80 * (Math.PI / 180);
+
+            const stageFloor = H * 0.84;
+            const rawLen     = (stageFloor - hy) / Math.max(0.15, Math.cos(tiltA));
+            const beamLen    = Math.min(rawLen, H * 0.95);
+
+            const ex = hx + Math.sin(panA) * beamLen;
+            const ey = hy + Math.cos(panA) * beamLen * Math.cos(tiltA) +
+                           Math.sin(tiltA) * beamLen * 0.15;
+
+            // Perpendicular for beam width
+            const dx = ex - hx, dy = ey - hy;
+            const dl = Math.sqrt(dx * dx + dy * dy) || 1;
+            const px = -dy / dl, py = dx / dl;
+
+            const baseW = 2.5;
+            const tipW  = 10 + tilt / 255 * 18 + (1 - dim) * 5;
+
+            const alpha = dim * 0.55;
+            const grd   = ctx.createLinearGradient(hx, hy, ex, ey);
+            grd.addColorStop(0,   `rgba(${r},${g},${b},${alpha * 0.9})`);
+            grd.addColorStop(0.5, `rgba(${r},${g},${b},${alpha * 0.4})`);
+            grd.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+
+            ctx.beginPath();
+            ctx.moveTo(hx - px * baseW, hy - py * baseW);
+            ctx.lineTo(hx + px * baseW, hy + py * baseW);
+            ctx.lineTo(ex + px * tipW,  ey + py * tipW);
+            ctx.lineTo(ex - px * tipW,  ey - py * tipW);
+            ctx.closePath();
+            ctx.fillStyle = grd;
+            ctx.fill();
+
+            // Floor pool
+            if (ey >= stageFloor - 8 && ey <= stageFloor + 8) {
+                const pg = ctx.createRadialGradient(ex, ey, 0, ex, ey, tipW * 2.2);
+                pg.addColorStop(0, `rgba(${r},${g},${b},${alpha * 0.65})`);
+                pg.addColorStop(1, `rgba(${r},${g},${b},0)`);
+                ctx.beginPath();
+                ctx.ellipse(ex, ey, tipW * 2.2, tipW * 0.6, panA, 0, Math.PI * 2);
+                ctx.fillStyle = pg;
+                ctx.fill();
+            }
+        }
+
+        function drawPARBeam(fid, px, py, W, H) {
+            const dim  = gv(fid, 0) / 255;
+            if (dim < 0.01) return;
+            const r    = gv(fid, 1);
+            const g    = gv(fid, 2);
+            const b    = gv(fid, 3);
+            const strb = gv(fid, 4);
+
+            if (strb > 8 && (Math.floor(Date.now() / Math.max(30, 400 - strb * 1.5)) % 2 === 0)) return;
+
+            // PAR aims at upper center
+            const tx = px + (W / 2 - px) * 0.35;
+            const ty = H * 0.28;
+            const dl = Math.sqrt((tx - px) ** 2 + (ty - py) ** 2) || 1;
+            const dx = (tx - px) / dl, dy = (ty - py) / dl;
+            const nx = -dy, ny = dx;
+
+            const alpha = dim * 0.45;
+            const grd   = ctx.createLinearGradient(px, py, tx, ty);
+            grd.addColorStop(0,   `rgba(${r},${g},${b},${alpha * 0.9})`);
+            grd.addColorStop(0.6, `rgba(${r},${g},${b},${alpha * 0.3})`);
+            grd.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+
+            ctx.beginPath();
+            ctx.moveTo(px - nx * 7, py - ny * 7);
+            ctx.lineTo(px + nx * 7, py + ny * 7);
+            ctx.lineTo(tx + nx * 28, ty + ny * 28);
+            ctx.lineTo(tx - nx * 28, ty - ny * 28);
+            ctx.closePath();
+            ctx.fillStyle = grd;
+            ctx.fill();
+        }
+
+        function drawMHBody(fid, x, y) {
+            const dim = gv(fid, 0) / 255;
+            const r   = gv(fid, 1), g = gv(fid, 2), b = gv(fid, 3);
+            const pan = gv(fid, 4);
+            const sel = selectedFix === fid;
+            const R   = 11;
+
+            // Body shell
+            ctx.beginPath();
+            ctx.arc(x, y, R, 0, Math.PI * 2);
+            ctx.fillStyle   = sel ? '#1c3050' : '#101828';
+            ctx.fill();
+            ctx.strokeStyle = sel ? '#6ab0f0' : '#2a3a50';
+            ctx.lineWidth   = sel ? 2 : 1;
+            ctx.stroke();
+
+            // Pan direction line
+            const panA = ((pan - 127) / 127) * 65 * (Math.PI / 180);
+            ctx.strokeStyle = dim > 0.01 ? `rgba(${r},${g},${b},0.9)` : '#243040';
+            ctx.lineWidth   = 2;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + Math.sin(panA) * R * 1.4, y + Math.cos(panA) * R * 1.4);
+            ctx.stroke();
+
+            // Lens
+            const lc = dim > 0.01 ? `rgb(${Math.round(r * dim)},${Math.round(g * dim)},${Math.round(b * dim)})` : '#1a2230';
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, Math.PI * 2);
+            ctx.fillStyle = lc;
+            ctx.fill();
+
+            if (dim > 0.05) {
+                const glw = ctx.createRadialGradient(x, y, 0, x, y, R);
+                glw.addColorStop(0, `rgba(${r},${g},${b},${dim * 0.25})`);
+                glw.addColorStop(1, `rgba(${r},${g},${b},0)`);
+                ctx.beginPath(); ctx.arc(x, y, R, 0, Math.PI * 2);
+                ctx.fillStyle = glw; ctx.fill();
+            }
+        }
+
+        function drawPARBody(fid, x, y) {
+            const dim = gv(fid, 0) / 255;
+            const r   = gv(fid, 1), g = gv(fid, 2), b = gv(fid, 3);
+            const sel = selectedFix === fid;
+            const hw = 11, hh = 8;
+
+            // Rectangle body
+            ctx.fillStyle   = sel ? '#1a1a30' : '#0d0d1a';
+            ctx.strokeStyle = sel ? '#6ab0f0' : '#2a2a3a';
+            ctx.lineWidth   = sel ? 2 : 1;
+            roundRect(x - hw, y - hh, hw * 2, hh * 2, 3);
+            ctx.fill(); ctx.stroke();
+
+            // Lens
+            const lc = dim > 0.01 ? `rgb(${Math.round(r * dim)},${Math.round(g * dim)},${Math.round(b * dim)})` : '#111122';
+            ctx.beginPath(); ctx.arc(x, y, hh * 0.6, 0, Math.PI * 2);
+            ctx.fillStyle = lc; ctx.fill();
+
+            if (dim > 0.05) {
+                const glw = ctx.createRadialGradient(x, y, 0, x, y, hh * 0.6);
+                glw.addColorStop(0, `rgba(${r},${g},${b},${dim * 0.4})`);
+                glw.addColorStop(1, `rgba(${r},${g},${b},0)`);
+                ctx.beginPath(); ctx.arc(x, y, hh * 0.6, 0, Math.PI * 2);
+                ctx.fillStyle = glw; ctx.fill();
+            }
+        }
+
+        function roundRect(x, y, w, h, r) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.lineTo(x + w - r, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+            ctx.lineTo(x + w, y + h - r);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+            ctx.lineTo(x + r, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+            ctx.lineTo(x, y + r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+            ctx.closePath();
+        }
+
+        // ============================================================
+        // FIXTURE CONTROLS
+        // ============================================================
+        function buildControls() {
+            const wrap = document.getElementById('fixtureControls');
+            wrap.innerHTML = '';
+            FIXTURES.forEach(f => {
+                const type = TYPES[f.type];
+                const card = document.createElement('div');
+                card.className = 'fixture-card';
+                card.dataset.fid = f.id;
+
+                card.innerHTML = `
+                    <div class="fixture-header">
+                        <div>
+                            <span class="fixture-name">${f.name}</span>
+                            <span class="fixture-type-badge">${type.short}</span>
+                        </div>
+                        <span class="fixture-addr">U${f.universe} A${f.address}</span>
+                    </div>
+                    <div class="fixture-color-row">
+                        <div class="color-dot" id="cdot-${f.id}"></div>
+                        <span class="color-text">Live Farbe (nach Dimmer)</span>
+                    </div>
+                `;
+
+                type.channels.forEach((ch, ci) => {
+                    const row = document.createElement('div');
+                    row.className = 'ch-row';
+                    row.innerHTML = `
+                        <span class="ch-label" title="${ch.n}">${ch.s}</span>
+                        <input type="range" class="ch-slider ${ch.cls}" id="sl-${f.id}-${ci}"
+                               min="0" max="255" value="0">
+                        <span class="ch-val" id="sv-${f.id}-${ci}">0</span>
+                    `;
+                    card.appendChild(row);
+                    const slider = row.querySelector('input');
+                    slider.addEventListener('input', () => {
+                        const v = parseInt(slider.value);
+                        sv(f.id, ci, v);
+                        document.getElementById(`sv-${f.id}-${ci}`).textContent = v;
+                        refreshColorDot(f.id);
+                        drawStage();
+                        refreshDMXMonitor();
+                        broadcastDMX();
+                    });
+                });
+
+                card.addEventListener('click', e => {
+                    if (e.target.tagName === 'INPUT') return;
+                    selectFixture(f.id);
+                });
+                wrap.appendChild(card);
+            });
+        }
+
+        function selectFixture(fid) {
+            selectedFix = fid;
+            document.querySelectorAll('.fixture-card').forEach(c => c.classList.remove('selected'));
+            const card = document.querySelector(`.fixture-card[data-fid="${fid}"]`);
+            if (card) {
+                card.classList.add('selected');
+                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+            drawStage();
+        }
+
+        function syncSliders() {
+            FIXTURES.forEach(f => {
+                const type = TYPES[f.type];
+                type.channels.forEach((ch, ci) => {
+                    const sl = document.getElementById(`sl-${f.id}-${ci}`);
+                    const sv = document.getElementById(`sv-${f.id}-${ci}`);
+                    if (sl) { sl.value = gv(f.id, ci); }
+                    if (sv) { sv.textContent = gv(f.id, ci); }
+                });
+                refreshColorDot(f.id);
+            });
+        }
+
+        function refreshColorDot(fid) {
+            const el = document.getElementById(`cdot-${fid}`);
+            if (el) el.style.background = fixColor(fid).css;
+        }
+
+        // Canvas click → select fixture
+        canvas.addEventListener('click', e => {
+            const rect  = canvas.getBoundingClientRect();
+            const sx    = canvas.width / rect.width;
+            const sy    = canvas.height / rect.height;
+            const cx    = (e.clientX - rect.left) * sx;
+            const cy    = (e.clientY - rect.top)  * sy;
+            const W = canvas.width, H = canvas.height;
+            const ty = H * 0.10 + H * 0.045 + 10;
+            const fy = H * 0.84 - 10;
+
+            for (let i = 0; i < 6; i++) {
+                const x = W * 0.10 + (i / 5) * W * 0.80;
+                if (Math.hypot(cx - x, cy - ty) < 18) { selectFixture(i); return; }
+            }
+            for (let i = 0; i < 6; i++) {
+                const x = W * 0.07 + (i / 5) * W * 0.86;
+                if (Math.hypot(cx - x, cy - fy) < 16) { selectFixture(6 + i); return; }
+            }
+        });
+
+        // ============================================================
+        // SEQUENCE EDITOR
+        // ============================================================
+        function buildSeqEditor() {
+            const wrap = document.getElementById('seqEditor');
+            wrap.innerHTML = `
+                <div class="toolbar">
+                    <input type="text" class="text-input" id="seqNameInp" value="${seqName}" placeholder="Sequenz-Name" style="width:160px;">
+                    <button class="btn btn-primary" onclick="addCue()">+ Cue</button>
+                    <button class="btn btn-success" id="playBtn" onclick="togglePlay()">▶ Play</button>
+                    <button class="btn btn-secondary" onclick="stopSeq()">⏹</button>
+                    <button class="btn btn-warning" id="loopBtn" onclick="toggleLoop()">🔁 OFF</button>
+                </div>
+                <div class="toolbar">
+                    <button class="btn btn-success" onclick="saveSeq()">💾 Speichern</button>
+                    <button class="btn btn-secondary" onclick="exportSeq()">⬇ JSON</button>
+                    <button class="btn btn-danger btn-sm" onclick="clearCues()">🗑 Alle Cues</button>
+                </div>
+                <div id="cueList" class="cue-list"></div>
+                <hr>
+                <h3>Gespeicherte Sequenzen</h3>
+                <div id="savedList" class="saved-list"></div>
+            `;
+            document.getElementById('seqNameInp').addEventListener('input', function() { seqName = this.value; });
+            renderCueList();
+            renderSavedList();
+        }
+
+        function renderCueList() {
+            const wrap = document.getElementById('cueList');
+            if (!wrap) return;
+            if (cues.length === 0) {
+                wrap.innerHTML = '<small style="display:block;padding:8px 0;">Keine Cues. Bühnenszene einstellen, dann "+ Cue" klicken.</small>';
+                return;
+            }
+            wrap.innerHTML = '';
+            cues.forEach((cue, idx) => {
+                const row = document.createElement('div');
+                row.className = 'cue-row' + (idx === curCueIdx ? ' playing' : '');
+                row.id = `cr-${idx}`;
+                row.innerHTML = `
+                    <div class="cue-num">${idx + 1}</div>
+                    <span class="cue-name-cell" title="${cue.name}">${cue.name}</span>
+                    <span class="fade-label">Fade</span>
+                    <input class="fade-inp" type="number" value="${cue.fade}" min="0" max="60" step="0.5"
+                           onchange="setCueFade(${idx},this.value)">
+                    <span class="fade-label">s</span>
+                    <button class="btn btn-xs btn-success" onclick="goCue(${idx})" title="Cue aktivieren">▶</button>
+                    <button class="btn btn-xs btn-secondary" onclick="capCue(${idx})" title="DMX-Stand übernehmen">⟳</button>
+                    <button class="btn btn-xs btn-danger" onclick="delCue(${idx})" title="Löschen">✕</button>
+                `;
+                wrap.appendChild(row);
+            });
+        }
+
+        window.addCue = function() {
+            cues.push({ name: `Cue ${cues.length + 1}`, fade: 2.0, snap: snapDMX() });
+            renderCueList();
+            toast(`Cue ${cues.length} gespeichert (aktueller Bühnenstand)`);
+        };
+        window.delCue = function(i) {
+            cues.splice(i, 1);
+            if (curCueIdx >= cues.length) curCueIdx = cues.length - 1;
+            renderCueList();
+        };
+        window.capCue = function(i) {
+            cues[i].snap = snapDMX();
+            toast(`Cue ${i + 1} aktualisiert`);
+        };
+        window.setCueFade = function(i, v) { cues[i].fade = parseFloat(v) || 0; };
+        window.goCue = function(i) {
+            stopSeq();
+            restoreDMX(cues[i].snap);
+            syncSliders(); drawStage(); refreshDMXMonitor(); broadcastDMX();
+            toast(`Cue ${i + 1}: "${cues[i].name}" aktiviert`);
+        };
+        window.clearCues = function() {
+            if (confirm('Alle Cues löschen?')) { cues = []; curCueIdx = -1; stopSeq(); renderCueList(); }
+        };
+
+        // ── Playback ──
+        window.togglePlay = function() { isPlaying ? stopSeq() : startSeq(); };
+        window.stopSeq    = stopSeq;
+        window.toggleLoop = function() {
+            isLooping = !isLooping;
+            const btn = document.getElementById('loopBtn');
+            if (btn) btn.textContent = `🔁 ${isLooping ? 'ON' : 'OFF'}`;
+        };
+
+        function startSeq() {
+            if (cues.length === 0) { toast('Keine Cues vorhanden'); return; }
+            isPlaying = true;
+            curCueIdx = 0;
+            const btn = document.getElementById('playBtn');
+            if (btn) btn.textContent = '⏸ Pause';
+            runCue();
+        }
+
+        function stopSeq() {
+            isPlaying = false;
+            if (rafHandle) { cancelAnimationFrame(rafHandle); rafHandle = null; }
+            curCueIdx = -1;
+            const btn = document.getElementById('playBtn');
+            if (btn) btn.textContent = '▶ Play';
+            renderCueList();
+            setPlayInfo('Gestoppt');
+            if (bc) bc.postMessage({ type: 'seq_stopped' });
+        }
+
+        function runCue() {
+            if (!isPlaying || cues.length === 0) return;
+            if (curCueIdx >= cues.length) {
+                if (isLooping) { curCueIdx = 0; } else { stopSeq(); return; }
+            }
+
+            const cue     = cues[curCueIdx];
+            const fromSnap = snapDMX();
+            const toSnap   = cue.snap;
+            const fadeMs   = (cue.fade || 0) * 1000;
+
+            renderCueList();
+            setPlayInfo(`▶ Cue ${curCueIdx + 1}: "${cue.name}" – Fade ${cue.fade}s`);
+            broadcastCueActive(curCueIdx);
+
+            if (fadeMs <= 0) {
+                restoreDMX(toSnap); syncSliders(); drawStage(); refreshDMXMonitor();
+                curCueIdx++;
+                setTimeout(runCue, 400);
+            } else {
+                const t0 = performance.now();
+                (function tick(now) {
+                    if (!isPlaying) return;
+                    const frac = Math.min(1, (now - t0) / fadeMs);
+                    [0, 1].forEach(u => {
+                        for (let i = 0; i < 512; i++) {
+                            DMX[u][i] = Math.round(fromSnap[u][i] + (toSnap[u][i] - fromSnap[u][i]) * frac);
+                        }
+                    });
+                    artPktCount++;
+                    syncSliders(); drawStage(); refreshDMXMonitor();
+                    broadcastDMX();
+                    if (frac < 1) { rafHandle = requestAnimationFrame(tick); }
+                    else { curCueIdx++; rafHandle = null; setTimeout(runCue, 400); }
+                })(t0);
+            }
+        }
+
+        function setPlayInfo(txt) {
+            const el = document.getElementById('playInfo');
+            if (el) el.textContent = txt;
+        }
+
+        function broadcastCueActive(idx) {
+            if (!bc || idx < 0 || idx >= cues.length) return;
+            bc.postMessage({
+                type:    'cue_active',
+                seqName: seqName,
+                cueIdx:  idx,
+                cueName: cues[idx].name,
+                fade:    cues[idx].fade,
+            });
+        }
+
+        // ── Save / Load ──
+        window.saveSeq = function() {
+            if (cues.length === 0) { toast('Keine Cues zum Speichern'); return; }
+            const name = document.getElementById('seqNameInp')?.value || seqName;
+            const idx  = saved.findIndex(s => s.name === name);
+            const obj  = { name, cues: JSON.parse(JSON.stringify(cues)) };
+            if (idx >= 0) saved[idx] = obj; else saved.push(obj);
+            try { localStorage.setItem('artnet_seqs', JSON.stringify(saved)); } catch(e) {}
+            toast(`"${name}" gespeichert (${cues.length} Cues)`);
+            renderSavedList();
+            // Notify console of updated sequence list
+            if (bc) bc.postMessage({ type: 'seq_list', sequences: saved.map(s => s.name) });
+        };
+
+        window.exportSeq = function() {
+            const data = JSON.stringify({ name: seqName, cues }, null, 2);
+            const a    = document.createElement('a');
+            a.href     = URL.createObjectURL(new Blob([data], { type: 'application/json' }));
+            a.download = `${seqName.replace(/\s+/g, '_')}.json`;
+            a.click();
+        };
+
+        window.loadNamedSeq = function(name) {
+            const s = saved.find(x => x.name === name);
+            if (!s) return;
+            cues    = JSON.parse(JSON.stringify(s.cues));
+            seqName = s.name;
+            const inp = document.getElementById('seqNameInp');
+            if (inp) inp.value = name;
+            renderCueList();
+            toast(`"${name}" geladen – ${cues.length} Cues`);
+        };
+
+        window.delNamedSeq = function(name) {
+            saved = saved.filter(s => s.name !== name);
+            try { localStorage.setItem('artnet_seqs', JSON.stringify(saved)); } catch(e) {}
+            renderSavedList();
+            toast(`"${name}" gelöscht`);
+        };
+
+        function renderSavedList() {
+            const wrap = document.getElementById('savedList');
+            if (!wrap) return;
+            if (saved.length === 0) { wrap.innerHTML = '<small>Keine gespeicherten Sequenzen</small>'; return; }
+            wrap.innerHTML = saved.map(s => `
+                <div class="saved-chip" onclick="loadNamedSeq('${s.name.replace(/'/g,"\\'")}')">
+                    <span>📋</span>
+                    <span>${s.name}</span>
+                    <small>(${s.cues.length})</small>
+                    <span class="chip-del" onclick="event.stopPropagation();delNamedSeq('${s.name.replace(/'/g,"\\'")}')">×</span>
+                </div>
+            `).join('');
+        }
+
+        // ============================================================
+        // PRESETS
+        // ============================================================
+        const PRESETS = [
+            { n: 'Blackout',         ico: '⬛', fn: pBlackout       },
+            { n: 'Whiteout',         ico: '⬜', fn: pWhiteout       },
+            { n: 'Roter Wash',       ico: '🔴', fn: pRedWash        },
+            { n: 'Blauer Wash',      ico: '🔵', fn: pBlueWash       },
+            { n: 'Grüner Wash',      ico: '🟢', fn: pGreenWash      },
+            { n: 'Amber Warm',       ico: '🟠', fn: pAmber          },
+            { n: 'Club Violett',     ico: '🟣', fn: pPurple         },
+            { n: 'Rainbow Split',    ico: '🌈', fn: pRainbow        },
+            { n: 'Spotlight Mitte',  ico: '🎯', fn: pSpotlight      },
+            { n: 'Theater',          ico: '🎭', fn: pTheater        },
+            { n: 'Strobo (alle)',    ico: '⚡', fn: pStrobe         },
+            { n: 'Cyan Wash',        ico: '🔷', fn: pCyan           },
+        ];
+
+        function buildPresets() {
+            const wrap = document.getElementById('presetsPanel');
+            if (!wrap) return;
+            wrap.innerHTML = `
+                <div class="preset-grid">
+                    ${PRESETS.map((p, i) => `
+                        <button class="preset-btn" onclick="runPreset(${i})">
+                            <span class="preset-icon">${p.ico}</span>${p.n}
+                        </button>
+                    `).join('')}
+                </div>
+                <hr>
+                <button class="btn btn-primary" onclick="loadDemo()" style="width:100%;margin-bottom:8px;">
+                    🎬 Demo-Sequenz laden (10 Cues)
+                </button>
+                <small>Demo-Sequenz lädt 10 vorgefertigte Cues in den Sequenz-Editor.</small>
+            `;
+        }
+
+        window.runPreset = function(i) { PRESETS[i].fn(); };
+
+        // ── Preset helpers ──
+        function allDim(d) { FIXTURES.forEach(f => sv(f.id, 0, d)); }
+        function allRGB(r, g, b) { FIXTURES.forEach(f => { sv(f.id,1,r); sv(f.id,2,g); sv(f.id,3,b); }); }
+        function allPT(pan, tilt) { FIXTURES.filter(f=>f.type==='MH').forEach(f => { sv(f.id,4,pan); sv(f.id,5,tilt); }); }
+        function clearStrobe() { FIXTURES.forEach(f => { const si = f.type==='MH'?6:4; sv(f.id,si,0); }); }
+        function afterPre() { clearStrobe(); syncSliders(); drawStage(); refreshDMXMonitor(); broadcastDMX(); }
+
+        function pBlackout() {
+            FIXTURES.forEach(f => { const n=TYPES[f.type].channels.length; for(let i=0;i<n;i++) sv(f.id,i,0); });
+            afterPre();
+        }
+        function pWhiteout()  { pBlackout(); allDim(255); allRGB(255,255,255); afterPre(); }
+        function pRedWash()   { pBlackout(); allDim(210); allRGB(255,0,0);   allPT(127,185); afterPre(); }
+        function pBlueWash()  { pBlackout(); allDim(200); allRGB(0,50,255);  allPT(127,185); afterPre(); }
+        function pGreenWash() { pBlackout(); allDim(180); allRGB(0,220,30);  allPT(127,175); afterPre(); }
+        function pAmber()     { pBlackout(); allDim(200); allRGB(255,130,10);allPT(127,165); afterPre(); }
+        function pPurple()    { pBlackout(); allDim(200); allRGB(140,0,240); allPT(127,170); afterPre(); }
+        function pCyan()      { pBlackout(); allDim(180); allRGB(0,200,220); allPT(127,180); afterPre(); }
+
+        function pRainbow() {
+            pBlackout();
+            const cols = [[255,0,0],[255,80,0],[255,200,0],[0,220,0],[0,100,255],[150,0,255],
+                          [255,0,120],[0,255,180],[200,255,0],[0,220,200],[220,50,255],[255,60,0]];
+            FIXTURES.forEach((f, i) => {
+                const c = cols[i % cols.length];
+                sv(f.id, 0, 220); sv(f.id, 1, c[0]); sv(f.id, 2, c[1]); sv(f.id, 3, c[2]);
+                if (f.type === 'MH') {
+                    sv(f.id, 4, 20 + i * 38);
+                    sv(f.id, 5, 110 + Math.round(Math.sin(i * 1.1) * 55));
+                }
+            });
+            afterPre();
+        }
+
+        function pSpotlight() {
+            pBlackout();
+            [2, 3].forEach(id => {
+                sv(id, 0, 255); sv(id, 1, 255); sv(id, 2, 240); sv(id, 3, 190);
+                sv(id, 4, 127); sv(id, 5, 210);
+            });
+            afterPre();
+        }
+
+        function pTheater() {
+            pBlackout();
+            FIXTURES.filter(f => f.type === 'MH').forEach((f, i) => {
+                sv(f.id, 0, 220); sv(f.id, 1, 255); sv(f.id, 2, 225); sv(f.id, 3, 170);
+                sv(f.id, 4, 50 + i * 36); sv(f.id, 5, 190);
+            });
+            FIXTURES.filter(f => f.type === 'PAR').forEach(f => {
+                sv(f.id, 0, 100); sv(f.id, 1, 255); sv(f.id, 2, 200); sv(f.id, 3, 90);
+            });
+            afterPre();
+        }
+
+        function pStrobe() {
+            allDim(255); allRGB(255, 255, 255);
+            FIXTURES.forEach(f => {
+                const si = f.type === 'MH' ? 6 : 4;
+                sv(f.id, si, 180);
+            });
+            syncSliders(); drawStage(); refreshDMXMonitor();
+        }
+
+        // ── Demo sequence ──
+        window.loadDemo = function() {
+            const scenes = [
+                { name: 'Blackout',         fade: 0.5,  fn: pBlackout    },
+                { name: 'Intro – Rot',       fade: 3.0,  fn: pRedWash     },
+                { name: 'Rainbow',           fade: 2.5,  fn: pRainbow     },
+                { name: 'Blauer Wash',       fade: 2.0,  fn: pBlueWash    },
+                { name: 'Amber Warm',        fade: 1.5,  fn: pAmber       },
+                { name: 'Spotlight',         fade: 1.0,  fn: pSpotlight   },
+                { name: 'Club Violett',      fade: 1.0,  fn: pPurple      },
+                { name: 'Theater White',     fade: 2.5,  fn: pTheater     },
+                { name: 'Cyan Wash',         fade: 2.0,  fn: pCyan        },
+                { name: 'Blackout (Ende)',   fade: 4.0,  fn: pBlackout    },
+            ];
+            cues = [];
+            scenes.forEach(s => { s.fn(); cues.push({ name: s.name, fade: s.fade, snap: snapDMX() }); });
+            pBlackout();
+            const inp = document.getElementById('seqNameInp');
+            if (inp) { inp.value = 'Demo Show'; seqName = 'Demo Show'; }
+            renderCueList();
+            showTab('sequence');
+            toast('Demo-Sequenz geladen – 10 Cues bereit');
+        };
+
+        // ============================================================
+        // ARTNET MONITOR
+        // ============================================================
+        function buildMonitor() {
+            const wrap = document.getElementById('monitorPanel');
+            wrap.innerHTML = `
+                <div class="artnet-stats">
+                    <div class="stat-card"><div class="stat-label">Protokoll</div><div class="stat-value">ArtNet 4</div></div>
+                    <div class="stat-card"><div class="stat-label">UDP Port</div><div class="stat-value">6454</div></div>
+                    <div class="stat-card"><div class="stat-label">IP-Range</div><div class="stat-value" style="font-size:0.9rem;">2.x.x.x</div></div>
+                    <div class="stat-card"><div class="stat-label">Pakete</div><div class="stat-value" id="pktCnt">0</div></div>
+                    <div class="stat-card"><div class="stat-label">Universes</div><div class="stat-value">0–1</div></div>
+                    <div class="stat-card"><div class="stat-label">Fixtures</div><div class="stat-value">12</div></div>
+                </div>
+                <div class="artnet-packet-header" id="artPktHdr">
+                    Art-Net Paket (OpDMX 0x5000):<br>
+                    ID: "Art-Net\\0"   OpCode: 0x5000 (ArtDMX)<br>
+                    ProtVer: 14   Sequence: --   Physical: 0<br>
+                    Universe: 0   Length: 512   → DMX-Daten folgen
+                </div>
+                <div class="univ-tabs">
+                    <button class="univ-tab active" id="ut0" onclick="selUniv(0)">Universe 0</button>
+                    <button class="univ-tab"        id="ut1" onclick="selUniv(1)">Universe 1</button>
+                </div>
+                <small>Kanal 1–256 (erste Hälfte) | Grau=0 · Blau=aktiv · Hellblau=255</small>
+                <div id="dmxGrid" class="dmx-grid" style="margin-top:6px;"></div>
+            `;
+            renderDMXGrid();
+        }
+
+        window.selUniv = function(u) {
+            monitorUniv = u;
+            document.querySelectorAll('.univ-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(`ut${u}`)?.classList.add('active');
+            renderDMXGrid();
+        };
+
+        function renderDMXGrid() {
+            const grid = document.getElementById('dmxGrid');
+            if (!grid) return;
+            const data = DMX[monitorUniv];
+            let html = '';
+            for (let i = 0; i < 256; i++) {
+                const v   = data[i];
+                const cls = v >= 200 ? 'full' : v >= 10 ? (v >= 80 ? 'mid' : 'used') : '';
+                html += `<div class="dmx-cell ${cls}" title="Ch ${i+1}: ${v}"><span class="dmx-ch">${i+1}</span>${v}</div>`;
+            }
+            grid.innerHTML = html;
+
+            const pkt = document.getElementById('pktCnt');
+            if (pkt) pkt.textContent = artPktCount;
+
+            // Update header sequence number
+            const hdr = document.getElementById('artPktHdr');
+            if (hdr) {
+                hdr.innerHTML =
+                    `Art-Net Paket (OpDMX 0x5000):<br>` +
+                    `ID: "Art-Net\\0" &nbsp; OpCode: 0x5000 (ArtDMX)<br>` +
+                    `ProtVer: 14 &nbsp; Sequence: ${artPktCount % 256} &nbsp; Physical: 0<br>` +
+                    `Universe: ${monitorUniv} &nbsp; Length: 512 &nbsp; → DMX-Daten folgen`;
+            }
+        }
+
+        function refreshDMXMonitor() {
+            const tab = document.getElementById('tab-artnet');
+            if (tab && tab.classList.contains('active')) renderDMXGrid();
+            const pkt = document.getElementById('pktCnt');
+            if (pkt) pkt.textContent = artPktCount;
+        }
+
+        // ============================================================
+        // TAB NAVIGATION
+        // ============================================================
+        window.showTab = function(name) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tab-${name}`)?.classList.add('active');
+            document.querySelector(`.tab-btn[data-tab="${name}"]`)?.classList.add('active');
+            if (name === 'artnet') renderDMXGrid();
+        };
+
+        // ============================================================
+        // TOAST
+        // ============================================================
+        function toast(msg) {
+            document.querySelectorAll('.toast').forEach(t => t.remove());
+            const el = document.createElement('div');
+            el.className = 'toast';
+            el.textContent = msg;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 2600);
+        }
+
+        // ============================================================
+        // ANIMATION LOOP (strobe refresh)
+        // ============================================================
+        function strobeLoop() {
+            let hasStrobe = false;
+            FIXTURES.forEach(f => {
+                const si = f.type === 'MH' ? 6 : 4;
+                if (gv(f.id, si) > 8) hasStrobe = true;
+            });
+            if (hasStrobe) drawStage();
+            requestAnimationFrame(strobeLoop);
+        }
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        function init() {
+            // Default pan/tilt for moving heads (centered)
+            FIXTURES.filter(f => f.type === 'MH').forEach(f => {
+                sv(f.id, 4, 127);
+                sv(f.id, 5, 127);
+            });
+
+            buildControls();
+            buildSeqEditor();
+            buildPresets();
+            buildMonitor();
+
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            drawStage();
+            strobeLoop();
+            showTab('controls');
+        }
+
+        init();
+    }); // end DOMContentLoaded
+    </script>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>🎭 ArtNet Simulator – Veranstaltungstechnik</h1>
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:5px;">
+            <p style="margin:0;">Kapitel 4 · ArtNet 4 · 12 Fixtures · Universe 0–1 · UDP 6454</p>
+            <button onclick="window.open(window.ARTNET_PULT_URL,'grandMA3','width=1350,height=780,resizable=yes');"
+                    style="background:#1a1400;border:1px solid #c8a000;color:#c8a000;padding:4px 14px;border-radius:6px;cursor:pointer;font-size:0.82rem;">
+                🎛️ grandMA3 Pult öffnen
+            </button>
+            <span style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#3a5070;">
+                <span id="pultDot" style="width:8px;height:8px;border-radius:50%;background:#333;display:inline-block;"></span>
+                <span id="pultLabel">Pult nicht verbunden</span>
+            </span>
+        </div>
+    </div>
+
+    <div class="main-layout">
+
+        <!-- ═══════════ LINKE SPALTE: BÜHNE ═══════════ -->
+        <div>
+            <div class="stage-section">
+                <div class="stage-header">
+                    <h2>🎭 Bühnenansicht (Frontperspektive)</h2>
+                    <div id="playInfo" class="playback-info-bar">Bereit</div>
+                </div>
+                <canvas id="stageCanvas"></canvas>
+                <div class="stage-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:#3a6090;"></div>
+                        Moving Head (MH 1–6, Truss oben)
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:#3a3a70;"></div>
+                        PAR LED (PAR 1–6, Boden)
+                    </div>
+                    <div class="legend-item" style="color:#2a4a2a;">
+                        💡 Auf Fixture klicken → auswählen &amp; in Controls scrollen
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════ RECHTE SPALTE: TABS ═══════════ -->
+        <div class="right-col">
+            <nav class="tab-nav">
+                <button class="tab-btn active" data-tab="controls"  onclick="showTab('controls')">🎛️ Controls</button>
+                <button class="tab-btn"        data-tab="sequence"  onclick="showTab('sequence')">📋 Sequenz</button>
+                <button class="tab-btn"        data-tab="presets"   onclick="showTab('presets')">⭐ Presets</button>
+                <button class="tab-btn"        data-tab="artnet"    onclick="showTab('artnet')">📡 ArtNet</button>
+            </nav>
+
+            <!-- Controls -->
+            <div id="tab-controls" class="tab-content active">
+                <small style="display:block;margin-bottom:8px;">
+                    Fixture anklicken oder im Bühnenbild selektieren · DIM = Dimmer · R/G/B = Farbe · PAN/TLT = Bewegung · STB = Strobe
+                </small>
+                <div id="fixtureControls"></div>
+            </div>
+
+            <!-- Sequenz Editor -->
+            <div id="tab-sequence" class="tab-content">
+                <small style="display:block;margin-bottom:8px;">
+                    Szene einstellen → "+ Cue" · Fade-Zeit = Überblendzeit in Sekunden · ▶ startet die Wiedergabe
+                </small>
+                <div id="seqEditor"></div>
+            </div>
+
+            <!-- Presets -->
+            <div id="tab-presets" class="tab-content">
+                <small style="display:block;margin-bottom:8px;">
+                    Vordefinierte Szenen sofort aktivieren oder als Demo-Sequenz laden
+                </small>
+                <div id="presetsPanel"></div>
+            </div>
+
+            <!-- ArtNet Monitor -->
+            <div id="tab-artnet" class="tab-content">
+                <small style="display:block;margin-bottom:8px;">
+                    Live-Ansicht der DMX-Kanalwerte pro Universe · Zeigt Kanäle 1–256
+                </small>
+                <div id="monitorPanel"></div>
+            </div>
+        </div>
+
+    </div><!-- end main-layout -->
+</div><!-- end container -->
+</body>
+</html>

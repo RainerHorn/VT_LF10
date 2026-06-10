@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtNet – Netzwerkhintergrund | VT LF10</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // ── Chatbot ──────────────────────────────────────────────
+            (async function () {
+                try {
+                    const { MMBBSBOT } = await import('https://dev.mm-bbs.de:8085/mmbbs-bot.js');
+                    const element = document.querySelector('.activity-description');
+                    const htmlContent = element ? element.innerHTML : '';
+                    const bot = new MMBBSBOT({
+                        host: "dev.mm-bbs.de", protocol: "https", port: 8085,
+                        opener: "Hallo! Ich helfe Ihnen beim Thema ArtNet und Netzwerktechnik. Was möchten Sie wissen?",
+                        chat_icon: "", chat_icon_style: "border-radius:50%;width:40px;height:40px;",
+                        title: "VT GPT",
+                        task: htmlContent,
+                        hints: "Sie sind Netzwerkexperte für Veranstaltungstechnik (ArtNet, DMX, sACN). Sie helfen Auszubildenden zur Fachkraft für Veranstaltungstechnik im 3. Ausbildungsjahr. Keine fertigen Lösungen – nur Erklärungen und Denkanstöße.",
+                        cookie: document.cookie
+                    });
+                    window.toggleChat    = bot.toggleChat.bind(bot);
+                    window.sendMessage   = bot.sendMessage.bind(bot);
+                    window.handleKeyDown = bot.handleKeyDown.bind(bot);
+                } catch (e) { console.error('Chatbot:', e); }
+            })();
+
+            // ── CSS ───────────────────────────────────────────────────
+            const style = document.createElement('style');
+            style.innerHTML = `
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    line-height: 1.7;
+                    color: #1e293b;
+                    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+                    min-height: 100vh;
+                    padding: 24px;
+                }
+
+                .container { max-width: 1100px; margin: 0 auto; }
+
+                .header {
+                    background: linear-gradient(135deg, #1e3a5f, #1e40af);
+                    color: #e0f2ff;
+                    border-radius: 16px;
+                    padding: 28px 32px;
+                    margin-bottom: 28px;
+                    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    gap: 20px;
+                    flex-wrap: wrap;
+                }
+                .header h1 { font-size: 2rem; font-weight: 800; margin-bottom: 6px; color: #fff; }
+                .header p  { color: #93c5fd; font-size: 1rem; }
+                .header-meta {
+                    background: rgba(255,255,255,0.1);
+                    border: 1px solid rgba(255,255,255,0.2);
+                    border-radius: 10px;
+                    padding: 10px 16px;
+                    font-size: 0.85rem;
+                    color: #bfdbfe;
+                    min-width: 190px;
+                    text-align: right;
+                    flex-shrink: 0;
+                }
+                .header-meta strong { display: block; color: #fff; font-size: 1rem; margin-bottom: 2px; }
+
+                .section {
+                    background: #fff;
+                    padding: 2rem 2.4rem;
+                    border-radius: 16px;
+                    box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+                    margin-bottom: 2rem;
+                    border: 1px solid #e2e8f0;
+                }
+
+                .intro {
+                    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+                    border-left: 4px solid #0284c7;
+                    padding: 1.4rem 1.6rem;
+                    border-radius: 10px;
+                    margin-bottom: 1.6rem;
+                    color: #0c4a6e;
+                }
+                .intro p { color: #0c4a6e; margin-bottom: 0.6rem; text-align: left; }
+                .intro p:last-child { margin-bottom: 0; }
+
+                h2 {
+                    color: #1d4ed8;
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    margin-bottom: 0.2rem !important;
+                    margin-top: 0;
+                    padding-bottom: 6px;
+                    border-bottom: 2px solid #dbeafe;
+                }
+                h3 {
+                    color: #1e40af;
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                    margin-bottom: 0.2rem !important;
+                    margin-top: 1.2rem;
+                }
+                h4 {
+                    font-size: 1rem;
+                    font-weight: 700;
+                    margin-bottom: 0.2rem !important;
+                }
+
+                p { margin-bottom: 1rem; color: #374151; }
+
+                ul, ol { padding-left: 1.8rem; margin-bottom: 1rem; }
+                li { margin-bottom: 0.4rem; color: #4b5563; }
+
+                code {
+                    background: #e0f2fe;
+                    color: #0369a1;
+                    padding: 2px 6px;
+                    border-radius: 5px;
+                    font-family: 'Consolas', monospace;
+                    font-size: 0.92em;
+                    font-weight: 700;
+                    border: 1px solid #bae6fd;
+                }
+
+                strong { color: #1e40af; }
+
+                .task {
+                    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+                    border-left: 5px solid #16a34a;
+                    padding: 1.4rem 1.6rem;
+                    margin: 1.6rem 0;
+                    border-radius: 10px;
+                    box-shadow: 0 2px 8px rgba(22,163,74,0.1);
+                }
+                .task > strong:first-child {
+                    color: #166534;
+                    font-size: 1.05rem;
+                    display: block;
+                    margin-bottom: 0.6rem;
+                }
+                .task p { color: #166534; margin-bottom: 0.5rem; }
+                .task p:last-child { margin-bottom: 0; }
+                .task ul li, .task ol li { color: #166534; }
+                .task .method-row {
+                    display: flex;
+                    gap: 20px;
+                    flex-wrap: wrap;
+                    margin-bottom: 0.7rem;
+                    font-size: 0.88rem;
+                }
+                .method-badge {
+                    background: rgba(22,163,74,0.15);
+                    border: 1px solid rgba(22,163,74,0.3);
+                    color: #166534;
+                    padding: 2px 10px;
+                    border-radius: 20px;
+                    font-weight: 600;
+                    font-size: 0.82rem;
+                }
+
+                .question {
+                    background: linear-gradient(135deg, #fffbeb, #fef3c7);
+                    border-left: 5px solid #d97706;
+                    padding: 1.2rem 1.4rem;
+                    margin: 1.2rem 0;
+                    border-radius: 10px;
+                    box-shadow: 0 2px 8px rgba(217,119,6,0.1);
+                }
+                .question strong { color: #92400e; }
+                .question ol li, .question p { color: #78350f; margin-bottom: 0.3rem; }
+
+                .tech-specs {
+                    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+                    border-left: 5px solid #2563eb;
+                    padding: 1.4rem 1.6rem;
+                    margin: 1.4rem 0;
+                    border-radius: 10px;
+                    box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+                }
+                .tech-specs h4 { color: #1e40af; margin-bottom: 0.7rem; }
+                .tech-specs p, .tech-specs li { color: #1e3a8a; }
+
+                /* ── Info / Merksatz ── */
+                .info-box {
+                    background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+                    border-left: 5px solid #7c3aed;
+                    padding: 1.2rem 1.4rem;
+                    margin: 1.2rem 0;
+                    border-radius: 10px;
+                }
+                .info-box h4 { color: #6d28d9; margin-bottom: 0.5rem; }
+                .info-box p, .info-box li { color: #4c1d95; }
+
+                /* ── Phasen ── */
+                .phases {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                    gap: 12px;
+                    margin: 1.4rem 0;
+                }
+                .phase {
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 10px;
+                    padding: 12px 14px;
+                    transition: transform 0.15s, box-shadow 0.15s;
+                }
+                .phase:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+                .phase-num {
+                    font-size: 0.68rem;
+                    font-weight: 800;
+                    letter-spacing: 0.1em;
+                    color: #94a3b8;
+                    text-transform: uppercase;
+                    margin-bottom: 3px;
+                }
+                .phase h4 { color: #1e40af; font-size: 0.9rem; margin-bottom: 3px; }
+                .phase p  { color: #64748b; font-size: 0.82rem; margin: 0; }
+
+                /* ── Tabelle ── */
+                .comparison-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 1.2rem 0;
+                    font-size: 0.9rem;
+                }
+                .comparison-table th {
+                    background: #1e40af;
+                    color: #fff;
+                    padding: 10px 14px;
+                    text-align: left;
+                    font-size: 0.85rem;
+                }
+                .comparison-table td {
+                    padding: 9px 14px;
+                    border-bottom: 1px solid #e2e8f0;
+                    color: #374151;
+                }
+                .comparison-table tr:nth-child(even) td { background: #f8fafc; }
+                .comparison-table tr:hover td { background: #eff6ff; }
+
+                /* ── Packet diagram ── */
+                .packet-diagram {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 0;
+                    border: 2px solid #2563eb;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    margin: 1.2rem 0;
+                    font-size: 0.82rem;
+                }
+                .pkt-field {
+                    padding: 8px 10px;
+                    border-right: 1px solid #bfdbfe;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                    min-width: 80px;
+                    flex: 1;
+                }
+                .pkt-field:last-child { border-right: none; }
+                .pkt-field.header-f { background: #1e40af; color: #fff; }
+                .pkt-field.opcode-f { background: #0369a1; color: #fff; }
+                .pkt-field.prot-f   { background: #0284c7; color: #fff; }
+                .pkt-field.univ-f   { background: #0891b2; color: #fff; }
+                .pkt-field.data-f   { background: #dbeafe; color: #1e3a8a; flex: 3; }
+                .pkt-name { font-weight: 700; font-size: 0.78rem; }
+                .pkt-bytes { font-size: 0.68rem; opacity: 0.8; margin-top: 2px; }
+
+                /* ── Aufgaben-Felder ── */
+                .answer-box {
+                    border: 2px dashed #94a3b8;
+                    border-radius: 8px;
+                    padding: 14px;
+                    margin-top: 8px;
+                    min-height: 70px;
+                    background: #f8fafc;
+                    color: #94a3b8;
+                    font-style: italic;
+                    font-size: 0.88rem;
+                }
+
+                /* ── Timeline ── */
+                .timeline { border-left: 3px solid #e2e8f0; margin-left: 10px; padding-left: 20px; }
+                .tl-item { position: relative; margin-bottom: 14px; }
+                .tl-item::before {
+                    content: '';
+                    position: absolute;
+                    left: -27px; top: 5px;
+                    width: 12px; height: 12px;
+                    border-radius: 50%;
+                    background: #2563eb;
+                    border: 2px solid #fff;
+                    box-shadow: 0 0 0 2px #2563eb;
+                }
+                .tl-time {
+                    font-size: 0.72rem;
+                    color: #94a3b8;
+                    font-weight: 700;
+                    letter-spacing: 0.05em;
+                    margin-bottom: 2px;
+                }
+                .tl-item h4 { color: #1e40af; margin-bottom: 2px; }
+                .tl-item p  { color: #64748b; font-size: 0.88rem; margin: 0; }
+
+                /* Chatbot */
+                #chat-container { color: white !important; }
+                #chat-container * { color: white !important; }
+                #chat-container .bot-message  { background-color: rgba(59,130,246,0.8) !important; }
+                #chat-container .user-message { background-color: rgba(107,114,128,0.8) !important; }
+                #chat-container input, #chat-container textarea { background-color: rgba(55,65,81,0.9) !important; }
+            `;
+            document.head.appendChild(style);
+
+            // ── Interaktive Quiz-Auswertung ────────────────────────────
+            document.querySelectorAll('.quiz-option').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const grp = this.closest('.quiz-group');
+                    grp.querySelectorAll('.quiz-option').forEach(b => {
+                        b.style.background = '';
+                        b.style.borderColor = '';
+                        b.style.color = '';
+                    });
+                    const correct = this.dataset.correct === 'true';
+                    this.style.background   = correct ? '#dcfce7' : '#fee2e2';
+                    this.style.borderColor  = correct ? '#16a34a' : '#dc2626';
+                    this.style.color        = correct ? '#166534' : '#991b1b';
+                    const fb = grp.querySelector('.quiz-feedback');
+                    if (fb) {
+                        fb.style.display = 'block';
+                        fb.style.color   = correct ? '#166534' : '#991b1b';
+                        fb.textContent   = correct ? '✓ Richtig!' : '✗ Nicht ganz – denken Sie noch einmal nach.';
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="activity-description">
+<div class="container">
+
+    <!-- ══════════════════════════════════════════════════════
+         HEADER
+    ══════════════════════════════════════════════════════ -->
+    <div class="header">
+        <div>
+            <h1>📡 ArtNet – Netzwerkhintergrund</h1>
+            <p>Lernfeld 10 · Kapitel 4 · Veranstaltungstechnik &amp; Netzwerke</p>
+        </div>
+        <div class="header-meta">
+            <strong>90 Minuten</strong>
+            Klasse: FkV 3. AJ<br>
+            Lernsituation 4.1
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         EINSTIEGSSZENARIO
+    ══════════════════════════════════════════════════════ -->
+    <div class="section">
+        <div class="intro">
+            <p><strong>🎪 Ausgangssituation:</strong> Sie arbeiten als Fachkraft für Veranstaltungstechnik bei der Firma <em>EventTech GmbH</em>. Ihr Team soll das Beleuchtungssystem für ein Open-Air-Konzert mit 800 Besuchern aufbauen. Der technische Leiter übergibt Ihnen folgende Angaben aus dem Ridersheet:</p>
+            <ul>
+                <li>48 Moving Heads (je 7 DMX-Kanäle) auf 4 Traversen</li>
+                <li>32 PAR-Scheinwerfer (je 5 Kanäle) als Wash-Licht</li>
+                <li>1 grandMA3 Lichtpult als Hauptsteuerung</li>
+                <li>Signalweg: ArtNet 4 über ein dediziertes Netzwerk</li>
+            </ul>
+            <p><strong>Ihre Aufgabe:</strong> Planen und dokumentieren Sie das ArtNet-Netzwerk für diese Veranstaltung.</p>
+        </div>
+
+        <h2>🗓️ Ablaufplan – 90 Minuten</h2>
+        <div class="timeline">
+            <div class="tl-item">
+                <div class="tl-time">MIN 0 – 15</div>
+                <h4>Phase 1 – Informieren</h4>
+                <p>ArtNet-Grundlagen lesen, Fachbegriffe klären, Paketstruktur verstehen</p>
+            </div>
+            <div class="tl-item">
+                <div class="tl-time">MIN 15 – 35</div>
+                <h4>Phase 2 – Planen &amp; Entscheiden</h4>
+                <p>Kanalberechnung, IP-Schema entwickeln, Universe-Verteilung festlegen</p>
+            </div>
+            <div class="tl-item">
+                <div class="tl-time">MIN 35 – 65</div>
+                <h4>Phase 3 – Ausführen</h4>
+                <p>Aufgaben zur Netzwerkkonfiguration, Simulator-Analyse</p>
+            </div>
+            <div class="tl-item">
+                <div class="tl-time">MIN 65 – 80</div>
+                <h4>Phase 4 – Kontrollieren</h4>
+                <p>Kontrollfragen, Peer-Check im Tandem</p>
+            </div>
+            <div class="tl-item">
+                <div class="tl-time">MIN 80 – 90</div>
+                <h4>Phase 5 – Bewerten &amp; Reflexion</h4>
+                <p>Ergebnispräsentation, Sicherung im Plenum</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         PHASE 1 – INFORMIEREN
+    ══════════════════════════════════════════════════════ -->
+    <div class="section">
+        <h2>Phase 1 – Informieren <small style="font-size:0.8rem;color:#64748b;font-weight:400;">(15 min)</small></h2>
+
+        <h3>1.1 Was ist ArtNet?</h3>
+        <p>
+            <strong>ArtNet</strong> ist ein royaltyfreies, offenes Protokoll zur Übertragung von
+            <strong>DMX512</strong>-Daten über Standard-Ethernet-Netzwerke (IEEE 802.3).
+            Es wurde 1998 von der Firma <em>Artistic Licence</em> entwickelt und ist heute in der
+            Version 4 (ArtNet 4) weit verbreitet. ArtNet ermöglicht es, bis zu
+            <strong>32.768 DMX-Universen</strong> über ein einziges Netzwerkkabel zu übertragen –
+            im Vergleich zu einem DMX-Kabel, das nur 512 Kanäle (1 Universum) transportiert.
+        </p>
+
+        <div class="info-box">
+            <h4>💡 Merksatz</h4>
+            <p>
+                ArtNet = DMX über IP. Ein Ethernet-Kabel ersetzt beliebig viele XLR-DMX-Kabel.
+                Das Protokoll nutzt <strong>UDP</strong> (User Datagram Protocol) auf Port
+                <strong>6454</strong> (0x1936) und benötigt einen speziellen IP-Adressbereich.
+            </p>
+        </div>
+
+        <h3>1.2 Das ArtNet-Netzwerk</h3>
+        <p>ArtNet definiert zwei zulässige <strong>IP-Adressbereiche</strong>:</p>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Bereich</th>
+                    <th>Netzwerk</th>
+                    <th>Subnetzmaske</th>
+                    <th>Beispiel-IP</th>
+                    <th>Typische Verwendung</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Primärbereich</strong></td>
+                    <td><code>2.0.0.0/8</code></td>
+                    <td><code>255.0.0.0</code></td>
+                    <td><code>2.0.1.50</code></td>
+                    <td>Professionelle Live-Events, Tourproduktionen</td>
+                </tr>
+                <tr>
+                    <td><strong>Sekundärbereich</strong></td>
+                    <td><code>10.0.0.0/8</code></td>
+                    <td><code>255.0.0.0</code></td>
+                    <td><code>10.0.1.50</code></td>
+                    <td>Fest installierte Anlagen, Studios</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="tech-specs">
+            <h4>🔧 Warum diese Adressbereiche?</h4>
+            <p>
+                ArtNet-Geräte kommunizieren häufig per <strong>Broadcast</strong> (z.B. <code>2.255.255.255</code>),
+                um alle Nodes im Netzwerk zu erreichen. Das /8-Subnetz stellt sicher, dass alle
+                ArtNet-Geräte automatisch im gleichen Broadcast-Domain liegen, ohne komplexe
+                Router-Konfiguration. <strong>Private Netzwerke wie 192.168.x.x sind offiziell nicht
+                für ArtNet vorgesehen</strong> – funktionieren aber in kleinen Installationen oft trotzdem.
+            </p>
+        </div>
+
+        <h3>1.3 Universes und Kanäle</h3>
+        <p>
+            Das Herzstück von ArtNet ist das Konzept der <strong>Universes</strong> (Universen).
+            Jedes Universum enthält genau <strong>512 DMX-Kanäle</strong> (1 Byte pro Kanal = 0–255).
+        </p>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Begriff</th>
+                    <th>Wert / Bereich</th>
+                    <th>Erklärung</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Kanäle pro Universe</strong></td>
+                    <td><code>512</code></td>
+                    <td>Standard DMX512 – 1 Byte pro Kanal (0–255)</td>
+                </tr>
+                <tr>
+                    <td><strong>Universe-Nummern</strong></td>
+                    <td><code>0 – 32767</code></td>
+                    <td>ArtNet 4: 15-Bit-Adressierung (Sub-Net + Universe)</td>
+                </tr>
+                <tr>
+                    <td><strong>Sub-Net</strong></td>
+                    <td><code>0 – 15</code></td>
+                    <td>4-Bit-Feld, gruppiert je 16 Universen</td>
+                </tr>
+                <tr>
+                    <td><strong>Universe (lokal)</strong></td>
+                    <td><code>0 – 15</code></td>
+                    <td>4-Bit-Feld innerhalb eines Sub-Nets</td>
+                </tr>
+                <tr>
+                    <td><strong>Net</strong></td>
+                    <td><code>0 – 127</code></td>
+                    <td>7-Bit-Feld (ArtNet 4), oberste Ebene</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-box">
+            <h4>📐 Formel: Universe-Adressierung in ArtNet 4</h4>
+            <p>
+                <code>Globale Universe-Adresse = (Net × 256) + (Sub-Net × 16) + Universe</code>
+                <br><br>
+                <strong>Beispiel:</strong> Net=0, Sub-Net=0, Universe=3 → globale Adresse = <strong>3</strong><br>
+                <strong>Beispiel:</strong> Net=1, Sub-Net=2, Universe=5 → globale Adresse = 1×256 + 2×16 + 5 = <strong>293</strong>
+            </p>
+        </div>
+
+        <h3>1.4 Das ArtNet-Paket</h3>
+        <p>Jedes ArtNet-Paket (OpDMX) wird als <strong>UDP-Datagramm</strong> übertragen und hat folgenden Aufbau:</p>
+
+        <div class="packet-diagram">
+            <div class="pkt-field header-f">
+                <span class="pkt-name">Art-Net ID</span>
+                <span class="pkt-bytes">8 Byte</span>
+                <span style="font-size:0.7rem;margin-top:2px;">"Art-Net\0"</span>
+            </div>
+            <div class="pkt-field opcode-f">
+                <span class="pkt-name">OpCode</span>
+                <span class="pkt-bytes">2 Byte</span>
+                <span style="font-size:0.7rem;margin-top:2px;">0x5000</span>
+            </div>
+            <div class="pkt-field prot-f">
+                <span class="pkt-name">ProtVer</span>
+                <span class="pkt-bytes">2 Byte</span>
+                <span style="font-size:0.7rem;margin-top:2px;">= 14</span>
+            </div>
+            <div class="pkt-field univ-f">
+                <span class="pkt-name">Sequence</span>
+                <span class="pkt-bytes">1 Byte</span>
+                <span style="font-size:0.7rem;margin-top:2px;">0–255</span>
+            </div>
+            <div class="pkt-field univ-f">
+                <span class="pkt-name">Universe</span>
+                <span class="pkt-bytes">2 Byte</span>
+                <span style="font-size:0.7rem;margin-top:2px;">0–32767</span>
+            </div>
+            <div class="pkt-field univ-f">
+                <span class="pkt-name">Length</span>
+                <span class="pkt-bytes">2 Byte</span>
+                <span style="font-size:0.7rem;margin-top:2px;">max. 512</span>
+            </div>
+            <div class="pkt-field data-f">
+                <span class="pkt-name">DMX Data</span>
+                <span class="pkt-bytes">2–512 Byte</span>
+                <span style="font-size:0.7rem;margin-top:2px;">Kanalwerte 1–512</span>
+            </div>
+        </div>
+
+        <table class="comparison-table">
+            <thead>
+                <tr><th>Feld</th><th>Inhalt</th><th>Bedeutung</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>Art-Net ID</code></td><td>"Art-Net\0"</td><td>Identifikation des Protokolls (8 ASCII-Bytes)</td></tr>
+                <tr><td><code>OpCode</code></td><td>0x5000</td><td>Pakettyp: ArtDMX (Kanalwerte senden)</td></tr>
+                <tr><td><code>ProtVer</code></td><td>14</td><td>Protokollversion (ArtNet 4 = 14)</td></tr>
+                <tr><td><code>Sequence</code></td><td>0–255</td><td>Paket-Reihenfolge, verhindert Out-of-Order-Fehler</td></tr>
+                <tr><td><code>Universe</code></td><td>0–32767</td><td>Ziel-Universe dieser Kanalwerte</td></tr>
+                <tr><td><code>Length</code></td><td>2–512</td><td>Anzahl der enthaltenen DMX-Kanalwerte</td></tr>
+                <tr><td><code>DMX Data</code></td><td>512 × 1 Byte</td><td>Kanalwerte 0–255 für jeden DMX-Kanal</td></tr>
+            </tbody>
+        </table>
+
+        <h3>1.5 Wichtige OpCodes</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr><th>OpCode</th><th>Name</th><th>Funktion</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>0x5000</code></td><td>ArtDMX</td><td>DMX-Kanalwerte senden (häufigster Typ)</td></tr>
+                <tr><td><code>0x2000</code></td><td>ArtPoll</td><td>Netzwerk nach ArtNet-Geräten abfragen</td></tr>
+                <tr><td><code>0x2100</code></td><td>ArtPollReply</td><td>Antwort eines Nodes auf ArtPoll</td></tr>
+                <tr><td><code>0x5800</code></td><td>ArtNzs</td><td>Non-Zero Start Code DMX (seltener)</td></tr>
+                <tr><td><code>0x6700</code></td><td>ArtRdm</td><td>Remote Device Management über ArtNet</td></tr>
+            </tbody>
+        </table>
+
+        <div class="question">
+            <strong>❓ Verständnisfragen zu Phase 1</strong>
+            <ol>
+                <li>Welchen Vorteil hat ArtNet gegenüber einer klassischen DMX-Verkabelung bei großen Veranstaltungen?</li>
+                <li>Auf welchem Protokoll (Transport) basiert ArtNet, und warum ist das für Lichtsteuerung sinnvoll?</li>
+                <li>Wie viele Kanäle enthält ein ArtNet-Universum?</li>
+                <li>Welche IP-Adressen sind für ArtNet offiziell vorgesehen?</li>
+                <li>Was bedeutet der OpCode <code>0x5000</code> im ArtNet-Paket?</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         PHASE 2 – PLANEN & ENTSCHEIDEN
+    ══════════════════════════════════════════════════════ -->
+    <div class="section">
+        <h2>Phase 2 – Planen &amp; Entscheiden <small style="font-size:0.8rem;color:#64748b;font-weight:400;">(20 min)</small></h2>
+
+        <div class="intro">
+            <p><strong>Rückblick auf Ihr Konzert-Setup:</strong></p>
+            <ul>
+                <li>48 Moving Heads × 7 CH = <strong>336 DMX-Kanäle</strong></li>
+                <li>32 PAR-Scheinwerfer × 5 CH = <strong>160 DMX-Kanäle</strong></li>
+                <li>Gesamt: <strong>496 DMX-Kanäle</strong></li>
+            </ul>
+        </div>
+
+        <div class="task">
+            <strong>🔧 Arbeitsauftrag 1 – Kanalberechnung &amp; Universe-Planung</strong>
+            <div class="method-row">
+                <span class="method-badge">👤 Einzelarbeit</span>
+                <span class="method-badge">⏱ 10 Minuten</span>
+                <span class="method-badge">📐 Methode: Schriftliche Berechnung</span>
+            </div>
+            <p>Berechnen Sie, wie viele ArtNet-Universen für das Konzert-Setup benötigt werden. Berücksichtigen Sie:</p>
+            <ol>
+                <li>Beginnen Sie den DMX-Patch jedes Fixtures am Anfang eines Kanals. Moving Head 1 = Adresse 1, MH 2 = Adresse 8, usw.</li>
+                <li>Wenn ein Universe voll ist (Kanal 512 überschritten), beginnt ein neues.</li>
+                <li>Planen Sie, welche Fixtures auf welchem Universe liegen.</li>
+                <li>Notieren Sie die Startadresse des letzten Kanals und entscheiden Sie, ob alles in ein Universe passt.</li>
+            </ol>
+            <div class="answer-box">Hier Ihre Berechnungen notieren …</div>
+        </div>
+
+        <div class="task">
+            <strong>🔧 Arbeitsauftrag 2 – IP-Adressschema entwickeln</strong>
+            <div class="method-row">
+                <span class="method-badge">👥 Tandemarbeit</span>
+                <span class="method-badge">⏱ 10 Minuten</span>
+                <span class="method-badge">📐 Methode: Think-Pair-Share</span>
+            </div>
+            <p>Entwickeln Sie ein IP-Adressschema für folgende Geräte im ArtNet-Netzwerk des Konzerts. Wählen Sie den Primärbereich <code>2.0.0.0/8</code>.</p>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Gerät</th>
+                        <th>Typ</th>
+                        <th>Anzahl</th>
+                        <th>IP-Adresse</th>
+                        <th>Subnetzmaske</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>grandMA3 Pult</td><td>ArtNet Controller</td><td>1</td><td></td><td></td></tr>
+                    <tr><td>ArtNet-Node Traverse 1</td><td>ArtNet Node (4 × DMX Out)</td><td>1</td><td></td><td></td></tr>
+                    <tr><td>ArtNet-Node Traverse 2</td><td>ArtNet Node (4 × DMX Out)</td><td>1</td><td></td><td></td></tr>
+                    <tr><td>ArtNet-Node Traverse 3</td><td>ArtNet Node (4 × DMX Out)</td><td>1</td><td></td><td></td></tr>
+                    <tr><td>ArtNet-Node Traverse 4</td><td>ArtNet Node (4 × DMX Out)</td><td>1</td><td></td><td></td></tr>
+                    <tr><td>Netzwerk-Switch</td><td>Managed Switch</td><td>1</td><td></td><td></td></tr>
+                </tbody>
+            </table>
+            <p style="margin-top:8px;"><strong>Begründen Sie</strong> Ihr gewähltes IP-Schema: Welche Systematik verwenden Sie (z.B. letzte Stelle = Gerätetyp)?</p>
+            <div class="answer-box">Begründung …</div>
+        </div>
+
+        <div class="info-box">
+            <h4>📡 ArtNet-Nodes – Was ist das?</h4>
+            <p>
+                Ein <strong>ArtNet-Node</strong> (auch ArtNet-Interface oder ArtNet-Decoder) wandelt
+                ArtNet-Ethernet-Pakete in klassisches <strong>DMX512</strong>-Signal um.
+                Er hat mindestens einen Ethernet-Eingang und einen oder mehrere XLR/RJ45-DMX-Ausgänge.
+                Bekannte Hersteller: <em>Artistic Licence</em>, <em>Enttec</em>, <em>Pathway Connectivity</em>.
+            </p>
+            <p>
+                Jeder DMX-Ausgang eines Nodes kann einem bestimmten ArtNet-Universe zugewiesen werden.
+                Ein Node mit 4 DMX-Ausgängen kann also 4 × 512 = <strong>2048 Kanäle</strong> parallel ausgeben.
+            </p>
+        </div>
+
+        <div class="question">
+            <strong>❓ Kontrollfragen zu Phase 2</strong>
+            <ol>
+                <li>Passt das gesamte Konzert-Setup (496 Kanäle) in ein einziges Universe? Begründen Sie.</li>
+                <li>Warum sollte die Broadcast-Adresse im Netzwerk <code>2.0.0.0/8</code> lauten: <code>2.255.255.255</code>?</li>
+                <li>Welchen Vorteil hat es, feste IP-Adressen statt DHCP bei ArtNet zu verwenden?</li>
+                <li>Wie viele DMX-Ausgänge benötigen Sie minimal, wenn Sie Moving Heads und PAR-Scheinwerfer auf getrennte Universen aufteilen?</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         PHASE 3 – AUSFÜHREN
+    ══════════════════════════════════════════════════════ -->
+    <div class="section">
+        <h2>Phase 3 – Ausführen <small style="font-size:0.8rem;color:#64748b;font-weight:400;">(30 min)</small></h2>
+
+        <div class="task">
+            <strong>🔧 Arbeitsauftrag 3 – Simulator-Analyse: Paketstruktur beobachten</strong>
+            <div class="method-row">
+                <span class="method-badge">👤 Einzelarbeit</span>
+                <span class="method-badge">⏱ 10 Minuten</span>
+                <span class="method-badge">📐 Methode: Erkundung am Simulator</span>
+            </div>
+            <p>Öffnen Sie den <strong>ArtNet Simulator</strong> (Datei: <code>Artnet_Simulator.html</code>) in einem neuen Fenster.</p>
+            <ol>
+                <li>Wechseln Sie zum Tab <strong>📡 ArtNet</strong>.</li>
+                <li>Aktivieren Sie verschiedene Presets (z.B. „Roter Wash", „Rainbow Split").</li>
+                <li>Beobachten Sie das ArtNet-Paket-Header-Feld oben und das DMX-Grid.</li>
+                <li>Notieren Sie: Welche Felder ändern sich bei jedem Preset? Welche bleiben konstant?</li>
+                <li>Aktivieren Sie einen Strobe-Effekt und beobachten Sie die Paketfrequenz (Paketzähler).</li>
+            </ol>
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Feld im Paket</th><th>Wert bei „Blackout"</th><th>Wert bei „Roter Wash"</th><th>Ändert sich?</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>OpCode</code></td><td></td><td></td><td></td></tr>
+                    <tr><td><code>ProtVer</code></td><td></td><td></td><td></td></tr>
+                    <tr><td><code>Sequence</code></td><td></td><td></td><td></td></tr>
+                    <tr><td><code>Universe</code></td><td></td><td></td><td></td></tr>
+                    <tr><td>Kanalwert Ch 1 (Dimmer MH1)</td><td></td><td></td><td></td></tr>
+                    <tr><td>Kanalwert Ch 2 (Rot MH1)</td><td></td><td></td><td></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="task">
+            <strong>🔧 Arbeitsauftrag 4 – Kanalrechnung am Simulator</strong>
+            <div class="method-row">
+                <span class="method-badge">👥 Tandemarbeit</span>
+                <span class="method-badge">⏱ 10 Minuten</span>
+                <span class="method-badge">📐 Methode: Partnerarbeit mit Protokollbogen</span>
+            </div>
+            <p>Im Simulator sind folgende Fixtures gepacht (Universe 0):</p>
+            <ul>
+                <li>MH 1–6: je 7 Kanäle, Startadressen 1, 8, 15, 22, 29, 36</li>
+                <li>PAR 1–6: je 5 Kanäle, Startadressen 101, 106, 111, 116, 121, 126</li>
+            </ul>
+            <p>Beantworten Sie folgende Fragen:</p>
+            <ol>
+                <li>Welcher DMX-Kanal (absolut im Universe) ist der <strong>Tilt-Kanal von MH 4</strong>? (MH 4 = Startadresse 22, Tilt = Kanal-Offset 5)</li>
+                <li>Welcher Kanalwert steht in der DMX-Grid-Zelle für den Dimmer von PAR 3 (Startadresse 111)?</li>
+                <li>Warum wurde zwischen den MH-Fixtures (Endadresse 42) und den PAR-Fixtures (Startadresse 101) eine <strong>Lücke</strong> gelassen?</li>
+                <li>Wie viele Kanäle belegt das gesamte Setup im Universe? Wie viele Kanäle bleiben frei?</li>
+            </ol>
+            <div class="answer-box">Antworten und Rechnungen …</div>
+        </div>
+
+        <div class="task">
+            <strong>🔧 Arbeitsauftrag 5 – Netzwerkdiagramm zeichnen</strong>
+            <div class="method-row">
+                <span class="method-badge">👥 Tandemarbeit</span>
+                <span class="method-badge">⏱ 10 Minuten</span>
+                <span class="method-badge">📐 Methode: Netzplan nach ISO/IEC 27001 Symbolen</span>
+            </div>
+            <p>Zeichnen Sie ein vereinfachtes Netzwerkdiagramm für das Konzert-Setup. Das Diagramm muss enthalten:</p>
+            <ul>
+                <li>grandMA3 Pult (Controller) mit IP-Adresse</li>
+                <li>Managed Switch (Mitte)</li>
+                <li>4 ArtNet-Nodes mit IP-Adressen und zugewiesenen Universes</li>
+                <li>Fixtures (vereinfacht) als Endgeräte hinter den Nodes</li>
+                <li>Beschriftung aller Verbindungstypen (Ethernet / DMX)</li>
+                <li>Broadcast-Richtung mit Pfeilen kennzeichnen</li>
+            </ul>
+            <div class="answer-box" style="min-height:140px;">Netzwerkdiagramm …</div>
+        </div>
+
+        <div class="tech-specs">
+            <h4>🔧 ArtNet vs. sACN – ein kurzer Vergleich</h4>
+            <table class="comparison-table" style="margin:0;">
+                <thead>
+                    <tr><th>Merkmal</th><th>ArtNet 4</th><th>sACN (E1.31)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Standardisierung</td><td>Hersteller-Standard (Artistic Licence)</td><td>ANSI/ESTA E1.31</td></tr>
+                    <tr><td>Transport</td><td>UDP, Broadcast/Unicast</td><td>UDP, Multicast</td></tr>
+                    <tr><td>Port</td><td>6454</td><td>5568</td></tr>
+                    <tr><td>IP-Bereich</td><td>2.x.x.x oder 10.x.x.x</td><td>beliebig (Multicast-IPs)</td></tr>
+                    <tr><td>Max. Universes</td><td>32.768</td><td>63.999</td></tr>
+                    <tr><td>Netzwerklast</td><td>höher (Broadcast)</td><td>niedriger (Multicast)</td></tr>
+                    <tr><td>Verbreitung</td><td>sehr hoch (Live-Events)</td><td>hoch (Architektur/Studios)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="question">
+            <strong>❓ Kontrollfragen zu Phase 3</strong>
+            <ol>
+                <li>Ein Moving Head hat Startadresse 249 in Universe 0 und belegt 7 Kanäle. Ist das möglich, und wenn nein, was müsste man tun?</li>
+                <li>Welchen Vorteil bietet sACN bei sehr großen Netzwerken mit vielen Universen gegenüber ArtNet?</li>
+                <li>Der Sequence-Counter im ArtNet-Paket läuft von 0–255 und springt dann wieder auf 1. Wofür wird er verwendet?</li>
+                <li>Im Simulator liegt MH 6 auf Startadresse 36. Auf welchem absoluten Kanal liegt der Strobe-Kanal (Offset 6)?</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         PHASE 4 – KONTROLLIEREN (Mini-Quiz)
+    ══════════════════════════════════════════════════════ -->
+    <div class="section">
+        <h2>Phase 4 – Kontrollieren <small style="font-size:0.8rem;color:#64748b;font-weight:400;">(15 min)</small></h2>
+        <p>Bearbeiten Sie das folgende Quiz zur Selbstkontrolle. Klicken Sie auf die Antwort, die Sie für richtig halten.</p>
+
+        <h3>Quiz: ArtNet-Netzwerkkenntnisse</h3>
+
+        <div style="margin-bottom:16px;">
+            <p><strong>F1:</strong> Auf welchem UDP-Port sendet ArtNet seine Pakete?</p>
+            <div class="quiz-group" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+                <button class="quiz-option" data-correct="false"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">
+                    6666
+                </button>
+                <button class="quiz-option" data-correct="true"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">
+                    6454
+                </button>
+                <button class="quiz-option" data-correct="false"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">
+                    5568
+                </button>
+                <button class="quiz-option" data-correct="false"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">
+                    8080
+                </button>
+                <div class="quiz-feedback" style="display:none;font-weight:700;font-size:0.88rem;margin-top:4px;"></div>
+            </div>
+        </div>
+
+        <div style="margin-bottom:16px;">
+            <p><strong>F2:</strong> Wie viele DMX-Kanäle enthält ein ArtNet-Universe?</p>
+            <div class="quiz-group" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+                <button class="quiz-option" data-correct="false"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">256</button>
+                <button class="quiz-option" data-correct="true"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">512</button>
+                <button class="quiz-option" data-correct="false"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">1024</button>
+                <button class="quiz-option" data-correct="false"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">2048</button>
+                <div class="quiz-feedback" style="display:none;font-weight:700;font-size:0.88rem;margin-top:4px;"></div>
+            </div>
+        </div>
+
+        <div style="margin-bottom:16px;">
+            <p><strong>F3:</strong> Welcher ArtNet-OpCode wird zum Senden von DMX-Kanalwerten verwendet?</p>
+            <div class="quiz-group" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+                <button class="quiz-option" data-correct="false"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">0x2000</button>
+                <button class="quiz-option" data-correct="false"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">0x2100</button>
+                <button class="quiz-option" data-correct="true"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">0x5000</button>
+                <button class="quiz-option" data-correct="false"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">0x6700</button>
+                <div class="quiz-feedback" style="display:none;font-weight:700;font-size:0.88rem;margin-top:4px;"></div>
+            </div>
+        </div>
+
+        <div style="margin-bottom:16px;">
+            <p><strong>F4:</strong> Welchen IP-Adressbereich empfiehlt die ArtNet-Spezifikation als Primärbereich?</p>
+            <div class="quiz-group" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+                <button class="quiz-option" data-correct="false"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">192.168.0.0/24</button>
+                <button class="quiz-option" data-correct="true"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">2.0.0.0/8</button>
+                <button class="quiz-option" data-correct="false"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">172.16.0.0/12</button>
+                <button class="quiz-option" data-correct="false"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">10.10.0.0/16</button>
+                <div class="quiz-feedback" style="display:none;font-weight:700;font-size:0.88rem;margin-top:4px;"></div>
+            </div>
+        </div>
+
+        <div style="margin-bottom:16px;">
+            <p><strong>F5:</strong> Auf welchem Transportprotokoll basiert ArtNet?</p>
+            <div class="quiz-group" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+                <button class="quiz-option" data-correct="false"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">TCP</button>
+                <button class="quiz-option" data-correct="true"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">UDP</button>
+                <button class="quiz-option" data-correct="false"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">HTTP</button>
+                <button class="quiz-option" data-correct="false"
+                        style="padding:6px 14px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;">ICMP</button>
+                <div class="quiz-feedback" style="display:none;font-weight:700;font-size:0.88rem;margin-top:4px;"></div>
+            </div>
+        </div>
+
+        <div class="task">
+            <strong>🔧 Peer-Check (Tandemarbeit, 5 min)</strong>
+            <div class="method-row">
+                <span class="method-badge">👥 Tandemarbeit</span>
+                <span class="method-badge">⏱ 5 Minuten</span>
+                <span class="method-badge">📐 Methode: Gegenseitige Überprüfung</span>
+            </div>
+            <p>Tauschen Sie Ihren Netzwerkplan (Arbeitsauftrag 2 und 5) mit Ihrem Lernpartner/Ihrer Lernpartnerin aus. Prüfen Sie:</p>
+            <ul>
+                <li>Sind die IP-Adressen im richtigen Subnetz (<code>2.0.0.0/8</code>)?</li>
+                <li>Sind alle Fixtures einem korrekten Universe zugeordnet?</li>
+                <li>Sind die DMX-Startadressen konfliktfrei (keine Überlappungen)?</li>
+                <li>Ist die Subnetzmaske korrekt (<code>255.0.0.0</code>)?</li>
+            </ul>
+            <p>Geben Sie anschließend konstruktives Feedback.</p>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         PHASE 5 – BEWERTEN & REFLEXION
+    ══════════════════════════════════════════════════════ -->
+    <div class="section">
+        <h2>Phase 5 – Bewerten &amp; Reflexion <small style="font-size:0.8rem;color:#64748b;font-weight:400;">(10 min)</small></h2>
+
+        <div class="phases">
+            <div class="phase">
+                <div class="phase-num">Ergebnis</div>
+                <h4>📋 Dokumentation</h4>
+                <p>Ihr Netzwerkplan und das IP-Schema werden im Plenum kurz vorgestellt.</p>
+            </div>
+            <div class="phase">
+                <div class="phase-num">Methode</div>
+                <h4>🗣️ Blitzlicht</h4>
+                <p>Jeder nennt einen Begriff, der ihm heute neu war und einen, der ihm gut gefallen hat.</p>
+            </div>
+            <div class="phase">
+                <div class="phase-num">Sicherung</div>
+                <h4>📌 Tafelanschrieb</h4>
+                <p>Wichtigste Fakten (Port, IP-Bereiche, Paketstruktur) werden gesichert.</p>
+            </div>
+            <div class="phase">
+                <div class="phase-num">Transfer</div>
+                <h4>🔗 Praxisausblick</h4>
+                <p>Wo begegnen Sie ArtNet in Ihrem Betrieb? Welche Software/Nodes setzen Sie ein?</p>
+            </div>
+        </div>
+
+        <div class="question">
+            <strong>❓ Abschlussfragen – Reflexion</strong>
+            <ol>
+                <li>Erklären Sie einem Auszubildenden im 1. Lehrjahr in zwei Sätzen, was ArtNet ist.</li>
+                <li>Welche Probleme können auftreten, wenn zwei ArtNet-Geräte dieselbe IP-Adresse haben?</li>
+                <li>Ein Venue hat bereits ein 192.168.1.0/24-Netzwerk. Wie würden Sie vorgehen, um ArtNet dort zu integrieren?</li>
+                <li>Welche Gemeinsamkeiten und Unterschiede hat ArtNet mit dem Protokoll sACN?</li>
+                <li>Warum ist UDP für ArtNet besser geeignet als TCP?</li>
+            </ol>
+        </div>
+
+        <div class="tech-specs">
+            <h4>🔧 Weiterführende Ressourcen</h4>
+            <ul>
+                <li><strong>ArtNet 4 Spezifikation</strong> (kostenlos): <code>artisticlicence.com</code> – offizielle PDF-Dokumentation</li>
+                <li><strong>Simulator</strong>: <code>Artnet_Simulator.html</code> – zeigt live DMX-Grid und Paket-Header</li>
+                <li><strong>grandMA3 Pult</strong>: <code>Artnet_Pult.html</code> – simuliertes Lichtpult mit Encoder und Executors</li>
+                <li><strong>Wireshark</strong>: Filter <code>artnet</code> zeigt live ArtNet-Pakete im realen Netzwerk</li>
+            </ul>
+        </div>
+    </div>
+
+</div><!-- /container -->
+</div><!-- /activity-description -->
+</body>
+</html>
